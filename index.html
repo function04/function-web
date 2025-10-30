@@ -1179,8 +1179,10 @@
                 .single();
             
             if (stats) {
-                // 실시간 미니창 정보 (현재 값 표시)
-                document.getElementById('liveScore').textContent = stats.current_score || '--';
+                // 실시간 미니창 정보 (현재 값 표시) - 5자리 이상 필터링
+                const score = Number(stats.current_score);
+                const displayScore = (score && score > 0 && score < 10000) ? score : '--';
+                document.getElementById('liveScore').textContent = displayScore;
                 
                 // 등수 표시 (순위권이탈 포함)
                 const rankElement = document.getElementById('liveRank');
@@ -2141,8 +2143,11 @@
                     return;
                 }
                 
-                // current_score가 null이거나 0인 사용자 제외
-                const validStats = stats.filter(s => s.current_score && s.current_score > 0);
+                // current_score가 null이거나 0인 사용자 제외 + 5자리 이상(10000 이상) 필터링
+                const validStats = stats.filter(s => {
+                    const score = Number(s.current_score);
+                    return score && score > 0 && score < 10000; // 4자리 이하만 허용
+                });
                 
                 if (validStats.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#808080;">점수 기록이 없습니다.</td></tr>';
@@ -2156,11 +2161,15 @@
                     else if (index === 2) rankIcon = '🥉';
                     else rankIcon = `${index + 1}`;
                     
+                    // 숫자로 변환 후 표시 (5자리 이상 방지)
+                    const score = Number(stat.current_score);
+                    const displayScore = (score < 10000) ? score : '--';
+                    
                     return `
                         <tr style="background: ${index < 3 ? 'rgba(255, 215, 0, 0.05)' : 'transparent'};">
                             <td style="font-size: 18px; font-weight: bold;">${rankIcon}</td>
                             <td><strong>${stat.username}</strong></td>
-                            <td style="color: #e0e0e0; font-weight: bold; font-size: 16px;">${stat.current_score.toLocaleString()}</td>
+                            <td style="color: #e0e0e0; font-weight: bold; font-size: 16px;">${displayScore !== '--' ? displayScore.toLocaleString() : '--'}</td>
                         </tr>
                     `;
                 }).join('');
