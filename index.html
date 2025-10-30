@@ -879,6 +879,25 @@
             return kstTime.toISOString().split('T')[0];
         }
         
+        // UTC 시간을 한국 시간(KST)으로 변환하여 포맷팅
+        function formatDateKST(utcDateStr, format = 'date') {
+            if (!utcDateStr) return '없음';
+            const utcDate = new Date(utcDateStr);
+            const kstDate = new Date(utcDate.getTime() + (9 * 60 * 60 * 1000));
+            
+            const year = kstDate.getUTCFullYear();
+            const month = kstDate.getUTCMonth() + 1;
+            const day = kstDate.getUTCDate();
+            
+            if (format === 'full') {
+                return `${year}.${month}.${day}`;
+            } else if (format === 'short') {
+                return `${month}/${day}`;
+            } else {
+                return `${year}. ${month}. ${day}.`;
+            }
+        }
+        
         // 자동 로그인 체크
         window.onload = function() {
             const savedUsername = localStorage.getItem('function_username');
@@ -1429,8 +1448,8 @@
             // 표 채우기
             let html = '';
             weekData.forEach(day => {
-                const date = new Date(day.session_date);
-                const dateStr = `${date.getMonth() + 1}/${date.getDate()}`;
+                // 한국 시간으로 날짜 표시
+                const dateStr = formatDateKST(day.session_date, 'short');
                 
                 const wins = day.wins || 0;
                 const losses = day.losses || 0;
@@ -1474,9 +1493,9 @@
                 document.getElementById('promotionCard').style.display = 'block';
                 document.getElementById('promotionMatches').textContent = `${promotion.matches_taken || '--'}판`;
                 
-                const date = new Date(promotion.promoted_at);
-                document.getElementById('promotionDate').textContent = 
-                    `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()} 승급`;
+                // 한국 시간으로 날짜 표시
+                const dateStr = formatDateKST(promotion.promoted_at, 'full');
+                document.getElementById('promotionDate').textContent = `${dateStr} 승급`;
             } else {
                 document.getElementById('promotionCard').style.display = 'none';
             }
@@ -1706,10 +1725,11 @@
                     pendingBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#8b949e;">없음</td></tr>';
                 } else {
                     pending.forEach(user => {
+                        const createdDate = formatDateKST(user.created_at);
                         pendingBody.innerHTML += `
                             <tr>
                                 <td><strong>${user.username}</strong></td>
-                                <td>${new Date(user.created_at).toLocaleDateString('ko-KR')}</td>
+                                <td>${createdDate}</td>
                                 <td class="action-buttons">
                                     <button class="btn-approve" onclick="approveUser('${user.username}')">✓</button>
                                     <button class="btn-reject" onclick="rejectUser('${user.username}')">✗</button>
@@ -1725,7 +1745,7 @@
                 const approved = users.filter(u => u.status === 'approved');
                 
                 approved.forEach(user => {
-                    const lastLogin = user.last_login ? new Date(user.last_login).toLocaleDateString('ko-KR') : '없음';
+                    const lastLogin = formatDateKST(user.last_login);
                     approvedBody.innerHTML += `
                         <tr>
                             <td><strong>${user.username}</strong>${user.is_admin ? ' 👑' : ''}</td>
@@ -1749,7 +1769,7 @@
                     suspendedBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#8b949e;">없음</td></tr>';
                 } else {
                     suspended.forEach(user => {
-                        const suspendedDate = user.updated_at ? new Date(user.updated_at).toLocaleDateString('ko-KR') : '알 수 없음';
+                        const suspendedDate = formatDateKST(user.updated_at);
                         suspendedBody.innerHTML += `
                             <tr>
                                 <td><strong>${user.username}</strong></td>
@@ -1772,7 +1792,7 @@
                     rejectedBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#8b949e;">없음</td></tr>';
                 } else {
                     rejected.forEach(user => {
-                        const rejectedDate = user.updated_at ? new Date(user.updated_at).toLocaleDateString('ko-KR') : '알 수 없음';
+                        const rejectedDate = formatDateKST(user.updated_at);
                         rejectedBody.innerHTML += `
                             <tr>
                                 <td><strong>${user.username}</strong></td>
