@@ -563,7 +563,7 @@
                     </div>
                 </div>
                 <div class="mini-status-bar">
-                    <div class="mini-status-text" id="liveStatus">대기 중...</div>
+                    <div class="mini-status-text" id="liveStatus" style="display: none;"></div>
                     <div class="mini-tags" id="liveTags"></div>
                 </div>
             </div>
@@ -1202,15 +1202,9 @@
                 document.getElementById('liveFC').textContent = stats.fc_mined || 0;
                 document.getElementById('liveMatches').textContent = stats.matches || 0;
                 
-                // 게임 상태 (프로그램에서 전달받은 값)
-                const status = stats.game_status || '대기 중';
-                document.getElementById('liveStatus').textContent = status;
-                
-                if (status === '게임 중') {
-                    document.getElementById('liveStatus').classList.add('in-game');
-                } else {
-                    document.getElementById('liveStatus').classList.remove('in-game');
-                }
+                // 게임 상태 표시 제거 (활성 모드만 표시)
+                // const status = stats.game_status || '대기 중';
+                // document.getElementById('liveStatus').textContent = status;
                 
                 // 활성 모드 태그 표시
                 const tagsContainer = document.getElementById('liveTags');
