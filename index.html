@@ -768,20 +768,26 @@
                     
                     <!-- 관리자만 보이는 작성 폼 -->
                     <div id="updateWriteForm" style="display:none;">
-                        <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-                            <h3 style="color: #58a6ff; margin-bottom: 15px; font-size: 16px;">✍️ 새 업데이트 작성</h3>
+                        <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+                            <h3 style="color: #e0e0e0; margin-bottom: 15px; font-size: 16px;">✍️ 업데이트 작성/수정</h3>
                             <input type="text" id="updateVersion" placeholder="버전 (예: v1.0.0)" 
-                                style="width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9;">
+                                style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
                             <input type="text" id="updateTitle" placeholder="제목" 
-                                style="width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9;">
+                                style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
                             <textarea id="updateContent" placeholder="업데이트 내용 (줄바꿈은 Enter로)" rows="5"
-                                style="width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; resize: vertical;"></textarea>
+                                style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0; resize: vertical; line-height: 1.5;"></textarea>
                             <input type="url" id="updateDownloadUrl" placeholder="다운로드 링크 (선택사항 - 구글 드라이브, GitHub 등)" 
-                                style="width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9;">
-                            <button onclick="publishUpdate()" 
-                                style="width: 100%; padding: 12px; margin-top: 10px; background: #238636; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                                📤 게시하기
-                            </button>
+                                style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
+                            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                <button onclick="postUpdate()" id="postUpdateBtn"
+                                    style="flex: 1; padding: 12px; background: #238636; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                                    📤 게시하기
+                                </button>
+                                <button onclick="cancelEdit()" 
+                                    style="padding: 12px 20px; background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; border-radius: 8px; cursor: pointer;">
+                                    취소
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
@@ -869,6 +875,7 @@
                             <tbody id="rejectedUsersBody"></tbody>
                         </table>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -909,6 +916,43 @@
                 return `${month}/${day}`;
             } else {
                 return `${year}. ${month}. ${day}.`;
+            }
+        }
+        
+        // 자동 갱신 타이머 변수
+        let autoRefreshTimer = null;
+        
+        // 자동 갱신 시작 (30초마다 자동으로 갱신 - 캐시 활용)
+        function startAutoRefresh() {
+            // 기존 타이머 제거
+            if (autoRefreshTimer) {
+                clearInterval(autoRefreshTimer);
+            }
+            
+            // 30초마다 자동 갱신 (캐시 활용으로 Egress 절감)
+            autoRefreshTimer = setInterval(() => {
+                if (currentUser) {
+                    loadMyStats(); // 캐시 사용 (30초 이내면 Supabase 요청 안 함)
+                }
+            }, 30000); // 30초
+            
+            console.log('🔄 자동 갱신 시작 (30초마다 갱신, 캐싱으로 Egress 절감)');
+        }
+        
+        // 수동 새로고침 (F5 누르면 강제로 Supabase에서 가져오기)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F5' && currentUser) {
+                e.preventDefault();
+                loadMyStats(true); // forceRefresh = true
+                console.log('🔄 강제 새로고침 (F5)');
+            }
+        });
+        
+        // 자동 갱신 중지
+        function stopAutoRefresh() {
+            if (autoRefreshTimer) {
+                clearInterval(autoRefreshTimer);
+                autoRefreshTimer = null;
             }
         }
         
@@ -1183,14 +1227,36 @@
             }
         }
         
-        // 내 통계 로드 (실시간 정보 포함)
-        async function loadMyStats() {
-            // 전체 통계 로드 (실시간 정보용)
-            const { data: stats } = await supabase
-                .from('game_stats')
-                .select('*')
-                .eq('username', currentUser)
-                .single();
+        // 캐싱 변수 (Egress 절감)
+        let cachedStats = null;
+        let cachedDailySession = null;
+        let lastStatsLoad = 0;
+        let lastDailySessionLoad = 0;
+        const CACHE_TIME = 30000; // 30초 캐시
+        let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
+        
+        // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
+        async function loadMyStats(forceRefresh = false) {
+            const now = Date.now();
+            
+            // 첫 호출 시 자동 갱신 시작 (한 번만)
+            if (!isAutoRefreshStarted && currentUser) {
+                startAutoRefresh();
+                isAutoRefreshStarted = true;
+            }
+            
+            // 전체 통계 로드 (실시간 정보용) - 30초 캐싱
+            let stats = cachedStats;
+            if (forceRefresh || !cachedStats || now - lastStatsLoad > CACHE_TIME) {
+                const { data: freshStats } = await supabase
+                    .from('game_stats')
+                    .select('*')
+                    .eq('username', currentUser)
+                    .single();
+                stats = freshStats;
+                cachedStats = freshStats;
+                lastStatsLoad = now;
+            }
             
             if (stats) {
                 // 실시간 미니창 정보 (현재 값 표시) - 5자리 이상 필터링
@@ -1233,14 +1299,20 @@
                 }
             }
             
-            // 오늘의 통계 로드 (한국 시간 기준)
+            // 오늘의 통계 로드 (한국 시간 기준) - 30초 캐싱
             const today = getTodayKST();
-            const { data: todaySession } = await supabase
-                .from('daily_sessions')
-                .select('*')
-                .eq('username', currentUser)
-                .eq('session_date', today)
-                .single();
+            let todaySession = cachedDailySession;
+            if (forceRefresh || !cachedDailySession || now - lastDailySessionLoad > CACHE_TIME) {
+                const { data: freshSession } = await supabase
+                    .from('daily_sessions')
+                    .select('*')
+                    .eq('username', currentUser)
+                    .eq('session_date', today)
+                    .single();
+                todaySession = freshSession;
+                cachedDailySession = freshSession;
+                lastDailySessionLoad = now;
+            }
             
             if (todaySession) {
                 document.getElementById('todayWins').textContent = todaySession.wins || 0;
@@ -1940,27 +2012,33 @@
             }
             
             list.innerHTML = updates.map(update => `
-                <div style="background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 15px;">
+                <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                         <div>
-                            <span style="background: #1f6feb; color: white; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-right: 10px;">
+                            <span style="background: #3a3a3a; color: #e0e0e0; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-right: 10px; border: 1px solid #4a4a4a;">
                                 ${update.version || 'v1.0.0'}
                             </span>
-                            <span style="color: #c9d1d9; font-size: 18px; font-weight: bold;">
+                            <span style="color: #e0e0e0; font-size: 18px; font-weight: bold;">
                                 ${update.title}
                             </span>
                         </div>
                         ${isAdmin ? `
-                            <button onclick="deleteUpdate(${update.id})" 
-                                style="background: #f85149; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
-                                🗑️ 삭제
-                            </button>
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="editUpdate(${update.id}, '${update.version?.replace(/'/g, "\\'")}', '${update.title.replace(/'/g, "\\'")}', \`${update.content.replace(/`/g, '\\`')}\`, '${update.download_url || ''}')" 
+                                    style="background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                                    ✏️ 수정
+                                </button>
+                                <button onclick="deleteUpdate(${update.id})" 
+                                    style="background: #f85149; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
+                                    🗑️ 삭제
+                                </button>
+                            </div>
                         ` : ''}
                     </div>
-                    <div style="color: #8b949e; font-size: 12px; margin-bottom: 15px;">
+                    <div style="color: #808080; font-size: 12px; margin-bottom: 15px;">
                         ${new Date(update.created_at).toLocaleString('ko-KR')} · ${update.created_by}
                     </div>
-                    <div style="color: #c9d1d9; line-height: 1.6; white-space: pre-wrap; margin-bottom: 15px;">
+                    <div style="color: #b4b4b4; line-height: 1.6; white-space: pre-wrap; margin-bottom: 15px;">
                         ${update.content}
                     </div>
                     ${update.download_url ? `
@@ -1993,47 +2071,95 @@
         }
         
         // 업데이트 게시
-        async function publishUpdate() {
+        // 업데이트 게시/수정 함수
+        async function postUpdate() {
             const version = document.getElementById('updateVersion').value.trim();
             const title = document.getElementById('updateTitle').value.trim();
             const content = document.getElementById('updateContent').value.trim();
             const downloadUrl = document.getElementById('updateDownloadUrl').value.trim();
             
             if (!version || !title || !content) {
-                alert('버전, 제목, 내용은 필수 항목입니다!');
+                alert('⚠️ 버전, 제목, 내용은 필수 항목입니다!');
                 return;
             }
             
             try {
-                const updateData = {
-                    version: version,
-                    title: title,
-                    content: content,
-                    created_by: currentUser
-                };
-                
-                // 다운로드 링크가 있으면 추가
-                if (downloadUrl) {
-                    updateData.download_url = downloadUrl;
+                if (editingUpdateId) {
+                    // 수정 모드
+                    const { error } = await supabase.from('updates')
+                        .update({
+                            version,
+                            title,
+                            content,
+                            download_url: downloadUrl || null
+                        })
+                        .eq('id', editingUpdateId);
+                    
+                    if (error) throw error;
+                    alert('✅ 업데이트 공지가 수정되었습니다!');
+                    editingUpdateId = null;
+                } else {
+                    // 등록 모드
+                    const updateData = {
+                        version,
+                        title,
+                        content,
+                        created_by: currentUser,
+                        download_url: downloadUrl || null
+                    };
+                    
+                    const { error } = await supabase.from('updates').insert(updateData);
+                    
+                    if (error) throw error;
+                    alert('✅ 업데이트 공지가 게시되었습니다!');
                 }
                 
-                const { error } = await supabase.from('updates').insert(updateData);
-                
-                if (error) throw error;
-                
-                alert('✅ 업데이트 공지가 게시되었습니다!');
-                
                 // 입력 필드 초기화
-                document.getElementById('updateVersion').value = '';
-                document.getElementById('updateTitle').value = '';
-                document.getElementById('updateContent').value = '';
-                document.getElementById('updateDownloadUrl').value = '';
-                
+                cancelEdit();
                 loadUpdates();
                 
             } catch (error) {
-                alert('❌ 게시 실패: ' + error.message);
+                alert('❌ 실패: ' + error.message);
             }
+        }
+        
+        // 수정 취소 및 폼 초기화
+        function cancelEdit() {
+            editingUpdateId = null;
+            document.getElementById('updateVersion').value = '';
+            document.getElementById('updateTitle').value = '';
+            document.getElementById('updateContent').value = '';
+            document.getElementById('updateDownloadUrl').value = '';
+            
+            // 버튼 텍스트 원래대로
+            const btn = document.getElementById('postUpdateBtn');
+            if (btn) {
+                btn.textContent = '📤 게시하기';
+                btn.style.background = '#238636';
+            }
+        }
+        
+        // 업데이트 수정 (폼에 데이터 넣기)
+        let editingUpdateId = null;
+        
+        function editUpdate(id, version, title, content, downloadUrl) {
+            editingUpdateId = id;
+            
+            // 폼에 기존 데이터 넣기
+            document.getElementById('updateVersion').value = version || '';
+            document.getElementById('updateTitle').value = title || '';
+            document.getElementById('updateContent').value = content || '';
+            document.getElementById('updateDownloadUrl').value = downloadUrl || '';
+            
+            // 버튼 텍스트 변경
+            const btn = document.getElementById('postUpdateBtn');
+            if (btn) {
+                btn.textContent = '✏️ 수정 완료';
+                btn.style.background = '#3a3a3a';
+            }
+            
+            // 스크롤 이동 (작성 폼으로)
+            document.getElementById('updateWriteForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
         // 업데이트 삭제
@@ -2045,11 +2171,11 @@
                 
                 if (error) throw error;
                 
-                alert('삭제 완료');
+                alert('✅ 삭제 완료');
                 loadUpdates();
                 
             } catch (error) {
-                alert('삭제 실패: ' + error.message);
+                alert('❌ 삭제 실패: ' + error.message);
             }
         }
         
