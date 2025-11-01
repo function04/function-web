@@ -682,6 +682,17 @@
                 <div class="card">
                     <h2>🎮 최근 전적 (넥슨 API)</h2>
                     
+                    <!-- 안내 문구 -->
+                    <div style="background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 15px;">
+                        <div style="color: #58a6ff; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
+                            💡 넥슨 전적 연동 안내
+                        </div>
+                        <div style="color: #b4b4b4; font-size: 12px; line-height: 1.6;">
+                            전적을 확인하려면 <strong style="color: #e0e0e0;">프로그램 설정에서 "넥슨 전적 연동" 칸에 피파 닉네임을 입력하고 저장해주세요</strong>.
+                            <br>저장 후 동기화 버튼을 클릭하면 최근 30경기의 전적을 조회할 수 있습니다.
+                        </div>
+                    </div>
+                    
                     <!-- 동기화 버튼 및 상태 -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                         <div style="color: #8b949e; font-size: 13px;">
@@ -709,7 +720,10 @@
                                 </tr>
                             </thead>
                             <tbody id="matchesTableBody">
-                                <tr><td colspan="4" style="text-align:center;color:#8b949e;">전적 데이터가 없습니다</td></tr>
+                                <tr><td colspan="4" style="text-align:center;color:#8b949e;padding:30px;">
+                                    <div style="margin-bottom:10px;">전적 데이터가 없습니다.</div>
+                                    <div style="font-size:12px;color:#58a6ff;">💡 프로그램 설정에서 "넥슨 전적 연동" 칸에 피파 닉네임을 입력하고 저장해주세요.</div>
+                                </td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -1288,7 +1302,13 @@
                 const tbody = document.getElementById('matchesTableBody');
                 
                 if (!matches || matches.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#8b949e;">전적 데이터가 없습니다.<br>프로그램 설정에서 전적 동기화를 실행해주세요.</td></tr>';
+                    // 피파 닉네임이 설정되어 있는지 확인
+                    const hasNickname = syncData && syncData.fifa_nickname;
+                    if (!hasNickname) {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#8b949e;padding:30px;"><div style="margin-bottom:10px;">전적 데이터가 없습니다.</div><div style="font-size:12px;color:#58a6ff;">💡 프로그램 설정에서 "넥슨 전적 연동" 칸에 피파 닉네임을 입력하고 저장해주세요.</div></td></tr>';
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#8b949e;">전적 데이터가 없습니다.<br>위의 "전적 동기화" 버튼을 클릭해주세요.</td></tr>';
+                    }
                     return;
                 }
                 
