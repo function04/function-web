@@ -573,7 +573,6 @@
                 <button class="tab-btn active" onclick="showTab('today')">오늘</button>
                 <button class="tab-btn" onclick="showTab('week')">7일</button>
                 <button class="tab-btn" onclick="showTab('history')">점수 그래프</button>
-                <button class="tab-btn" onclick="showTab('matches')">🎮 전적</button>
                 <button class="tab-btn" onclick="showTab('ranking')">🏆 랭킹</button>
                 <button class="tab-btn" onclick="showTab('updates')">📢 업데이트</button>
                 <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="showTab('admin')">👑 회원관리</button>
@@ -673,59 +672,6 @@
                     
                     <div style="height: 350px;">
                         <canvas id="scoreChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 전적 탭 -->
-            <div class="tab-content" id="matchesTab">
-                <div class="card">
-                    <h2>🎮 최근 전적 (넥슨 API)</h2>
-                    
-                    <!-- 안내 문구 -->
-                    <div style="background: rgba(88, 166, 255, 0.1); border: 1px solid rgba(88, 166, 255, 0.3); border-radius: 8px; padding: 12px; margin-bottom: 15px;">
-                        <div style="color: #58a6ff; font-size: 13px; font-weight: 500; margin-bottom: 8px;">
-                            💡 넥슨 전적 연동 안내
-                        </div>
-                        <div style="color: #b4b4b4; font-size: 12px; line-height: 1.6;">
-                            전적을 확인하려면 <strong style="color: #e0e0e0;">프로그램 설정에서 "넥슨 전적 연동" 칸에 피파 닉네임을 입력하고 저장해주세요</strong>.
-                            <br>저장 후 동기화 버튼을 클릭하면 최근 30경기의 전적을 조회할 수 있습니다.
-                        </div>
-                    </div>
-                    
-                    <!-- 동기화 버튼 및 상태 -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                        <div style="color: #8b949e; font-size: 13px;">
-                            <span id="lastSyncTime">마지막 동기화: -</span>
-                            <br>
-                            <span style="color: #fcd34d; font-size: 11px;">⚠️ 넥슨 API는 2시간 전까지의 데이터만 제공합니다</span>
-                            <br>
-                            <span style="color: #8b949e; font-size: 11px;">📊 감독모드 공식경기 최대 30경기까지 조회됩니다</span>
-                        </div>
-                        <button class="tab-btn" id="syncMatchesBtn" onclick="requestMatchSync()" style="margin: 0;">
-                            🔄 전적 동기화
-                        </button>
-                    </div>
-                    
-                    <p id="syncStatus" style="color: #8b949e; font-size: 12px; margin-bottom: 15px; display: none;"></p>
-                    
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>날짜</th>
-                                    <th>결과</th>
-                                    <th>점수</th>
-                                    <th>상대</th>
-                                </tr>
-                            </thead>
-                            <tbody id="matchesTableBody">
-                                <tr><td colspan="4" style="text-align:center;color:#8b949e;padding:30px;">
-                                    <div style="margin-bottom:10px;">전적 데이터가 없습니다.</div>
-                                    <div style="font-size:12px;color:#58a6ff;">💡 프로그램 설정에서 "넥슨 전적 연동" 칸에 피파 닉네임을 입력하고 저장해주세요.</div>
-                                </td></tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -1208,16 +1154,12 @@
                 document.querySelectorAll('.tab-btn')[2].classList.add('active');
                 document.getElementById('historyTab').classList.add('active');
                 loadScoreGraph(500);
-            } else if (tabName === 'matches') {
-                document.querySelectorAll('.tab-btn')[3].classList.add('active');
-                document.getElementById('matchesTab').classList.add('active');
-                loadMyMatches();
             } else if (tabName === 'ranking') {
-                document.querySelectorAll('.tab-btn')[4].classList.add('active');
+                document.querySelectorAll('.tab-btn')[3].classList.add('active');
                 document.getElementById('rankingTab').classList.add('active');
                 loadRanking();
             } else if (tabName === 'updates') {
-                document.querySelectorAll('.tab-btn')[5].classList.add('active');
+                document.querySelectorAll('.tab-btn')[4].classList.add('active');
                 document.getElementById('updatesTab').classList.add('active');
                 loadUpdates();
             } else if (tabName === 'admin' && isAdmin) {
@@ -1330,165 +1272,6 @@
             
             // 승급 정보 로드
             await loadPromotionInfo();
-        }
-        
-        // 넥슨 전적 로드
-        async function loadMyMatches() {
-            try {
-                // 마지막 동기화 시간 로드
-                const { data: syncData } = await supabase
-                    .from('nexon_sync')
-                    .select('last_synced, fifa_nickname')
-                    .eq('username', currentUser)
-                    .single();
-                
-                if (syncData && syncData.last_synced) {
-                    const lastSync = new Date(syncData.last_synced);
-                    const now = new Date();
-                    const diffMinutes = Math.floor((now - lastSync) / 1000 / 60);
-                    
-                    let timeStr = '';
-                    if (diffMinutes < 1) {
-                        timeStr = '방금 전';
-                    } else if (diffMinutes < 60) {
-                        timeStr = `${diffMinutes}분 전`;
-                    } else if (diffMinutes < 1440) {
-                        timeStr = `${Math.floor(diffMinutes / 60)}시간 전`;
-                    } else {
-                        timeStr = `${Math.floor(diffMinutes / 1440)}일 전`;
-                    }
-                    
-                    document.getElementById('lastSyncTime').textContent = `마지막 동기화: ${timeStr}`;
-                } else {
-                    document.getElementById('lastSyncTime').textContent = '마지막 동기화: 없음';
-                }
-                
-                // 전적 데이터 로드 (최근 30경기)
-                const { data: matches } = await supabase
-                    .from('nexon_match_history')
-                    .select('*')
-                    .eq('username', currentUser)
-                    .order('match_date', { ascending: false })
-                    .limit(30);
-                
-                const tbody = document.getElementById('matchesTableBody');
-                
-                if (!matches || matches.length === 0) {
-                    // 피파 닉네임이 설정되어 있는지 확인
-                    const hasNickname = syncData && syncData.fifa_nickname;
-                    if (!hasNickname) {
-                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#8b949e;padding:30px;"><div style="margin-bottom:10px;">전적 데이터가 없습니다.</div><div style="font-size:12px;color:#58a6ff;">💡 프로그램 설정에서 "넥슨 전적 연동" 칸에 피파 닉네임을 입력하고 저장해주세요.</div></td></tr>';
-                    } else {
-                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#8b949e;">전적 데이터가 없습니다.<br>위의 "전적 동기화" 버튼을 클릭해주세요.</td></tr>';
-                    }
-                    return;
-                }
-                
-                tbody.innerHTML = matches.map(match => {
-                    // 날짜 포맷 (UTC → 한국 시간 KST 변환)
-                    const dateStr = match.match_date.replace('T', ' ').replace('Z', '').replace('+00:00', '');
-                    const utcDate = new Date(dateStr + 'Z'); // UTC로 파싱
-                    
-                    // 한국 시간으로 변환 (UTC+9)
-                    const kstDate = new Date(utcDate.getTime() + (9 * 60 * 60 * 1000));
-                    const month = kstDate.getUTCMonth() + 1;
-                    const day = kstDate.getUTCDate();
-                    const hours = kstDate.getUTCHours().toString().padStart(2, '0');
-                    const minutes = kstDate.getUTCMinutes().toString().padStart(2, '0');
-                    const formattedDateStr = `${month}/${day} ${hours}:${minutes}`;
-                    
-                    // 결과 표시
-                    let resultHtml = '';
-                    let resultColor = '';
-                    if (match.result === 'win') {
-                        resultHtml = '승';
-                        resultColor = '#58a6ff';
-                    } else if (match.result === 'draw') {
-                        resultHtml = '무';
-                        resultColor = '#fcd34d';
-                    } else {
-                        resultHtml = '패';
-                        resultColor = '#fca5a5';
-                    }
-                    
-                    // 점수 표시
-                    const scoreStr = `${match.my_score} : ${match.opponent_score}`;
-                    
-                    return `
-                        <tr>
-                            <td style="color: #8b949e;">${formattedDateStr}</td>
-                            <td style="color: ${resultColor}; font-weight: bold;">${resultHtml}</td>
-                            <td style="color: #e0e0e0; font-weight: bold;">${scoreStr}</td>
-                            <td style="color: #8b949e;">${match.opponent_name || '알 수 없음'}</td>
-                        </tr>
-                    `;
-                }).join('');
-                
-            } catch (error) {
-                console.error('전적 로드 오류:', error);
-                document.getElementById('matchesTableBody').innerHTML = 
-                    '<tr><td colspan="4" style="text-align:center;color:#fca5a5;">전적 로드 실패</td></tr>';
-            }
-        }
-        
-        // 전적 동기화 요청
-        async function requestMatchSync() {
-            try {
-                const btn = document.getElementById('syncMatchesBtn');
-                const statusEl = document.getElementById('syncStatus');
-                
-                // 버튼 비활성화
-                btn.disabled = true;
-                btn.textContent = '⏳ 요청 중...';
-                
-                // 피파 닉네임 확인
-                const { data: syncData } = await supabase
-                    .from('nexon_sync')
-                    .select('fifa_nickname')
-                    .eq('username', currentUser)
-                    .single();
-                
-                if (!syncData || !syncData.fifa_nickname) {
-                    statusEl.textContent = '⚠️ 먼저 프로그램 설정에서 피파 닉네임을 등록해주세요.';
-                    statusEl.style.color = '#fca5a5';
-                    statusEl.style.display = 'block';
-                    
-                    btn.disabled = false;
-                    btn.textContent = '🔄 전적 동기화';
-                    return;
-                }
-                
-                // 동기화 요청 플래그 설정
-                await supabase
-                    .from('nexon_sync')
-                    .update({ sync_requested: true })
-                    .eq('username', currentUser);
-                
-                statusEl.textContent = '✅ 동기화 요청 완료! 프로그램이 실행 중이면 10초 내에 자동으로 동기화됩니다.';
-                statusEl.style.color = '#58a6ff';
-                statusEl.style.display = 'block';
-                
-                // 15초 후 자동으로 새로고침
-                setTimeout(() => {
-                    loadMyMatches();
-                    statusEl.style.display = 'none';
-                }, 15000);
-                
-                btn.disabled = false;
-                btn.textContent = '🔄 전적 동기화';
-                
-            } catch (error) {
-                console.error('전적 동기화 요청 오류:', error);
-                
-                const statusEl = document.getElementById('syncStatus');
-                statusEl.textContent = '❌ 동기화 요청 실패: ' + error.message;
-                statusEl.style.color = '#fca5a5';
-                statusEl.style.display = 'block';
-                
-                const btn = document.getElementById('syncMatchesBtn');
-                btn.disabled = false;
-                btn.textContent = '🔄 전적 동기화';
-            }
         }
         
         // 최근 7일 통계 로드 (한국 시간 기준)
