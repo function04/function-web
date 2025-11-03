@@ -875,21 +875,32 @@
                 supabase.removeChannel(realtimeChannel);
             }
             
-            // Realtime 채널 구독
+            // Realtime 채널 구독 (game_stats + daily_sessions)
             realtimeChannel = supabase
                 .channel(`user_stats_${currentUser}`)
+                // 1. 전체 통계 (실시간 정보)
                 .on('postgres_changes', {
                     event: 'UPDATE',
                     schema: 'public',
                     table: 'game_stats',
                     filter: `username=eq.${currentUser}`
                 }, (payload) => {
-                    console.log('🔔 실시간 업데이트 수신!', payload.new);
+                    console.log('🔔 실시간 업데이트 (전체 통계):', payload.new);
                     updateStatsDisplay(payload.new);
+                })
+                // 2. 오늘의 통계 (일일 세션)
+                .on('postgres_changes', {
+                    event: '*',  // INSERT, UPDATE 모두
+                    schema: 'public',
+                    table: 'daily_sessions',
+                    filter: `username=eq.${currentUser}`
+                }, (payload) => {
+                    console.log('🔔 실시간 업데이트 (오늘의 통계):', payload.new);
+                    updateDailySessionDisplay(payload.new);
                 })
                 .subscribe((status) => {
                     if (status === 'SUBSCRIBED') {
-                        console.log('✅ Realtime 연결 성공! (실시간 업데이트 활성화)');
+                        console.log('✅ Realtime 연결 성공! (전체 통계 + 오늘의 통계 실시간 업데이트)');
                     } else if (status === 'CLOSED') {
                         console.log('❌ Realtime 연결 끊김. 5초 후 재연결...');
                         setTimeout(() => startRealtimeSubscription(), 5000);
@@ -899,10 +910,10 @@
                     }
                 });
             
-            console.log('🔔 Realtime 구독 시작 (0.1초 실시간 업데이트, Egress 95% 절감)');
+            console.log('🔔 Realtime 구독 시작 (전체 통계 + 오늘의 통계 실시간 업데이트, Egress 95% 절감)');
         }
         
-        // 실시간 업데이트 화면 반영
+        // 실시간 업데이트 화면 반영 (전체 통계)
         function updateStatsDisplay(data) {
             // 실시간 정보 업데이트
             if (data.wins !== undefined) {
@@ -937,7 +948,43 @@
             cachedStats = data;
             lastStatsLoad = Date.now();
             
-            console.log('✨ 화면 업데이트 완료 (Realtime)');
+            console.log('✨ 전체 통계 업데이트 완료 (Realtime)');
+        }
+        
+        // 실시간 업데이트 화면 반영 (오늘의 통계)
+        function updateDailySessionDisplay(data) {
+            const today = getTodayKST();
+            
+            // 오늘 날짜 데이터만 업데이트
+            if (data.session_date === today) {
+                if (data.start_score !== undefined) {
+                    document.getElementById('todayStartScore').textContent = data.start_score;
+                }
+                if (data.highest_score !== undefined) {
+                    document.getElementById('todayHighestScore').textContent = data.highest_score;
+                }
+                if (data.wins !== undefined) {
+                    document.getElementById('todayWins').textContent = data.wins + '승';
+                }
+                if (data.losses !== undefined) {
+                    document.getElementById('todayLosses').textContent = data.losses + '패';
+                }
+                if (data.draws !== undefined) {
+                    document.getElementById('todayDraws').textContent = data.draws + '무';
+                }
+                if (data.matches !== undefined) {
+                    document.getElementById('todayMatches').textContent = data.matches + '판';
+                }
+                if (data.fc_mined !== undefined) {
+                    document.getElementById('todayFC').textContent = data.fc_mined + ' FC';
+                }
+                
+                // 캐시 업데이트
+                cachedDailySession = data;
+                lastDailySessionLoad = Date.now();
+                
+                console.log('✨ 오늘의 통계 업데이트 완료 (Realtime)');
+            }
         }
         
         // 수동 새로고침 (F5 누르면 강제로 Supabase에서 가져오기)
