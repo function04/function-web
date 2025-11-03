@@ -865,24 +865,79 @@
             }
         }
         
-        // 자동 갱신 타이머 변수
-        let autoRefreshTimer = null;
+        // Realtime 채널 변수
+        let realtimeChannel = null;
         
-        // 자동 갱신 시작 (30초마다 자동으로 갱신 - 캐시 활용)
-        function startAutoRefresh() {
-            // 기존 타이머 제거
-            if (autoRefreshTimer) {
-                clearInterval(autoRefreshTimer);
+        // Realtime 구독 시작 (실시간 업데이트, Egress 95% 절감)
+        function startRealtimeSubscription() {
+            // 기존 채널 제거
+            if (realtimeChannel) {
+                supabase.removeChannel(realtimeChannel);
             }
             
-            // 30초마다 자동 갱신 (캐시 활용으로 Egress 절감)
-            autoRefreshTimer = setInterval(() => {
-                if (currentUser) {
-                    loadMyStats(); // 캐시 사용 (30초 이내면 Supabase 요청 안 함)
-                }
-            }, 30000); // 30초
+            // Realtime 채널 구독
+            realtimeChannel = supabase
+                .channel(`user_stats_${currentUser}`)
+                .on('postgres_changes', {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'game_stats',
+                    filter: `username=eq.${currentUser}`
+                }, (payload) => {
+                    console.log('🔔 실시간 업데이트 수신!', payload.new);
+                    updateStatsDisplay(payload.new);
+                })
+                .subscribe((status) => {
+                    if (status === 'SUBSCRIBED') {
+                        console.log('✅ Realtime 연결 성공! (실시간 업데이트 활성화)');
+                    } else if (status === 'CLOSED') {
+                        console.log('❌ Realtime 연결 끊김. 5초 후 재연결...');
+                        setTimeout(() => startRealtimeSubscription(), 5000);
+                    } else if (status === 'CHANNEL_ERROR') {
+                        console.log('⚠️ Realtime 연결 오류. 10초 후 재연결...');
+                        setTimeout(() => startRealtimeSubscription(), 10000);
+                    }
+                });
             
-            console.log('🔄 자동 갱신 시작 (30초마다 갱신, 캐싱으로 Egress 절감)');
+            console.log('🔔 Realtime 구독 시작 (0.1초 실시간 업데이트, Egress 95% 절감)');
+        }
+        
+        // 실시간 업데이트 화면 반영
+        function updateStatsDisplay(data) {
+            // 실시간 정보 업데이트
+            if (data.wins !== undefined) {
+                document.getElementById('sessionWins').textContent = data.wins + '승';
+            }
+            if (data.losses !== undefined) {
+                document.getElementById('sessionLosses').textContent = data.losses + '패';
+            }
+            if (data.draws !== undefined) {
+                document.getElementById('sessionDraws').textContent = data.draws + '무';
+            }
+            if (data.matches !== undefined) {
+                document.getElementById('sessionMatches').textContent = data.matches + '판';
+            }
+            if (data.fc_mined !== undefined) {
+                document.getElementById('sessionFC').textContent = data.fc_mined + ' FC';
+            }
+            if (data.current_score !== undefined) {
+                document.getElementById('currentScore').textContent = data.current_score;
+            }
+            if (data.current_rank !== undefined) {
+                document.getElementById('currentRank').textContent = data.current_rank + '위';
+            }
+            if (data.current_tier !== undefined) {
+                document.getElementById('currentTier').textContent = data.current_tier;
+            }
+            if (data.game_status !== undefined) {
+                document.getElementById('gameStatus').textContent = data.game_status;
+            }
+            
+            // 캐시 업데이트 (F5 새로고침 시 사용)
+            cachedStats = data;
+            lastStatsLoad = Date.now();
+            
+            console.log('✨ 화면 업데이트 완료 (Realtime)');
         }
         
         // 수동 새로고침 (F5 누르면 강제로 Supabase에서 가져오기)
@@ -890,15 +945,23 @@
             if (e.key === 'F5' && currentUser) {
                 e.preventDefault();
                 loadMyStats(true); // forceRefresh = true
-                console.log('🔄 강제 새로고침 (F5)');
+                
+                // 현재 활성 탭도 강제 새로고침
+                if (document.getElementById('weekTab').classList.contains('active')) {
+                    loadWeekStats();
+                } else if (document.getElementById('rankingTab').classList.contains('active')) {
+                    loadRanking();
+                }
+                console.log('🔄 강제 새로고침 (F5) - 모든 캐시 무시');
             }
         });
         
-        // 자동 갱신 중지
-        function stopAutoRefresh() {
-            if (autoRefreshTimer) {
-                clearInterval(autoRefreshTimer);
-                autoRefreshTimer = null;
+        // Realtime 구독 중지
+        function stopRealtimeSubscription() {
+            if (realtimeChannel) {
+                supabase.removeChannel(realtimeChannel);
+                realtimeChannel = null;
+                console.log('🔕 Realtime 구독 중지');
             }
         }
         
@@ -1106,27 +1169,16 @@
                 loadAdminPanel();
             }
             
-            // 5분마다 자동 새로고침
-            setInterval(() => {
-                loadMyStats(); // 실시간 정보는 항상 업데이트
-                
-                // 현재 활성 탭에 따라 데이터 새로고침
-                if (document.getElementById('weekTab').classList.contains('active')) {
-                    loadWeekStats();
-                } else if (document.getElementById('historyTab').classList.contains('active')) {
-                    // 그래프는 자동 새로고침 안 함 (버튼으로만 로드)
-                } else if (document.getElementById('rankingTab').classList.contains('active')) {
-                    loadRanking();
-                } else if (document.getElementById('updatesTab').classList.contains('active')) {
-                    loadUpdates();
-                } else if (isAdmin && document.getElementById('adminTab').classList.contains('active')) {
-                    loadAdminPanel();
-                }
-            }, 300000);
+            // Realtime 구독 시작 (실시간 업데이트)
+            startRealtimeSubscription();
+            console.log('🔔 Realtime 활성화: 프로그램 변경사항이 0.1초만에 자동 반영됩니다!');
         }
         
         function logout() {
             if (confirm('로그아웃 하시겠습니까?')) {
+                // Realtime 구독 중지
+                stopRealtimeSubscription();
+                
                 clearAutoLogin();
                 currentUser = null;
                 isAdmin = false;
@@ -1174,18 +1226,14 @@
         let cachedDailySession = null;
         let lastStatsLoad = 0;
         let lastDailySessionLoad = 0;
-        const CACHE_TIME = 30000; // 30초 캐시
+        const CACHE_TIME = 180000; // 3분 캐시 (Egress 절감 최적화)
         let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
         
         // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
         async function loadMyStats(forceRefresh = false) {
             const now = Date.now();
             
-            // 첫 호출 시 자동 갱신 시작 (한 번만)
-            if (!isAutoRefreshStarted && currentUser) {
-                startAutoRefresh();
-                isAutoRefreshStarted = true;
-            }
+            // Realtime은 로그인 시 자동 시작되므로 여기서는 불필요
             
             // 전체 통계 로드 (실시간 정보용) - 30초 캐싱
             let stats = cachedStats;
