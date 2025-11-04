@@ -1459,40 +1459,79 @@
         
         // 최근 N경기 점수 그래프 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
         async function loadScoreGraph(limit, forceRefresh = false) {
-            const now = Date.now();
-            
-            // 캐시가 있고 같은 limit이고 유효하면 캐시 사용
-            if (!forceRefresh && cachedScoreGraph && cachedScoreGraphLimit === limit && 
-                now - lastScoreGraphLoad < SCORE_GRAPH_CACHE_TIME) {
-                // 캐시된 데이터로 그래프 렌더링
-                const history = cachedScoreGraph;
-                renderScoreGraph(history, limit);
-                return;
+            try {
+                const now = Date.now();
+                
+                // 캐시가 있고 같은 limit이고 유효하면 캐시 사용
+                if (!forceRefresh && cachedScoreGraph && cachedScoreGraphLimit === limit && 
+                    now - lastScoreGraphLoad < SCORE_GRAPH_CACHE_TIME) {
+                    // 캐시된 데이터로 그래프 렌더링
+                    const history = cachedScoreGraph;
+                    renderScoreGraph(history, limit);
+                    return;
+                }
+                
+                // currentUser가 없으면 에러
+                if (!currentUser) {
+                    console.error('⚠️ 로그인이 필요합니다.');
+                    renderScoreGraph(null, limit);
+                    return;
+                }
+                
+                const { data: history, error } = await supabase
+                    .from('game_history')
+                    .select('created_at, score_after, result')
+                    .eq('username', currentUser)
+                    .order('created_at', { ascending: false })
+                    .limit(limit);
+                
+                if (error) {
+                    console.error('점수 그래프 로드 오류:', error);
+                    renderScoreGraph(null, limit);
+                    return;
+                }
+                
+                // 캐시 저장
+                cachedScoreGraph = history || [];
+                cachedScoreGraphLimit = limit;
+                lastScoreGraphLoad = now;
+                
+                renderScoreGraph(history || [], limit);
+            } catch (error) {
+                console.error('점수 그래프 로드 중 오류:', error);
+                renderScoreGraph(null, limit);
             }
-            
-            const { data: history } = await supabase
-                .from('game_history')
-                .select('created_at, score, result')
-                .eq('username', currentUser)
-                .order('created_at', { ascending: false })
-                .limit(limit);
-            
-            // 캐시 저장
-            cachedScoreGraph = history;
-            cachedScoreGraphLimit = limit;
-            lastScoreGraphLoad = now;
-            
-            renderScoreGraph(history, limit);
         }
         
         // 점수 그래프 렌더링 함수 (재사용)
         function renderScoreGraph(history, limit) {
+            try {
+                // 기존 차트 안전하게 제거
+                if (window.scoreChart && typeof window.scoreChart.destroy === 'function') {
+                    try {
+                        window.scoreChart.destroy();
+                    } catch (e) {
+                        console.warn('기존 차트 제거 중 오류:', e);
+                    }
+                }
+                window.scoreChart = null;
+                
+                // canvas 요소 확인
+                const canvasElement = document.getElementById('scoreChart');
+                if (!canvasElement) {
+                    console.error('⚠️ scoreChart canvas 요소를 찾을 수 없습니다.');
+                    return;
+                }
+                
+                const scoreCtx = canvasElement.getContext('2d');
+                if (!scoreCtx) {
+                    console.error('⚠️ canvas context를 가져올 수 없습니다.');
+                    return;
+                }
             
-            if (!history || history.length === 0) {
-                // 데이터가 없을 때 빈 그래프 표시
-                const scoreCtx = document.getElementById('scoreChart').getContext('2d');
-                if (window.scoreChart) window.scoreChart.destroy();
-                window.scoreChart = new Chart(scoreCtx, {
+                if (!history || history.length === 0) {
+                    // 데이터가 없을 때 빈 그래프 표시
+                    window.scoreChart = new Chart(scoreCtx, {
                     type: 'line',
                     data: {
                         labels: [],
@@ -1530,18 +1569,16 @@
             let gameNumber = 1;
             
             history.forEach((game) => {
-                // score가 있으면 실제 점수, 없으면 스킵
-                if (game.score) {
-                    scores.push(game.score);
+                // score_after가 있으면 실제 점수, 없으면 스킵
+                if (game.score_after) {
+                    scores.push(game.score_after);
                     labels.push(gameNumber.toString());
                     gameNumber++;
                 }
             });
             
             if (scores.length === 0) {
-                // score_after 데이터가 없을 때
-                const scoreCtx = document.getElementById('scoreChart').getContext('2d');
-                if (window.scoreChart) window.scoreChart.destroy();
+                // score 데이터가 없을 때
                 window.scoreChart = new Chart(scoreCtx, {
                     type: 'line',
                     data: {
@@ -1571,9 +1608,7 @@
                 return;
             }
             
-            // 점수 그래프
-            const scoreCtx = document.getElementById('scoreChart').getContext('2d');
-            try { if (window.scoreChart) window.scoreChart.destroy(); } catch(e) {}
+            // 점수 그래프 렌더링
             window.scoreChart = new Chart(scoreCtx, {
                 type: 'line',
                 data: {
@@ -1643,6 +1678,34 @@
                     btn.classList.remove('active');
                 }
             });
+            } catch (error) {
+                console.error('점수 그래프 렌더링 중 오류:', error);
+                // 오류 발생 시 빈 그래프 표시
+                const canvasElement = document.getElementById('scoreChart');
+                if (canvasElement) {
+                    const scoreCtx = canvasElement.getContext('2d');
+                    if (scoreCtx && window.scoreChart && typeof window.scoreChart.destroy === 'function') {
+                        try {
+                            window.scoreChart.destroy();
+                        } catch (e) {}
+                    }
+                    window.scoreChart = new Chart(scoreCtx, {
+                        type: 'line',
+                        data: { labels: [], datasets: [] },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: '그래프 로드 중 오류가 발생했습니다',
+                                    color: '#f85149'
+                                }
+                            }
+                        }
+                    });
+                }
+            }
         }
         
         // 관리자 패널 (Egress 최적화: 필요한 컬럼만 선택)
