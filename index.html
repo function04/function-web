@@ -993,11 +993,18 @@
                 e.preventDefault();
                 loadMyStats(true); // forceRefresh = true
                 
-                // 현재 활성 탭도 강제 새로고침
+                // 현재 활성 탭도 강제 새로고침 (forceRefresh = true)
                 if (document.getElementById('weekTab').classList.contains('active')) {
-                    loadWeekStats();
+                    loadWeekStats(true);
                 } else if (document.getElementById('rankingTab').classList.contains('active')) {
-                    loadRanking();
+                    loadRanking(true);
+                    // 랭킹 탭 내부의 서브 탭도 새로고침
+                    const rankingType = document.querySelector('.ranking-type-btn.active')?.textContent;
+                    if (rankingType && rankingType.includes('점수')) {
+                        loadScoreRanking(true);
+                    } else if (rankingType && rankingType.includes('최다승')) {
+                        loadWinsRanking(true);
+                    }
                 }
                 console.log('🔄 강제 새로고침 (F5) - 모든 캐시 무시');
             }
@@ -1226,6 +1233,20 @@
                 // Realtime 구독 중지
                 stopRealtimeSubscription();
                 
+                // 모든 캐시 초기화 (Egress 최적화)
+                cachedStats = null;
+                cachedDailySession = null;
+                cachedRanking = null;
+                cachedScoreRanking = null;
+                cachedWinsRanking = null;
+                cachedWeekStats = null;
+                lastStatsLoad = 0;
+                lastDailySessionLoad = 0;
+                lastRankingLoad = 0;
+                lastScoreRankingLoad = 0;
+                lastWinsRankingLoad = 0;
+                lastWeekStatsLoad = 0;
+                
                 clearAutoLogin();
                 currentUser = null;
                 isAdmin = false;
@@ -1271,9 +1292,18 @@
         // 캐싱 변수 (Egress 절감)
         let cachedStats = null;
         let cachedDailySession = null;
+        let cachedRanking = null;
+        let cachedScoreRanking = null;
+        let cachedWinsRanking = null;
+        let cachedWeekStats = null;
         let lastStatsLoad = 0;
         let lastDailySessionLoad = 0;
+        let lastRankingLoad = 0;
+        let lastScoreRankingLoad = 0;
+        let lastWinsRankingLoad = 0;
+        let lastWeekStatsLoad = 0;
         const CACHE_TIME = 180000; // 3분 캐시 (Egress 절감 최적화)
+        const RANKING_CACHE_TIME = 180000; // 랭킹도 3분 캐시
         let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
         
         // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
@@ -1282,12 +1312,12 @@
             
             // Realtime은 로그인 시 자동 시작되므로 여기서는 불필요
             
-            // 전체 통계 로드 (실시간 정보용) - 30초 캐싱
+            // 전체 통계 로드 (실시간 정보용) - 3분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
             let stats = cachedStats;
             if (forceRefresh || !cachedStats || now - lastStatsLoad > CACHE_TIME) {
                 const { data: freshStats } = await supabase
                     .from('game_stats')
-                    .select('*')
+                    .select('current_score, current_rank, current_tier, wins, draws, losses, fc_mined, matches, active_modes')
                     .eq('username', currentUser)
                     .single();
                 stats = freshStats;
@@ -1336,13 +1366,13 @@
                 }
             }
             
-            // 오늘의 통계 로드 (한국 시간 기준) - 30초 캐싱
+            // 오늘의 통계 로드 (한국 시간 기준) - 3분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
             const today = getTodayKST();
             let todaySession = cachedDailySession;
             if (forceRefresh || !cachedDailySession || now - lastDailySessionLoad > CACHE_TIME) {
                 const { data: freshSession } = await supabase
                     .from('daily_sessions')
-                    .select('*')
+                    .select('wins, losses, draws, matches, fc_mined, start_score, highest_score')
                     .eq('username', currentUser)
                     .eq('session_date', today)
                     .single();
@@ -1369,21 +1399,41 @@
             await loadPromotionInfo();
         }
         
-        // 최근 7일 통계 로드 (한국 시간 기준)
-        async function loadWeekStats() {
-            // 한국 시간 기준으로 7일 전 날짜 계산
-            const now = new Date();
-            const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로
-            const kstNow = new Date(now.getTime() + kstOffset);
-            kstNow.setDate(kstNow.getDate() - 7);
-            const sevenDaysAgo = kstNow.toISOString().split('T')[0];
+        // 최근 7일 통계 로드 (한국 시간 기준) (Egress 최적화: 캐싱 추가)
+        async function loadWeekStats(forceRefresh = false) {
+            const now = Date.now();
+            let weekData = cachedWeekStats;
+            let promotions = null;
             
-            const { data: weekData } = await supabase
-                .from('daily_sessions')
-                .select('*')
-                .eq('username', currentUser)
-                .gte('session_date', sevenDaysAgo)
-                .order('session_date', { ascending: false });
+            if (forceRefresh || !cachedWeekStats || now - lastWeekStatsLoad > CACHE_TIME) {
+                // 한국 시간 기준으로 7일 전 날짜 계산
+                const dateNow = new Date();
+                const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로
+                const kstNow = new Date(dateNow.getTime() + kstOffset);
+                kstNow.setDate(kstNow.getDate() - 7);
+                const sevenDaysAgo = kstNow.toISOString().split('T')[0];
+                
+                const { data: freshWeekData } = await supabase
+                    .from('daily_sessions')
+                    .select('session_date, wins, losses, draws, fc_mined')
+                    .eq('username', currentUser)
+                    .gte('session_date', sevenDaysAgo)
+                    .order('session_date', { ascending: false });
+                weekData = freshWeekData;
+                cachedWeekStats = freshWeekData;
+                lastWeekStatsLoad = now;
+                
+                // 슈챌→챔스 승급 정보 가져오기 (한국 시간 기준) (Egress 최적화)
+                const { data: freshPromotions } = await supabase
+                .from('tier_promotions')
+                    .select('promoted_at, matches_taken')
+                    .eq('username', currentUser)
+                    .eq('from_tier', '슈챌')
+                    .eq('to_tier', '챔스')
+                    .gte('promoted_at', sevenDaysAgo)
+                    .order('promoted_at', { ascending: false });
+                promotions = freshPromotions;
+            }
             
             const tbody = document.getElementById('weekTableBody');
             
@@ -1391,16 +1441,6 @@
                 tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#8b949e;">데이터가 없습니다</td></tr>';
                 return;
             }
-            
-            // 슈챌→챔스 승급 정보 가져오기 (한국 시간 기준)
-            const { data: promotions } = await supabase
-                .from('tier_promotions')
-                .select('*')
-                .eq('username', currentUser)
-                .eq('from_tier', '슈챌')
-                .eq('to_tier', '챔스')
-                .gte('promoted_at', sevenDaysAgo)
-                .order('promoted_at', { ascending: false });
             
             // 날짜별 승급 정보 매핑
             const promotionMap = {};
@@ -1443,11 +1483,11 @@
             tbody.innerHTML = html;
         }
         
-        // 슈챌→챔스 승급 정보 로드
+        // 슈챌→챔스 승급 정보 로드 (Egress 최적화: 필요한 컬럼만 선택)
         async function loadPromotionInfo() {
             const { data: promotion } = await supabase
                 .from('tier_promotions')
-                .select('*')
+                .select('promoted_at, matches_taken')
                 .eq('username', currentUser)
                 .eq('from_tier', '슈챌')
                 .eq('to_tier', '챔스')
@@ -1467,11 +1507,11 @@
             }
         }
         
-        // 최근 N경기 점수 그래프
+        // 최근 N경기 점수 그래프 (Egress 최적화: 필요한 컬럼만 선택)
         async function loadScoreGraph(limit) {
             const { data: history } = await supabase
                 .from('game_history')
-                .select('*')
+                .select('created_at, score, result')
                 .eq('username', currentUser)
                 .order('created_at', { ascending: false })
                 .limit(limit);
@@ -1633,13 +1673,21 @@
             });
         }
         
-        // 랭킹 로드
-        async function loadRanking() {
-            const { data: rankings } = await supabase
-                .from('game_stats')
-                .select('*')
-                .order('wins', { ascending: false })
-                .limit(50);
+        // 랭킹 로드 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
+        async function loadRanking(forceRefresh = false) {
+            const now = Date.now();
+            let rankings = cachedRanking;
+            
+            if (forceRefresh || !cachedRanking || now - lastRankingLoad > RANKING_CACHE_TIME) {
+                const { data: freshRankings } = await supabase
+                    .from('game_stats')
+                    .select('username, wins, losses, draws')
+                    .order('wins', { ascending: false })
+                    .limit(50);
+                rankings = freshRankings;
+                cachedRanking = freshRankings;
+                lastRankingLoad = now;
+            }
             
             const tbody = document.getElementById('rankingBody');
             tbody.innerHTML = '';
@@ -1669,9 +1717,10 @@
             }
         }
         
-        // 관리자 패널
+        // 관리자 패널 (Egress 최적화: 필요한 컬럼만 선택)
         async function loadAdminPanel() {
-            const { data: users } = await supabase.from('user_accounts').select('*');
+            const { data: users } = await supabase.from('user_accounts')
+                .select('username, status, created_at, last_login, is_admin');
             
             if (users) {
                 document.getElementById('totalUsers').textContent = users.length;
@@ -2099,16 +2148,24 @@
             }
         }
         
-        // 최다승 랭킹 (오늘 기준)
-        async function loadWinsRanking() {
+        // 최다승 랭킹 (오늘 기준) (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
+        async function loadWinsRanking(forceRefresh = false) {
             const today = getTodayKST();
             
             try {
-                const { data: sessions } = await supabase
-                    .from('daily_sessions')
-                    .select('*')
-                    .eq('session_date', today)
-                    .order('wins', { ascending: false });
+                const now = Date.now();
+                let sessions = cachedWinsRanking;
+                
+                if (forceRefresh || !cachedWinsRanking || now - lastWinsRankingLoad > RANKING_CACHE_TIME) {
+                    const { data: freshSessions } = await supabase
+                        .from('daily_sessions')
+                        .select('username, wins, losses, draws')
+                        .eq('session_date', today)
+                        .order('wins', { ascending: false });
+                    sessions = freshSessions;
+                    cachedWinsRanking = freshSessions;
+                    lastWinsRankingLoad = now;
+                }
                 
                 const tbody = document.getElementById('rankingTableBody');
                 
@@ -2146,13 +2203,21 @@
             }
         }
         
-        // 실시간 점수 랭킹
-        async function loadScoreRanking() {
+        // 실시간 점수 랭킹 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
+        async function loadScoreRanking(forceRefresh = false) {
             try {
-                const { data: stats } = await supabase
-                    .from('game_stats')
-                    .select('*')
-                    .order('current_score', { ascending: false });
+                const now = Date.now();
+                let stats = cachedScoreRanking;
+                
+                if (forceRefresh || !cachedScoreRanking || now - lastScoreRankingLoad > RANKING_CACHE_TIME) {
+                    const { data: freshStats } = await supabase
+                        .from('game_stats')
+                        .select('username, current_score')
+                        .order('current_score', { ascending: false });
+                    stats = freshStats;
+                    cachedScoreRanking = freshStats;
+                    lastScoreRankingLoad = now;
+                }
                 
                 const tbody = document.getElementById('rankingTableBody');
                 
