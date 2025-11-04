@@ -665,9 +665,7 @@
                     <div style="text-align: center; margin-bottom: 15px;">
                         <button class="tab-btn" style="margin: 5px;" onclick="loadScoreGraph(100)">100경기</button>
                         <button class="tab-btn" style="margin: 5px;" onclick="loadScoreGraph(200)">200경기</button>
-                        <button class="tab-btn" style="margin: 5px;" onclick="loadScoreGraph(300)">300경기</button>
-                        <button class="tab-btn" style="margin: 5px;" onclick="loadScoreGraph(400)">400경기</button>
-                        <button class="tab-btn active" style="margin: 5px;" onclick="loadScoreGraph(500)">500경기</button>
+                        <button class="tab-btn active" style="margin: 5px;" onclick="loadScoreGraph(300)">300경기</button>
                     </div>
                     
                     <div style="height: 350px;">
@@ -1213,17 +1211,12 @@
                 document.getElementById('announcementAdmin').style.display = 'block';  // 공지 작성 표시
             }
             
-            // 초기 데이터 로드
-            loadAnnouncements();  // 공지사항 로드
-            loadMyStats(); // 오늘 탭 + 실시간 정보
-            loadWeekStats(); // 7일 탭 (미리 로드)
-            loadUpdates(); // 업데이트 탭 (미리 로드)
+            // 초기 로드 최소화: 오늘 탭만 로드하고 나머지는 탭 클릭 시 로드 (Lazy Loading)
+            // Realtime이 자동으로 업데이트하므로 초기 로드 불필요
+            loadAnnouncements();  // 공지사항 로드 (필수)
+            loadMyStats(); // 오늘 탭만 로드 (기본 탭)
             
-            if (isAdmin) {
-                loadAdminPanel();
-            }
-            
-            // Realtime 구독 시작 (실시간 업데이트)
+            // Realtime 구독 시작 (실시간 업데이트로 자동 반영되므로 초기 로드 불필요)
             startRealtimeSubscription();
             console.log('🔔 Realtime 활성화: 프로그램 변경사항이 0.1초만에 자동 반영됩니다!');
         }
@@ -1273,7 +1266,7 @@
             } else if (tabName === 'history') {
                 document.querySelectorAll('.tab-btn')[2].classList.add('active');
                 document.getElementById('historyTab').classList.add('active');
-                loadScoreGraph(500);
+                loadScoreGraph(300);
             } else if (tabName === 'ranking') {
                 document.querySelectorAll('.tab-btn')[3].classList.add('active');
                 document.getElementById('rankingTab').classList.add('active');
@@ -1281,11 +1274,11 @@
             } else if (tabName === 'updates') {
                 document.querySelectorAll('.tab-btn')[4].classList.add('active');
                 document.getElementById('updatesTab').classList.add('active');
-                loadUpdates();
+                loadUpdates(); // Lazy Loading: 탭 클릭 시에만 로드
             } else if (tabName === 'admin' && isAdmin) {
                 document.getElementById('adminTabBtn').classList.add('active');
                 document.getElementById('adminTab').classList.add('active');
-                loadAdminPanel();
+                loadAdminPanel(); // Lazy Loading: 탭 클릭 시에만 로드
             }
         }
         
@@ -1302,8 +1295,8 @@
         let lastScoreRankingLoad = 0;
         let lastWinsRankingLoad = 0;
         let lastWeekStatsLoad = 0;
-        const CACHE_TIME = 180000; // 3분 캐시 (Egress 절감 최적화)
-        const RANKING_CACHE_TIME = 180000; // 랭킹도 3분 캐시
+        const CACHE_TIME = 300000; // 5분 캐시 (Egress 절감 최적화)
+        const RANKING_CACHE_TIME = 300000; // 랭킹도 5분 캐시
         let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
         
         // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
@@ -1683,7 +1676,7 @@
                     .from('game_stats')
                     .select('username, wins, losses, draws')
                     .order('wins', { ascending: false })
-                    .limit(50);
+                    .limit(30);
                 rankings = freshRankings;
                 cachedRanking = freshRankings;
                 lastRankingLoad = now;
