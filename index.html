@@ -1305,7 +1305,7 @@
             
             // Realtime은 로그인 시 자동 시작되므로 여기서는 불필요
             
-            // 전체 통계 로드 (실시간 정보용) - 3분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
+            // 전체 통계 로드 (실시간 정보용) - 5분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
             let stats = cachedStats;
             if (forceRefresh || !cachedStats || now - lastStatsLoad > CACHE_TIME) {
                 const { data: freshStats } = await supabase
@@ -1359,7 +1359,7 @@
                 }
             }
             
-            // 오늘의 통계 로드 (한국 시간 기준) - 3분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
+            // 오늘의 통계 로드 (한국 시간 기준) - 5분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
             const today = getTodayKST();
             let todaySession = cachedDailySession;
             if (forceRefresh || !cachedDailySession || now - lastDailySessionLoad > CACHE_TIME) {
@@ -2154,7 +2154,8 @@
                         .from('daily_sessions')
                         .select('username, wins, losses, draws')
                         .eq('session_date', today)
-                        .order('wins', { ascending: false });
+                        .order('wins', { ascending: false })
+                        .limit(30);
                     sessions = freshSessions;
                     cachedWinsRanking = freshSessions;
                     lastWinsRankingLoad = now;
@@ -2206,7 +2207,8 @@
                     const { data: freshStats } = await supabase
                         .from('game_stats')
                         .select('username, current_score')
-                        .order('current_score', { ascending: false });
+                        .order('current_score', { ascending: false })
+                        .limit(30);
                     stats = freshStats;
                     cachedScoreRanking = freshStats;
                     lastScoreRankingLoad = now;
