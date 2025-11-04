@@ -573,7 +573,6 @@
                 <button class="tab-btn active" onclick="showTab('today')">오늘</button>
                 <button class="tab-btn" onclick="showTab('week')">7일</button>
                 <button class="tab-btn" onclick="showTab('history')">점수 그래프</button>
-                <button class="tab-btn" onclick="showTab('ranking')">🏆 랭킹</button>
                 <button class="tab-btn" onclick="showTab('updates')">📢 업데이트</button>
                 <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="showTab('admin')">👑 회원관리</button>
             </div>
@@ -663,9 +662,9 @@
                     
                     <!-- 경기 수 선택 -->
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <button class="tab-btn" style="margin: 5px;" onclick="loadScoreGraph(100)">100경기</button>
-                        <button class="tab-btn" style="margin: 5px;" onclick="loadScoreGraph(200)">200경기</button>
-                        <button class="tab-btn active" style="margin: 5px;" onclick="loadScoreGraph(300)">300경기</button>
+                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(100, false);">100경기</button>
+                        <button class="tab-btn active" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(200, false);">200경기</button>
+                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(300, false);">300경기</button>
                     </div>
                     
                     <div style="height: 350px;">
@@ -674,36 +673,6 @@
                 </div>
             </div>
             
-            <!-- 랭킹 탭 -->
-            <div class="tab-content" id="rankingTab">
-                <div class="card">
-                    <h2>🏆 랭킹</h2>
-                    
-                    <!-- 랭킹 타입 선택 -->
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <button class="tab-btn active" id="winsRankBtn" style="margin: 5px;" onclick="showRankingType('wins')">최다승 랭킹</button>
-                        <button class="tab-btn" id="scoreRankBtn" style="margin: 5px;" onclick="showRankingType('score')">실시간 점수 랭킹</button>
-                    </div>
-                    
-                    <div class="table-container">
-                        <table>
-                            <thead id="rankingTableHead">
-                                <tr>
-                                    <th>순위</th>
-                                    <th>사용자명</th>
-                                    <th>승</th>
-                                    <th>패</th>
-                                    <th>무</th>
-                                    <th>승률</th>
-                                </tr>
-                            </thead>
-                            <tbody id="rankingTableBody">
-                                <tr><td colspan="6" style="text-align:center;color:#808080;">로딩 중...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
             
             <!-- 업데이트 탭 -->
             <div class="tab-content" id="updatesTab">
@@ -994,15 +963,11 @@
                 // 현재 활성 탭도 강제 새로고침 (forceRefresh = true)
                 if (document.getElementById('weekTab').classList.contains('active')) {
                     loadWeekStats(true);
-                } else if (document.getElementById('rankingTab').classList.contains('active')) {
-                    loadRanking(true);
-                    // 랭킹 탭 내부의 서브 탭도 새로고침
-                    const rankingType = document.querySelector('.ranking-type-btn.active')?.textContent;
-                    if (rankingType && rankingType.includes('점수')) {
-                        loadScoreRanking(true);
-                    } else if (rankingType && rankingType.includes('최다승')) {
-                        loadWinsRanking(true);
-                    }
+                } else if (document.getElementById('historyTab').classList.contains('active')) {
+                    // 히스토리 탭: 현재 limit 찾기
+                    const activeBtn = document.querySelector('#historyTab .tab-btn.active');
+                    const limit = activeBtn ? parseInt(activeBtn.textContent) : 200;
+                    loadScoreGraph(limit, true);
                 }
                 console.log('🔄 강제 새로고침 (F5) - 모든 캐시 무시');
             }
@@ -1212,11 +1177,11 @@
             }
             
             // 초기 로드 최소화: 오늘 탭만 로드하고 나머지는 탭 클릭 시 로드 (Lazy Loading)
-            // Realtime이 자동으로 업데이트하므로 초기 로드 불필요
+            // Realtime이 자동으로 업데이트하므로 초기 REST API 로드 불필요
             loadAnnouncements();  // 공지사항 로드 (필수)
-            loadMyStats(); // 오늘 탭만 로드 (기본 탭)
+            // loadMyStats() 제거: Realtime이 데이터를 자동으로 푸시하므로 초기 REST API 호출 불필요
             
-            // Realtime 구독 시작 (실시간 업데이트로 자동 반영되므로 초기 로드 불필요)
+            // Realtime 구독 시작 (실시간 업데이트로 자동 반영, Egress 최적화)
             startRealtimeSubscription();
             console.log('🔔 Realtime 활성화: 프로그램 변경사항이 0.1초만에 자동 반영됩니다!');
         }
@@ -1229,16 +1194,13 @@
                 // 모든 캐시 초기화 (Egress 최적화)
                 cachedStats = null;
                 cachedDailySession = null;
-                cachedRanking = null;
-                cachedScoreRanking = null;
-                cachedWinsRanking = null;
                 cachedWeekStats = null;
+                cachedScoreGraph = null;
+                cachedScoreGraphLimit = null;
                 lastStatsLoad = 0;
                 lastDailySessionLoad = 0;
-                lastRankingLoad = 0;
-                lastScoreRankingLoad = 0;
-                lastWinsRankingLoad = 0;
                 lastWeekStatsLoad = 0;
+                lastScoreGraphLoad = 0;
                 
                 clearAutoLogin();
                 currentUser = null;
@@ -1255,24 +1217,21 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
+            // Realtime이 있으므로 탭 전환 시에는 캐시만 활용 (함수 내부에서 캐시 체크)
             if (tabName === 'today') {
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.getElementById('todayTab').classList.add('active');
-                loadMyStats();
+                loadMyStats(false); // 캐시 로직이 내부에 있음
             } else if (tabName === 'week') {
                 document.querySelectorAll('.tab-btn')[1].classList.add('active');
                 document.getElementById('weekTab').classList.add('active');
-                loadWeekStats();
+                loadWeekStats(false); // 캐시 로직이 내부에 있음 (15분 캐시)
             } else if (tabName === 'history') {
                 document.querySelectorAll('.tab-btn')[2].classList.add('active');
                 document.getElementById('historyTab').classList.add('active');
-                loadScoreGraph(300);
-            } else if (tabName === 'ranking') {
-                document.querySelectorAll('.tab-btn')[3].classList.add('active');
-                document.getElementById('rankingTab').classList.add('active');
-                loadRanking();
+                loadScoreGraph(200); // 기본값 300 → 200 (Egress 최적화), 캐시 로직이 내부에 있음 (20분 캐시)
             } else if (tabName === 'updates') {
-                document.querySelectorAll('.tab-btn')[4].classList.add('active');
+                document.querySelectorAll('.tab-btn')[3].classList.add('active');
                 document.getElementById('updatesTab').classList.add('active');
                 loadUpdates(); // Lazy Loading: 탭 클릭 시에만 로드
             } else if (tabName === 'admin' && isAdmin) {
@@ -1285,18 +1244,16 @@
         // 캐싱 변수 (Egress 절감)
         let cachedStats = null;
         let cachedDailySession = null;
-        let cachedRanking = null;
-        let cachedScoreRanking = null;
-        let cachedWinsRanking = null;
         let cachedWeekStats = null;
+        let cachedScoreGraph = null;
+        let cachedScoreGraphLimit = null;
         let lastStatsLoad = 0;
         let lastDailySessionLoad = 0;
-        let lastRankingLoad = 0;
-        let lastScoreRankingLoad = 0;
-        let lastWinsRankingLoad = 0;
         let lastWeekStatsLoad = 0;
-        const CACHE_TIME = 300000; // 5분 캐시 (Egress 절감 최적화)
-        const RANKING_CACHE_TIME = 300000; // 랭킹도 5분 캐시
+        let lastScoreGraphLoad = 0;
+        const CACHE_TIME = 900000; // 15분 캐시 (Egress 절감 최적화: 5분 → 15분)
+        const RANKING_CACHE_TIME = 300000; // 랭킹도 5분 캐시 (사용 안 함)
+        const SCORE_GRAPH_CACHE_TIME = 1200000; // 점수 그래프는 20분 캐시 (변경 빈도가 낮음, 10분 → 20분)
         let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
         
         // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
@@ -1500,14 +1457,36 @@
             }
         }
         
-        // 최근 N경기 점수 그래프 (Egress 최적화: 필요한 컬럼만 선택)
-        async function loadScoreGraph(limit) {
+        // 최근 N경기 점수 그래프 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
+        async function loadScoreGraph(limit, forceRefresh = false) {
+            const now = Date.now();
+            
+            // 캐시가 있고 같은 limit이고 유효하면 캐시 사용
+            if (!forceRefresh && cachedScoreGraph && cachedScoreGraphLimit === limit && 
+                now - lastScoreGraphLoad < SCORE_GRAPH_CACHE_TIME) {
+                // 캐시된 데이터로 그래프 렌더링
+                const history = cachedScoreGraph;
+                renderScoreGraph(history, limit);
+                return;
+            }
+            
             const { data: history } = await supabase
                 .from('game_history')
                 .select('created_at, score, result')
                 .eq('username', currentUser)
                 .order('created_at', { ascending: false })
                 .limit(limit);
+            
+            // 캐시 저장
+            cachedScoreGraph = history;
+            cachedScoreGraphLimit = limit;
+            lastScoreGraphLoad = now;
+            
+            renderScoreGraph(history, limit);
+        }
+        
+        // 점수 그래프 렌더링 함수 (재사용)
+        function renderScoreGraph(history, limit) {
             
             if (!history || history.length === 0) {
                 // 데이터가 없을 때 빈 그래프 표시
@@ -1551,9 +1530,9 @@
             let gameNumber = 1;
             
             history.forEach((game) => {
-                // score_after가 있으면 실제 점수, 없으면 스킵
-                if (game.score_after) {
-                    scores.push(game.score_after);
+                // score가 있으면 실제 점수, 없으면 스킵
+                if (game.score) {
+                    scores.push(game.score);
                     labels.push(gameNumber.toString());
                     gameNumber++;
                 }
@@ -1664,50 +1643,6 @@
                     btn.classList.remove('active');
                 }
             });
-        }
-        
-        // 랭킹 로드 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
-        async function loadRanking(forceRefresh = false) {
-            const now = Date.now();
-            let rankings = cachedRanking;
-            
-            if (forceRefresh || !cachedRanking || now - lastRankingLoad > RANKING_CACHE_TIME) {
-                const { data: freshRankings } = await supabase
-                    .from('game_stats')
-                    .select('username, wins, losses, draws')
-                    .order('wins', { ascending: false })
-                    .limit(30);
-                rankings = freshRankings;
-                cachedRanking = freshRankings;
-                lastRankingLoad = now;
-            }
-            
-            const tbody = document.getElementById('rankingBody');
-            tbody.innerHTML = '';
-            
-            if (rankings && rankings.length > 0) {
-                rankings.forEach((rank, index) => {
-                    const total = (rank.wins || 0) + (rank.losses || 0) + (rank.draws || 0);
-                    const winrate = total > 0 ? ((rank.wins || 0) / total * 100).toFixed(1) : 0;
-                    const isMe = rank.username === currentUser;
-                    
-                    let rankClass = '';
-                    if (index === 0) rankClass = 'rank-1';
-                    else if (index === 1) rankClass = 'rank-2';
-                    else if (index === 2) rankClass = 'rank-3';
-                    
-                    tbody.innerHTML += `
-                        <tr class="${rankClass} ${isMe ? 'me-row' : ''}">
-                            <td>${index + 1}${index < 3 ? '🏆' : ''}</td>
-                            <td><strong>${rank.username}</strong>${isMe ? ' (나)' : ''}</td>
-                            <td>${rank.wins || 0}</td>
-                            <td>${rank.losses || 0}</td>
-                            <td>${rank.draws || 0}</td>
-                            <td>${winrate}%</td>
-                        </tr>
-                    `;
-                });
-            }
         }
         
         // 관리자 패널 (Egress 최적화: 필요한 컬럼만 선택)
@@ -2101,173 +2036,6 @@
         
         // 랭킹 로드 (오늘의 승수 순위)
         // 랭킹 타입 전환
-        let currentRankingType = 'wins';
-        
-        function showRankingType(type) {
-            currentRankingType = type;
-            
-            // 버튼 활성화 상태 변경
-            document.getElementById('winsRankBtn').classList.toggle('active', type === 'wins');
-            document.getElementById('scoreRankBtn').classList.toggle('active', type === 'score');
-            
-            // 테이블 헤더 변경
-            const thead = document.getElementById('rankingTableHead');
-            if (type === 'wins') {
-                thead.innerHTML = `
-                    <tr>
-                        <th>순위</th>
-                        <th>사용자명</th>
-                        <th>승</th>
-                        <th>패</th>
-                        <th>무</th>
-                        <th>승률</th>
-                    </tr>
-                `;
-            } else {
-                thead.innerHTML = `
-                    <tr>
-                        <th>순위</th>
-                        <th>사용자명</th>
-                        <th>실시간 점수</th>
-                    </tr>
-                `;
-            }
-            
-            // 랭킹 로드
-            if (type === 'wins') {
-                loadWinsRanking();
-            } else {
-                loadScoreRanking();
-            }
-        }
-        
-        // 최다승 랭킹 (오늘 기준) (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
-        async function loadWinsRanking(forceRefresh = false) {
-            const today = getTodayKST();
-            
-            try {
-                const now = Date.now();
-                let sessions = cachedWinsRanking;
-                
-                if (forceRefresh || !cachedWinsRanking || now - lastWinsRankingLoad > RANKING_CACHE_TIME) {
-                    const { data: freshSessions } = await supabase
-                        .from('daily_sessions')
-                        .select('username, wins, losses, draws')
-                        .eq('session_date', today)
-                        .order('wins', { ascending: false })
-                        .limit(30);
-                    sessions = freshSessions;
-                    cachedWinsRanking = freshSessions;
-                    lastWinsRankingLoad = now;
-                }
-                
-                const tbody = document.getElementById('rankingTableBody');
-                
-                if (!sessions || sessions.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#808080;">오늘 게임한 사용자가 없습니다.</td></tr>';
-                    return;
-                }
-                
-                tbody.innerHTML = sessions.map((session, index) => {
-                    const total = (session.wins || 0) + (session.losses || 0) + (session.draws || 0);
-                    const winrate = total > 0 ? ((session.wins || 0) / total * 100).toFixed(1) : 0;
-                    
-                    let rankIcon = '';
-                    if (index === 0) rankIcon = '🥇';
-                    else if (index === 1) rankIcon = '🥈';
-                    else if (index === 2) rankIcon = '🥉';
-                    else rankIcon = `${index + 1}`;
-                    
-                    return `
-                        <tr style="background: ${index < 3 ? 'rgba(255, 215, 0, 0.05)' : 'transparent'};">
-                            <td style="font-size: 18px; font-weight: bold;">${rankIcon}</td>
-                            <td><strong>${session.username}</strong></td>
-                            <td style="color: #86efac; font-weight: bold;">${session.wins || 0}</td>
-                            <td style="color: #fca5a5;">${session.losses || 0}</td>
-                            <td style="color: #fcd34d;">${session.draws || 0}</td>
-                            <td style="color: #e0e0e0;">${winrate}%</td>
-                        </tr>
-                    `;
-                }).join('');
-                
-            } catch (error) {
-                console.error('랭킹 로드 오류:', error);
-                document.getElementById('rankingTableBody').innerHTML = 
-                    '<tr><td colspan="6" style="text-align:center;color:#fca5a5;">랭킹 로드 실패</td></tr>';
-            }
-        }
-        
-        // 실시간 점수 랭킹 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
-        async function loadScoreRanking(forceRefresh = false) {
-            try {
-                const now = Date.now();
-                let stats = cachedScoreRanking;
-                
-                if (forceRefresh || !cachedScoreRanking || now - lastScoreRankingLoad > RANKING_CACHE_TIME) {
-                    const { data: freshStats } = await supabase
-                        .from('game_stats')
-                        .select('username, current_score')
-                        .order('current_score', { ascending: false })
-                        .limit(30);
-                    stats = freshStats;
-                    cachedScoreRanking = freshStats;
-                    lastScoreRankingLoad = now;
-                }
-                
-                const tbody = document.getElementById('rankingTableBody');
-                
-                if (!stats || stats.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#808080;">사용자가 없습니다.</td></tr>';
-                    return;
-                }
-                
-                // current_score가 null이거나 0인 사용자 제외 + 5자리 이상(10000 이상) 필터링
-                const validStats = stats.filter(s => {
-                    const score = Number(s.current_score);
-                    return score && score > 0 && score < 10000; // 4자리 이하만 허용
-                });
-                
-                if (validStats.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#808080;">점수 기록이 없습니다.</td></tr>';
-                    return;
-                }
-                
-                tbody.innerHTML = validStats.map((stat, index) => {
-                    let rankIcon = '';
-                    if (index === 0) rankIcon = '🥇';
-                    else if (index === 1) rankIcon = '🥈';
-                    else if (index === 2) rankIcon = '🥉';
-                    else rankIcon = `${index + 1}`;
-                    
-                    // 숫자로 변환 후 표시 (5자리 이상 방지)
-                    const score = Number(stat.current_score);
-                    const displayScore = (score < 10000) ? score : '--';
-                    
-                    return `
-                        <tr style="background: ${index < 3 ? 'rgba(255, 215, 0, 0.05)' : 'transparent'};">
-                            <td style="font-size: 18px; font-weight: bold;">${rankIcon}</td>
-                            <td><strong>${stat.username}</strong></td>
-                            <td style="color: #e0e0e0; font-weight: bold; font-size: 16px;">${displayScore !== '--' ? displayScore.toLocaleString() : '--'}</td>
-                        </tr>
-                    `;
-                }).join('');
-                
-            } catch (error) {
-                console.error('점수 랭킹 로드 오류:', error);
-                document.getElementById('rankingTableBody').innerHTML = 
-                    '<tr><td colspan="3" style="text-align:center;color:#fca5a5;">랭킹 로드 실패</td></tr>';
-            }
-        }
-        
-        // 기본 랭킹 로드 (호환성)
-        async function loadRanking() {
-            if (currentRankingType === 'wins') {
-                await loadWinsRanking();
-            } else {
-                await loadScoreRanking();
-            }
-        }
-        
         // 댓글 로드
         async function loadComments(updateId) {
             try {
