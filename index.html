@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Function - 게임 통계 시스템</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -795,6 +798,11 @@
     </div>
     
     <script>
+        // 버전 정보 (캐시 확인용)
+        const APP_VERSION = '2024-01-20-v2-fixed-406';
+        console.log('🚀 Function 통계 시스템 로드됨 - 버전:', APP_VERSION);
+        console.log('📅 빌드 시간:', new Date().toISOString());
+        
         const SUPABASE_URL = 'https://tmbyzravuobepzicwpqe.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtYnl6cmF2dW9iZXB6aWN3cHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODg2NTksImV4cCI6MjA3NzE2NDY1OX0.XIb1VE_r3_7PHwaFSppscpIgpaJ9cuvf5t0i67OeQCg';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
