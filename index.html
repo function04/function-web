@@ -662,9 +662,9 @@
                     
                     <!-- 경기 수 선택 -->
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(100, false);">100경기</button>
-                        <button class="tab-btn active" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(200, false);">200경기</button>
-                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(300, false);">300경기</button>
+                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(100);">100경기</button>
+                        <button class="tab-btn active" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(200);">200경기</button>
+                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(300);">300경기</button>
                     </div>
                     
                     <div style="height: 350px;">
@@ -966,8 +966,12 @@
                 } else if (document.getElementById('historyTab').classList.contains('active')) {
                     // 히스토리 탭: 현재 limit 찾기
                     const activeBtn = document.querySelector('#historyTab .tab-btn.active');
-                    const limit = activeBtn ? parseInt(activeBtn.textContent) : 200;
+                    const limit = activeBtn ? parseInt(activeBtn.textContent.replace('경기', '')) : 200;
                     loadScoreGraph(limit, true);
+                } else if (document.getElementById('updatesTab').classList.contains('active')) {
+                    loadUpdates(true);
+                } else if (document.getElementById('adminTab').classList.contains('active')) {
+                    loadAdminPanel(true);
                 }
                 console.log('🔄 강제 새로고침 (F5) - 모든 캐시 무시');
             }
@@ -1197,10 +1201,17 @@
                 cachedWeekStats = null;
                 cachedScoreGraph = null;
                 cachedScoreGraphLimit = null;
+                cachedPromotionInfo = null;
+                cachedUpdates = null;
+                cachedAdminPanel = null;
                 lastStatsLoad = 0;
                 lastDailySessionLoad = 0;
                 lastWeekStatsLoad = 0;
                 lastScoreGraphLoad = 0;
+                lastPromotionInfoLoad = 0;
+                lastUpdatesLoad = 0;
+                lastAdminPanelLoad = 0;
+                loadedComments.clear();
                 
                 clearAutoLogin();
                 currentUser = null;
@@ -1247,13 +1258,22 @@
         let cachedWeekStats = null;
         let cachedScoreGraph = null;
         let cachedScoreGraphLimit = null;
+        let cachedPromotionInfo = null;
+        let cachedUpdates = null;
+        let cachedAdminPanel = null;
         let lastStatsLoad = 0;
         let lastDailySessionLoad = 0;
         let lastWeekStatsLoad = 0;
         let lastScoreGraphLoad = 0;
+        let lastPromotionInfoLoad = 0;
+        let lastUpdatesLoad = 0;
+        let lastAdminPanelLoad = 0;
         const CACHE_TIME = 900000; // 15분 캐시 (Egress 절감 최적화: 5분 → 15분)
         const RANKING_CACHE_TIME = 300000; // 랭킹도 5분 캐시 (사용 안 함)
         const SCORE_GRAPH_CACHE_TIME = 1200000; // 점수 그래프는 20분 캐시 (변경 빈도가 낮음, 10분 → 20분)
+        const PROMOTION_CACHE_TIME = 600000; // 승급 정보는 10분 캐시 (변경 빈도가 매우 낮음)
+        const UPDATES_CACHE_TIME = 300000; // 업데이트는 5분 캐시
+        const ADMIN_CACHE_TIME = 300000; // 관리자 패널은 5분 캐시
         let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
         
         // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
@@ -1345,8 +1365,8 @@
                 document.getElementById('todayWinrate').textContent = winrate + '%';
             }
             
-            // 승급 정보 로드
-            await loadPromotionInfo();
+            // 승급 정보 로드 (캐싱 적용)
+            await loadPromotionInfo(false);
         }
         
         // 최근 7일 통계 로드 (한국 시간 기준) (Egress 최적화: 캐싱 추가)
@@ -1433,8 +1453,24 @@
             tbody.innerHTML = html;
         }
         
-        // 슈챌→챔스 승급 정보 로드 (Egress 최적화: 필요한 컬럼만 선택)
-        async function loadPromotionInfo() {
+        // 슈챌→챔스 승급 정보 로드 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
+        async function loadPromotionInfo(forceRefresh = false) {
+            const now = Date.now();
+            
+            // 캐시 확인
+            if (!forceRefresh && cachedPromotionInfo && now - lastPromotionInfoLoad < PROMOTION_CACHE_TIME) {
+                const promotion = cachedPromotionInfo;
+                if (promotion) {
+                    document.getElementById('promotionCard').style.display = 'block';
+                    document.getElementById('promotionMatches').textContent = `${promotion.matches_taken || '--'}판`;
+                    const dateStr = formatDateKST(promotion.promoted_at, 'full');
+                    document.getElementById('promotionDate').textContent = `${dateStr} 승급`;
+                } else {
+                    document.getElementById('promotionCard').style.display = 'none';
+                }
+                return;
+            }
+            
             const { data: promotion } = await supabase
                 .from('tier_promotions')
                 .select('promoted_at, matches_taken')
@@ -1444,6 +1480,10 @@
                 .order('promoted_at', { ascending: false })
                 .limit(1)
                 .single();
+            
+            // 캐시 저장
+            cachedPromotionInfo = promotion;
+            lastPromotionInfoLoad = now;
             
             if (promotion) {
                 document.getElementById('promotionCard').style.display = 'block';
@@ -1708,10 +1748,19 @@
             }
         }
         
-        // 관리자 패널 (Egress 최적화: 필요한 컬럼만 선택)
-        async function loadAdminPanel() {
-            const { data: users } = await supabase.from('user_accounts')
-                .select('username, status, created_at, last_login, is_admin');
+        // 관리자 패널 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
+        async function loadAdminPanel(forceRefresh = false) {
+            const now = Date.now();
+            
+            // 캐시 확인
+            let users = cachedAdminPanel;
+            if (forceRefresh || !cachedAdminPanel || now - lastAdminPanelLoad > ADMIN_CACHE_TIME) {
+                const { data: freshUsers } = await supabase.from('user_accounts')
+                    .select('username, status, created_at, last_login, is_admin, updated_at');
+                users = freshUsers;
+                cachedAdminPanel = freshUsers;
+                lastAdminPanelLoad = now;
+            }
             
             if (users) {
                 document.getElementById('totalUsers').textContent = users.length;
@@ -1827,7 +1876,8 @@
                 if (error) throw error;
                 
                 alert('✅ 승인 완료!');
-                await loadAdminPanel(); // await 추가
+                cachedAdminPanel = null; // 캐시 무효화
+                await loadAdminPanel(true);
                 
             } catch (error) {
                 console.error('승인 오류:', error);
@@ -1846,7 +1896,8 @@
                 if (error) throw error;
                 
                 alert('✅ 거부 완료');
-                await loadAdminPanel();
+                cachedAdminPanel = null; // 캐시 무효화
+                await loadAdminPanel(true);
                 
             } catch (error) {
                 console.error('거부 오류:', error);
@@ -1865,7 +1916,8 @@
                 if (error) throw error;
                 
                 alert('✅ 정지 완료');
-                await loadAdminPanel();
+                cachedAdminPanel = null; // 캐시 무효화
+                await loadAdminPanel(true);
                 
             } catch (error) {
                 console.error('정지 오류:', error);
@@ -1886,7 +1938,8 @@
                 if (userError) throw userError;
                 
                 alert('✅ 삭제 완료');
-                await loadAdminPanel();
+                cachedAdminPanel = null; // 캐시 무효화
+                await loadAdminPanel(true);
                 
             } catch (error) {
                 console.error('삭제 오류:', error);
@@ -1907,7 +1960,8 @@
                 if (error) throw error;
                 
                 alert('✅ 복귀 완료! 해당 사용자는 다시 로그인할 수 있습니다.');
-                await loadAdminPanel();
+                cachedAdminPanel = null; // 캐시 무효화
+                await loadAdminPanel(true);
                 
             } catch (error) {
                 console.error('복귀 오류:', error);
@@ -1915,14 +1969,22 @@
             }
         }
         
-        // 업데이트 목록 로드
-        async function loadUpdates() {
-            const { data: updates } = await supabase
-                .from('updates')
-                .select('*')
-                .order('created_at', { ascending: false });
-            
+        // 업데이트 목록 로드 (Egress 최적화: 캐싱 + 필요한 컬럼만 선택 + 댓글 지연 로드)
+        async function loadUpdates(forceRefresh = false) {
+            const now = Date.now();
             const list = document.getElementById('updatesList');
+            
+            // 캐시 확인
+            let updates = cachedUpdates;
+            if (forceRefresh || !cachedUpdates || now - lastUpdatesLoad > UPDATES_CACHE_TIME) {
+                const { data: freshUpdates } = await supabase
+                    .from('updates')
+                    .select('id, version, title, content, created_at, created_by, download_url')
+                    .order('created_at', { ascending: false });
+                updates = freshUpdates;
+                cachedUpdates = freshUpdates;
+                lastUpdatesLoad = now;
+            }
             
             if (!updates || updates.length === 0) {
                 list.innerHTML = '<div style="text-align:center;color:#8b949e;padding:40px;">아직 업데이트 공지가 없습니다.</div>';
@@ -1968,24 +2030,52 @@
                         </a>
                     ` : ''}
                     
-                    <!-- 댓글 섹션 -->
+                    <!-- 댓글 섹션 (지연 로드: 클릭 시에만 로드) -->
                     <div style="border-top: 1px solid #30363d; padding-top: 15px; margin-top: 15px;">
-                        <div style="color: #8b949e; font-size: 14px; margin-bottom: 10px;">💬 댓글</div>
-                        <div id="comments-${update.id}" style="margin-bottom: 10px;"></div>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" id="commentInput-${update.id}" placeholder="댓글을 입력하세요..." 
-                                style="flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 13px;">
-                            <button onclick="postComment(${update.id})" 
-                                style="background: #238636; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap;">
-                                댓글 작성
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="color: #8b949e; font-size: 14px;">💬 댓글</div>
+                            <button onclick="toggleComments(${update.id})" id="toggleBtn-${update.id}"
+                                style="background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px;">
+                                보기
                             </button>
+                        </div>
+                        <div id="commentsContainer-${update.id}" style="display: none;">
+                            <div id="comments-${update.id}" style="margin-bottom: 10px;"></div>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" id="commentInput-${update.id}" placeholder="댓글을 입력하세요..." 
+                                    style="flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 13px;">
+                                <button onclick="postComment(${update.id})" 
+                                    style="background: #238636; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap;">
+                                    댓글 작성
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             `).join('');
             
-            // 각 업데이트의 댓글 로드
-            updates.forEach(update => loadComments(update.id));
+            // 댓글은 지연 로드 (초기 로드 안 함)
+        }
+        
+        // 댓글 토글 함수 (지연 로드)
+        let loadedComments = new Set();
+        async function toggleComments(updateId) {
+            const container = document.getElementById(`commentsContainer-${updateId}`);
+            const toggleBtn = document.getElementById(`toggleBtn-${updateId}`);
+            
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                toggleBtn.textContent = '숨기기';
+                
+                // 댓글을 아직 로드하지 않았으면 로드
+                if (!loadedComments.has(updateId)) {
+                    await loadComments(updateId);
+                    loadedComments.add(updateId);
+                }
+            } else {
+                container.style.display = 'none';
+                toggleBtn.textContent = '보기';
+            }
         }
         
         // 업데이트 게시
@@ -2034,7 +2124,8 @@
                 
                 // 입력 필드 초기화
                 cancelEdit();
-                loadUpdates();
+                cachedUpdates = null; // 캐시 무효화
+                await loadUpdates(true);
                 
             } catch (error) {
                 alert('❌ 실패: ' + error.message);
@@ -2090,7 +2181,8 @@
                 if (error) throw error;
                 
                 alert('✅ 삭제 완료');
-                loadUpdates();
+                cachedUpdates = null; // 캐시 무효화
+                await loadUpdates(true);
                 
             } catch (error) {
                 alert('❌ 삭제 실패: ' + error.message);
@@ -2152,7 +2244,8 @@
                 if (error) throw error;
                 
                 input.value = '';
-                loadComments(updateId);
+                // 댓글만 새로고침 (업데이트 목록은 그대로)
+                await loadComments(updateId);
                 
             } catch (error) {
                 console.error('댓글 작성 오류:', error);
