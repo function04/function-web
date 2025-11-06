@@ -1755,10 +1755,24 @@
             // 캐시 확인
             let users = cachedAdminPanel;
             if (forceRefresh || !cachedAdminPanel || now - lastAdminPanelLoad > ADMIN_CACHE_TIME) {
-                const { data: freshUsers } = await supabase.from('user_accounts')
-                    .select('username, status, created_at, last_login, is_admin, updated_at');
-                users = freshUsers;
-                cachedAdminPanel = freshUsers;
+                const { data: freshUsers, error } = await supabase.from('user_accounts')
+                    .select('username,status,created_at,last_login,is_admin');
+                
+                if (error) {
+                    console.error('관리자 패널 로드 오류:', error);
+                    // 에러 발생 시 전체 컬럼 선택으로 폴백 (에러 핸들링)
+                    const { data: fallbackUsers, error: fallbackError } = await supabase.from('user_accounts')
+                        .select('*');
+                    if (fallbackError) {
+                        console.error('폴백 로드도 실패:', fallbackError);
+                        alert('사용자 목록을 불러올 수 없습니다: ' + fallbackError.message);
+                        return;
+                    }
+                    users = fallbackUsers;
+                } else {
+                    users = freshUsers;
+                }
+                cachedAdminPanel = users;
                 lastAdminPanelLoad = now;
             }
             
@@ -1824,7 +1838,7 @@
                     suspendedBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#8b949e;">없음</td></tr>';
                 } else {
                     suspended.forEach(user => {
-                        const suspendedDate = formatDateKST(user.updated_at);
+                        const suspendedDate = formatDateKST(user.updated_at || user.created_at);
                         suspendedBody.innerHTML += `
                             <tr>
                                 <td><strong>${user.username}</strong></td>
@@ -1847,7 +1861,7 @@
                     rejectedBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#8b949e;">없음</td></tr>';
                 } else {
                     rejected.forEach(user => {
-                        const rejectedDate = formatDateKST(user.updated_at);
+                        const rejectedDate = formatDateKST(user.updated_at || user.created_at);
                         rejectedBody.innerHTML += `
                             <tr>
                                 <td><strong>${user.username}</strong></td>
