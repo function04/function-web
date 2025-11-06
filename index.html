@@ -1285,14 +1285,21 @@
             // 전체 통계 로드 (실시간 정보용) - 5분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
             let stats = cachedStats;
             if (forceRefresh || !cachedStats || now - lastStatsLoad > CACHE_TIME) {
-                const { data: freshStats } = await supabase
+                const { data: freshStats, error: statsError } = await supabase
                     .from('game_stats')
                     .select('current_score, current_rank, current_tier, wins, draws, losses, fc_mined, matches, active_modes')
                     .eq('username', currentUser)
-                    .single();
-                stats = freshStats;
-                cachedStats = freshStats;
-                lastStatsLoad = now;
+                    .maybeSingle(); // single() 대신 maybeSingle() 사용 (데이터 없을 때 null 반환, 406 에러 방지)
+                
+                if (statsError) {
+                    console.error('[loadMyStats] game_stats 쿼리 오류:', statsError);
+                    // 에러가 있어도 계속 진행 (Realtime이 있으므로)
+                    stats = null;
+                } else {
+                    stats = freshStats;
+                    cachedStats = freshStats;
+                    lastStatsLoad = now;
+                }
             }
             
             if (stats) {
@@ -1340,15 +1347,22 @@
             const today = getTodayKST();
             let todaySession = cachedDailySession;
             if (forceRefresh || !cachedDailySession || now - lastDailySessionLoad > CACHE_TIME) {
-                const { data: freshSession } = await supabase
+                const { data: freshSession, error: sessionError } = await supabase
                     .from('daily_sessions')
                     .select('wins, losses, draws, matches, fc_mined, start_score, highest_score')
                     .eq('username', currentUser)
                     .eq('session_date', today)
-                    .single();
-                todaySession = freshSession;
-                cachedDailySession = freshSession;
-                lastDailySessionLoad = now;
+                    .maybeSingle(); // single() 대신 maybeSingle() 사용 (데이터 없을 때 null 반환, 406 에러 방지)
+                
+                if (sessionError) {
+                    console.error('[loadMyStats] daily_sessions 쿼리 오류:', sessionError);
+                    // 에러가 있어도 계속 진행 (오늘 첫 게임이면 데이터가 없을 수 있음)
+                    todaySession = null;
+                } else {
+                    todaySession = freshSession;
+                    cachedDailySession = freshSession;
+                    lastDailySessionLoad = now;
+                }
             }
             
             if (todaySession) {
@@ -1471,7 +1485,7 @@
                 return;
             }
             
-            const { data: promotion } = await supabase
+            const { data: promotion, error: promotionError } = await supabase
                 .from('tier_promotions')
                 .select('promoted_at, matches_taken')
                 .eq('username', currentUser)
@@ -1479,10 +1493,15 @@
                 .eq('to_tier', '챔스')
                 .order('promoted_at', { ascending: false })
                 .limit(1)
-                .single();
+                .maybeSingle(); // single() 대신 maybeSingle() 사용 (데이터 없을 때 null 반환, 406 에러 방지)
             
-            // 캐시 저장
-            cachedPromotionInfo = promotion;
+            if (promotionError) {
+                console.error('[loadPromotionInfo] 승급 정보 쿼리 오류:', promotionError);
+                cachedPromotionInfo = null;
+            } else {
+                // 캐시 저장
+                cachedPromotionInfo = promotion;
+            }
             lastPromotionInfoLoad = now;
             
             if (promotion) {
