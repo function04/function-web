@@ -1755,10 +1755,12 @@
             // 캐시 확인
             let users = cachedAdminPanel;
             if (forceRefresh || !cachedAdminPanel || now - lastAdminPanelLoad > ADMIN_CACHE_TIME) {
-                // updated_at 제거된 쿼리 (400 에러 방지)
+                // updated_at 제거된 쿼리 (400 에러 방지) - 배열 형식으로 명시적 지정
                 console.log('[AdminPanel] 사용자 목록 로드 시작 (updated_at 제외)');
+                // 배열 형식으로 컬럼 지정 (브라우저 캐시 문제 방지)
+                const columns = ['username', 'status', 'created_at', 'last_login', 'is_admin'];
                 const { data: freshUsers, error } = await supabase.from('user_accounts')
-                    .select('username,status,created_at,last_login,is_admin');
+                    .select(columns.join(','));
                 
                 if (error) {
                     console.error('[AdminPanel] 쿼리 오류:', error);
