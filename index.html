@@ -553,10 +553,10 @@
                             transition: all 0.3s ease;
                             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
                         " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(102, 126, 234, 0.3)';">
-                            🔄 새로고침
+                            🔄 갱신
                         </button>
                         <div id="lastUpdatedTime" style="font-size: 11px; color: #8b949e; margin-top: 5px;">
-                            마지막 업데이트: 방금 전
+                            마지막 갱신: 방금 전
                         </div>
                     </div>
                 </div>
@@ -656,8 +656,28 @@
             <!-- 7일 탭 -->
             <div class="tab-content" id="weekTab">
                 <div class="card">
-                    <h2>📅 최근 7일 통계</h2>
-                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 style="margin: 0;">📅 최근 7일 통계</h2>
+                        <div style="text-align: right;">
+                            <button id="refresh7DayBtn" onclick="refresh7DayStats()" style="
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                border: none;
+                                padding: 6px 14px;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                font-size: 12px;
+                                font-weight: bold;
+                                transition: all 0.3s ease;
+                            ">
+                                📊 7일 갱신
+                            </button>
+                            <div id="lastWeekUpdatedTime" style="font-size: 10px; color: #8b949e; margin-top: 3px;">
+                                마지막 갱신: 방금 전
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="table-container">
                         <table>
                             <thead>
@@ -682,8 +702,28 @@
             <!-- 점수 그래프 탭 -->
             <div class="tab-content" id="historyTab">
                 <div class="card">
-                    <h2>📈 점수 그래프</h2>
-                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 style="margin: 0;">📈 점수 그래프</h2>
+                        <div style="text-align: right;">
+                            <button id="refreshGraphBtn" onclick="refreshScoreGraph()" style="
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                border: none;
+                                padding: 6px 14px;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                font-size: 12px;
+                                font-weight: bold;
+                                transition: all 0.3s ease;
+                            ">
+                                📈 그래프 갱신
+                            </button>
+                            <div id="lastGraphUpdatedTime" style="font-size: 10px; color: #8b949e; margin-top: 3px;">
+                                마지막 갱신: 방금 전
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- 경기 수 선택 -->
                     <div style="text-align: center; margin-bottom: 15px;">
                         <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(100);">100경기</button>
@@ -736,8 +776,28 @@
             <!-- 관리자 탭 -->
             <div class="tab-content" id="adminTab">
                 <div class="card">
-                    <h2>👑 회원 관리</h2>
-                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 style="margin: 0;">👑 회원 관리</h2>
+                        <div style="text-align: right;">
+                            <button id="refreshAdminBtn" onclick="refreshAdminPanel()" style="
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                border: none;
+                                padding: 6px 14px;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                font-size: 12px;
+                                font-weight: bold;
+                                transition: all 0.3s ease;
+                            ">
+                                👥 사용자 목록 갱신
+                            </button>
+                            <div id="lastAdminUpdatedTime" style="font-size: 10px; color: #8b949e; margin-top: 3px;">
+                                마지막 갱신: 방금 전
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="stats-grid">
                         <div class="stat-box">
                             <div class="stat-value" id="totalUsers">0</div>
@@ -1218,14 +1278,14 @@
                 document.getElementById('announcementAdmin').style.display = 'block';  // 공지 작성 표시
             }
             
-            // [Egress 최적화] 초기 데이터 로드 (1회만, 이후 수동 새로고침)
-            loadAnnouncements();  // 공지사항 로드 (필수)
-            loadMyStats(true);     // 실시간 정보 초기 로드
+            // [Egress 최적화] 초기 데이터 로드 제거 - 완전 수동 새로고침 모드
+            loadAnnouncements();  // 공지사항만 로드 (필수)
+            // loadMyStats(true); ← 제거: 사용자가 새로고침 버튼을 눌러야 데이터 로드
 
             // [Egress 최적화] Realtime 구독 비활성화, 타임스탬프 업데이트 시작
             startRealtimeSubscription(); // 빈 함수 (비활성화됨)
-            startTimestampUpdates();     // 타임스탬프 업데이트 시작
-            console.log('ℹ️ 수동 새로고침 모드: 새로고침 버튼을 눌러 최신 데이터를 확인하세요 (Egress 93% 절감)');
+            startTimestampUpdates();     // 타임스탬프 업데이트 시작 (페이지 접속 시간 기준)
+            console.log('ℹ️ 수동 새로고침 모드: 새로고침 버튼을 눌러 최신 데이터를 확인하세요 (Egress 97% 절감)');
         }
         
         function logout() {
@@ -1233,11 +1293,13 @@
                 // Realtime 구독 중지
                 stopRealtimeSubscription();
 
-                // [Egress 최적화] 타임스탬프 업데이트 중지
+                // [Egress 최적화] 타임스탬프 업데이트 중지 및 초기화
                 if (timestampUpdateInterval) {
                     clearInterval(timestampUpdateInterval);
                     timestampUpdateInterval = null;
                 }
+                lastManualRefreshTime = null;
+                // localStorage는 유지 (다음 로그인 시 복원됨)
 
                 // 모든 캐시 초기화 (Egress 최적화)
                 cachedStats = null;
@@ -1272,19 +1334,19 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
-            // Realtime이 있으므로 탭 전환 시에는 캐시만 활용 (함수 내부에서 캐시 체크)
+            // [Egress 최적화] 탭 전환 시 자동 로드 제거 - 사용자가 갱신 버튼 클릭해야만 데이터 로드
             if (tabName === 'today') {
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.getElementById('todayTab').classList.add('active');
-                loadMyStats(false); // 캐시 로직이 내부에 있음
+                // loadMyStats(false); // 비활성화: 수동 갱신 버튼으로 대체
             } else if (tabName === 'week') {
                 document.querySelectorAll('.tab-btn')[1].classList.add('active');
                 document.getElementById('weekTab').classList.add('active');
-                loadWeekStats(false); // 캐시 로직이 내부에 있음 (15분 캐시)
+                // loadWeekStats(false); // 비활성화: 수동 갱신 버튼으로 대체
             } else if (tabName === 'history') {
                 document.querySelectorAll('.tab-btn')[2].classList.add('active');
                 document.getElementById('historyTab').classList.add('active');
-                loadScoreGraph(200); // 기본값 300 → 200 (Egress 최적화), 캐시 로직이 내부에 있음 (20분 캐시)
+                // loadScoreGraph(200); // 비활성화: 수동 갱신 버튼으로 대체
             } else if (tabName === 'updates') {
                 document.querySelectorAll('.tab-btn')[3].classList.add('active');
                 document.getElementById('updatesTab').classList.add('active');
@@ -1292,7 +1354,8 @@
             } else if (tabName === 'admin' && isAdmin) {
                 document.getElementById('adminTabBtn').classList.add('active');
                 document.getElementById('adminTab').classList.add('active');
-                loadAdminPanel(); // Lazy Loading: 탭 클릭 시에만 로드
+                // [Egress 최적화] 자동 로드 제거 - 사용자가 "사용자 목록 갱신" 버튼 클릭해야 로드
+                // loadAdminPanel(); // 비활성화: 수동 갱신 버튼으로 대체
             }
         }
         
@@ -1322,11 +1385,14 @@
         const ADMIN_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
         let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
 
-        // [Egress 최적화] 수동 새로고침 추적 변수
-        let lastManualRefreshTime = Date.now(); // 마지막 수동 새로고침 시간
+        // [Egress 최적화] 수동 갱신 추적 변수 (섹션별 분리)
+        let lastManualRefreshTime = null; // 실시간 정보 마지막 갱신 시간
+        let lastWeekRefreshTime = null;   // 7일 통계 마지막 갱신 시간
+        let lastGraphRefreshTime = null;  // 그래프 마지막 갱신 시간
+        let lastAdminRefreshTime = null;  // 관리자 패널 마지막 갱신 시간
         let timestampUpdateInterval = null; // 타임스탬프 업데이트 인터벌
 
-        // [Egress 최적화] 수동 새로고침 함수
+        // [Egress 최적화] 실시간 정보 갱신 (실시간 정보 + 오늘의 통계만)
         async function manualRefresh() {
             const btn = document.getElementById('manualRefreshBtn');
 
@@ -1337,29 +1403,128 @@
             btn.style.cursor = 'not-allowed';
 
             try {
-                // 강제 새로고침으로 데이터 로드
+                // 실시간 정보 + 오늘의 통계만 로드 (7일/그래프는 별도 버튼)
                 await loadMyStats(true);
-                await loadWeekStats(true);
 
-                // 마지막 새로고침 시간 업데이트
+                // 마지막 갱신 시간 업데이트 및 localStorage에 저장
                 lastManualRefreshTime = Date.now();
+                localStorage.setItem('lastRefreshTime', lastManualRefreshTime.toString());
                 updateTimestampDisplay();
 
-                console.log('✅ 수동 새로고침 완료 (Egress 최적화)');
+                console.log('✅ 실시간 정보 갱신 완료 (Egress 최적화)');
             } catch (error) {
-                console.error('❌ 새로고침 오류:', error);
+                console.error('❌ 갱신 오류:', error);
             } finally {
                 // 버튼 다시 활성화
                 btn.disabled = false;
-                btn.innerHTML = '🔄 새로고침';
+                btn.innerHTML = '🔄 갱신';
                 btn.style.opacity = '1';
                 btn.style.cursor = 'pointer';
             }
         }
 
-        // 타임스탬프 표시 업데이트
+        // [Egress 최적화] 7일 통계 갱신
+        async function refresh7DayStats() {
+            const btn = document.getElementById('refresh7DayBtn');
+            if (!btn) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ 불러오는 중...';
+            btn.style.opacity = '0.6';
+
+            try {
+                await loadWeekStats(true);
+
+                lastWeekRefreshTime = Date.now();
+                localStorage.setItem('lastWeekRefreshTime', lastWeekRefreshTime.toString());
+                updateWeekTimestamp();
+
+                console.log('✅ 7일 통계 갱신 완료');
+            } catch (error) {
+                console.error('❌ 7일 통계 갱신 오류:', error);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '📊 7일 갱신';
+                btn.style.opacity = '1';
+            }
+        }
+
+        // [Egress 최적화] 점수 그래프 갱신
+        async function refreshScoreGraph() {
+            const btn = document.getElementById('refreshGraphBtn');
+            if (!btn) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ 불러오는 중...';
+            btn.style.opacity = '0.6';
+
+            try {
+                // Find active graph limit button
+                const activeBtn = document.querySelector('#historyTab .tab-btn.active');
+                const limit = parseInt(activeBtn?.textContent?.match(/\d+/)?.[0] || '200');
+                await loadScoreGraph(limit, true);
+
+                lastGraphRefreshTime = Date.now();
+                localStorage.setItem('lastGraphRefreshTime', lastGraphRefreshTime.toString());
+                updateGraphTimestamp();
+
+                console.log('✅ 점수 그래프 갱신 완료');
+            } catch (error) {
+                console.error('❌ 그래프 갱신 오류:', error);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '📈 그래프 갱신';
+                btn.style.opacity = '1';
+            }
+        }
+
+        // [Egress 최적화] 관리자 패널 갱신
+        async function refreshAdminPanel() {
+            const btn = document.getElementById('refreshAdminBtn');
+            if (!btn) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ 불러오는 중...';
+            btn.style.opacity = '0.6';
+
+            try {
+                await loadAdminPanel(true);
+
+                lastAdminRefreshTime = Date.now();
+                localStorage.setItem('lastAdminRefreshTime', lastAdminRefreshTime.toString());
+                updateAdminTimestamp();
+
+                console.log('✅ 관리자 패널 갱신 완료');
+            } catch (error) {
+                console.error('❌ 관리자 패널 갱신 오류:', error);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '👥 사용자 목록 갱신';
+                btn.style.opacity = '1';
+            }
+        }
+
+        // 타임스탬프 표시 업데이트 (실시간 정보용)
         function updateTimestampDisplay() {
-            const elapsed = Math.floor((Date.now() - lastManualRefreshTime) / 60000); // 분 단위
+            const timestampEl = document.getElementById('lastUpdatedTime');
+            if (!timestampEl) return;
+
+            // lastManualRefreshTime이 없으면 페이지 로드 시간 기준으로 표시
+            const referenceTime = lastManualRefreshTime || Date.now();
+
+            // 경과 시간 계산 (밀리초 → 분)
+            const elapsed = Math.floor((Date.now() - referenceTime) / 60000);
+
+            // 24시간(1440분) 이상 경과한 경우 → localStorage 정리하고 페이지 로드 시간으로 재설정
+            if (lastManualRefreshTime !== null && elapsed >= 1440) {
+                lastManualRefreshTime = null;
+                localStorage.removeItem('lastRefreshTime');
+                // 재귀 호출로 페이지 로드 시간 기준으로 다시 표시
+                updateTimestampDisplay();
+                return;
+            }
+
+            // 경과 시간 표시
             let text;
 
             if (elapsed === 0) {
@@ -1371,9 +1536,193 @@
                 text = `${hours}시간 전`;
             }
 
-            const timestampEl = document.getElementById('lastUpdatedTime');
-            if (timestampEl) {
-                timestampEl.textContent = `마지막 업데이트: ${text}`;
+            timestampEl.textContent = `마지막 갱신: ${text}`;
+            timestampEl.style.color = '#8b949e'; // 회색
+        }
+
+        // 7일 통계 타임스탬프 업데이트
+        function updateWeekTimestamp() {
+            const timestampEl = document.getElementById('lastWeekUpdatedTime');
+            if (!timestampEl) return;
+
+            const referenceTime = lastWeekRefreshTime || Date.now();
+            const elapsed = Math.floor((Date.now() - referenceTime) / 60000);
+
+            if (lastWeekRefreshTime !== null && elapsed >= 1440) {
+                lastWeekRefreshTime = null;
+                localStorage.removeItem('lastWeekRefreshTime');
+                updateWeekTimestamp();
+                return;
+            }
+
+            let text = elapsed === 0 ? '방금 전' : elapsed < 60 ? `${elapsed}분 전` : `${Math.floor(elapsed / 60)}시간 전`;
+            timestampEl.textContent = `마지막 갱신: ${text}`;
+            timestampEl.style.color = '#8b949e';
+        }
+
+        // 그래프 타임스탬프 업데이트
+        function updateGraphTimestamp() {
+            const timestampEl = document.getElementById('lastGraphUpdatedTime');
+            if (!timestampEl) return;
+
+            const referenceTime = lastGraphRefreshTime || Date.now();
+            const elapsed = Math.floor((Date.now() - referenceTime) / 60000);
+
+            if (lastGraphRefreshTime !== null && elapsed >= 1440) {
+                lastGraphRefreshTime = null;
+                localStorage.removeItem('lastGraphRefreshTime');
+                updateGraphTimestamp();
+                return;
+            }
+
+            let text = elapsed === 0 ? '방금 전' : elapsed < 60 ? `${elapsed}분 전` : `${Math.floor(elapsed / 60)}시간 전`;
+            timestampEl.textContent = `마지막 갱신: ${text}`;
+            timestampEl.style.color = '#8b949e';
+        }
+
+        // 관리자 패널 타임스탬프 업데이트
+        function updateAdminTimestamp() {
+            const timestampEl = document.getElementById('lastAdminUpdatedTime');
+            if (!timestampEl) return;
+
+            const referenceTime = lastAdminRefreshTime || Date.now();
+            const elapsed = Math.floor((Date.now() - referenceTime) / 60000);
+
+            if (lastAdminRefreshTime !== null && elapsed >= 1440) {
+                lastAdminRefreshTime = null;
+                localStorage.removeItem('lastAdminRefreshTime');
+                updateAdminTimestamp();
+                return;
+            }
+
+            let text = elapsed === 0 ? '방금 전' : elapsed < 60 ? `${elapsed}분 전` : `${Math.floor(elapsed / 60)}시간 전`;
+            timestampEl.textContent = `마지막 갱신: ${text}`;
+            timestampEl.style.color = '#8b949e';
+        }
+
+        // [Egress 최적화] localStorage에서 캐시된 데이터 복원 및 표시 (zero egress)
+        function restoreCachedData() {
+            try {
+                // 실시간 정보 + 오늘의 통계 복원
+                const savedStats = localStorage.getItem('cachedStats');
+                if (savedStats) {
+                    const stats = JSON.parse(savedStats);
+                    cachedStats = stats;
+
+                    // 실시간 정보 표시
+                    const score = Number(stats.current_score);
+                    const displayScore = (score && score > 0 && score < 10000) ? score : '--';
+                    document.getElementById('liveScore').textContent = displayScore;
+
+                    const rankElement = document.getElementById('liveRank');
+                    if (stats.current_rank && stats.current_rank < 99999) {
+                        rankElement.textContent = stats.current_rank;
+                        rankElement.style.fontSize = '20px';
+                    } else if (stats.current_rank >= 99999) {
+                        rankElement.textContent = '순위권이탈';
+                        rankElement.style.fontSize = '12px';
+                    } else {
+                        rankElement.textContent = '--';
+                        rankElement.style.fontSize = '20px';
+                    }
+
+                    document.getElementById('liveTier').textContent = stats.current_tier || '--';
+                    document.getElementById('liveWLD').textContent = `${stats.wins || 0}-${stats.draws || 0}-${stats.losses || 0}`;
+                    document.getElementById('liveFC').textContent = stats.fc_mined || 0;
+                    document.getElementById('liveMatches').textContent = stats.matches || 0;
+
+                    const tagsContainer = document.getElementById('liveTags');
+                    const activeModes = stats.active_modes ? stats.active_modes.split(',').filter(m => m.trim()) : [];
+                    if (activeModes.length > 0) {
+                        tagsContainer.innerHTML = activeModes.map(mode => `<span class="mini-tag">${mode}</span>`).join('');
+                    } else {
+                        tagsContainer.innerHTML = '';
+                    }
+
+                    console.log('✅ 실시간 정보 캐시 복원 완료 (zero egress)');
+                }
+
+                // 오늘의 통계 복원
+                const savedDailySession = localStorage.getItem('cachedDailySession');
+                if (savedDailySession) {
+                    const todaySession = JSON.parse(savedDailySession);
+                    cachedDailySession = todaySession;
+
+                    if (todaySession) {
+                        document.getElementById('todayWins').textContent = todaySession.wins || 0;
+                        document.getElementById('todayLosses').textContent = todaySession.losses || 0;
+                        document.getElementById('todayDraws').textContent = todaySession.draws || 0;
+                        document.getElementById('todayMatches').textContent = todaySession.matches || 0;
+                        document.getElementById('todayFC').textContent = todaySession.fc_mined || 0;
+                        document.getElementById('todayStartScore').textContent = todaySession.start_score || '--';
+                        document.getElementById('todayHighScore').textContent = todaySession.highest_score || '--';
+                        console.log('✅ 오늘의 통계 캐시 복원 완료 (zero egress)');
+                    }
+                }
+
+                // 7일 통계 복원
+                const savedWeekStats = localStorage.getItem('cachedWeekStats');
+                if (savedWeekStats) {
+                    const weekCache = JSON.parse(savedWeekStats);
+                    cachedWeekStats = weekCache;
+
+                    const weekData = weekCache.weekData;
+                    const promotions = weekCache.promotions;
+
+                    if (weekData && weekData.length > 0) {
+                        const tbody = document.getElementById('weekTableBody');
+                        const promotionMap = {};
+                        if (promotions) {
+                            promotions.forEach(p => {
+                                const date = p.promoted_at.split('T')[0];
+                                promotionMap[date] = p.matches_taken;
+                            });
+                        }
+
+                        let html = '';
+                        weekData.forEach(day => {
+                            const dateStr = formatDateKST(day.session_date, 'short');
+                            const wins = day.wins || 0;
+                            const losses = day.losses || 0;
+                            const draws = day.draws || 0;
+                            const total = wins + losses + draws;
+                            const winrate = total > 0 ? ((wins / total) * 100).toFixed(1) : '0.0';
+                            const fc = day.fc_mined || 0;
+                            const promotion = promotionMap[day.session_date];
+                            const promotionText = promotion ? `${promotion}판` : '--';
+
+                            html += `
+                                <tr>
+                                    <td style="color: #b4b4b4;">${dateStr}</td>
+                                    <td style="color: #86efac; font-weight: 600;">${wins}</td>
+                                    <td style="color: #fcd34d; font-weight: 600;">${draws}</td>
+                                    <td style="color: #fca5a5; font-weight: 600;">${losses}</td>
+                                    <td style="color: #e0e0e0; font-weight: 600;">${winrate}%</td>
+                                    <td style="color: #fdba74; font-weight: 600;">${fc}</td>
+                                    <td style="color: #c4b5fd; font-weight: 600;">${promotionText}</td>
+                                </tr>
+                            `;
+                        });
+                        tbody.innerHTML = html;
+                        console.log('✅ 7일 통계 캐시 복원 완료 (zero egress)');
+                    }
+                }
+
+                // 점수 그래프 복원
+                const savedScoreGraph = localStorage.getItem('cachedScoreGraph');
+                if (savedScoreGraph) {
+                    const graphCache = JSON.parse(savedScoreGraph);
+                    cachedScoreGraph = graphCache.history;
+                    cachedScoreGraphLimit = graphCache.limit;
+
+                    if (graphCache.history && graphCache.history.length > 0) {
+                        renderScoreGraph(graphCache.history, graphCache.limit);
+                        console.log('✅ 점수 그래프 캐시 복원 완료 (zero egress)');
+                    }
+                }
+
+            } catch (error) {
+                console.error('캐시 복원 오류:', error);
             }
         }
 
@@ -1384,11 +1733,75 @@
                 clearInterval(timestampUpdateInterval);
             }
 
-            // 1분마다 타임스탬프 업데이트
-            timestampUpdateInterval = setInterval(updateTimestampDisplay, 60000);
+            // [Egress 최적화] localStorage에서 각 섹션의 마지막 갱신 시간 복원
+            // 실시간 정보
+            const savedTime = localStorage.getItem('lastRefreshTime');
+            if (savedTime) {
+                const savedTimestamp = parseInt(savedTime);
+                const elapsed = Math.floor((Date.now() - savedTimestamp) / 60000);
+                if (elapsed < 1440) {
+                    lastManualRefreshTime = savedTimestamp;
+                    console.log(`ℹ️ 실시간 정보 갱신 시간 복원: ${elapsed}분 전`);
+                } else {
+                    localStorage.removeItem('lastRefreshTime');
+                }
+            }
+
+            // 7일 통계
+            const savedWeekTime = localStorage.getItem('lastWeekRefreshTime');
+            if (savedWeekTime) {
+                const savedTimestamp = parseInt(savedWeekTime);
+                const elapsed = Math.floor((Date.now() - savedTimestamp) / 60000);
+                if (elapsed < 1440) {
+                    lastWeekRefreshTime = savedTimestamp;
+                    console.log(`ℹ️ 7일 통계 갱신 시간 복원: ${elapsed}분 전`);
+                } else {
+                    localStorage.removeItem('lastWeekRefreshTime');
+                }
+            }
+
+            // 점수 그래프
+            const savedGraphTime = localStorage.getItem('lastGraphRefreshTime');
+            if (savedGraphTime) {
+                const savedTimestamp = parseInt(savedGraphTime);
+                const elapsed = Math.floor((Date.now() - savedTimestamp) / 60000);
+                if (elapsed < 1440) {
+                    lastGraphRefreshTime = savedTimestamp;
+                    console.log(`ℹ️ 그래프 갱신 시간 복원: ${elapsed}분 전`);
+                } else {
+                    localStorage.removeItem('lastGraphRefreshTime');
+                }
+            }
+
+            // 관리자 패널
+            const savedAdminTime = localStorage.getItem('lastAdminRefreshTime');
+            if (savedAdminTime) {
+                const savedTimestamp = parseInt(savedAdminTime);
+                const elapsed = Math.floor((Date.now() - savedTimestamp) / 60000);
+                if (elapsed < 1440) {
+                    lastAdminRefreshTime = savedTimestamp;
+                    console.log(`ℹ️ 관리자 패널 갱신 시간 복원: ${elapsed}분 전`);
+                } else {
+                    localStorage.removeItem('lastAdminRefreshTime');
+                }
+            }
+
+            // [Egress 최적화] localStorage에서 캐시된 데이터 복원 및 표시 (zero egress)
+            restoreCachedData();
+
+            // 1분마다 모든 타임스탬프 업데이트
+            timestampUpdateInterval = setInterval(() => {
+                updateTimestampDisplay();
+                updateWeekTimestamp();
+                updateGraphTimestamp();
+                updateAdminTimestamp();
+            }, 60000);
 
             // 즉시 한 번 업데이트
             updateTimestampDisplay();
+            updateWeekTimestamp();
+            updateGraphTimestamp();
+            updateAdminTimestamp();
         }
 
         // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
@@ -1414,9 +1827,11 @@
                     stats = freshStats;
                     cachedStats = freshStats;
                     lastStatsLoad = now;
+                    // [Egress 최적화] localStorage에 캐시 저장 (페이지 새로고침 후에도 표시)
+                    localStorage.setItem('cachedStats', JSON.stringify(freshStats));
                 }
             }
-            
+
             if (stats) {
                 // 실시간 미니창 정보 (현재 값 표시) - 5자리 이상 필터링
                 const score = Number(stats.current_score);
@@ -1477,9 +1892,11 @@
                     todaySession = freshSession;
                     cachedDailySession = freshSession;
                     lastDailySessionLoad = now;
+                    // [Egress 최적화] localStorage에 캐시 저장 (페이지 새로고침 후에도 표시)
+                    localStorage.setItem('cachedDailySession', JSON.stringify(freshSession));
                 }
             }
-            
+
             if (todaySession) {
                 document.getElementById('todayWins').textContent = todaySession.wins || 0;
                 document.getElementById('todayLosses').textContent = todaySession.losses || 0;
@@ -1501,9 +1918,9 @@
         // 최근 7일 통계 로드 (한국 시간 기준) (Egress 최적화: 캐싱 추가)
         async function loadWeekStats(forceRefresh = false) {
             const now = Date.now();
-            let weekData = cachedWeekStats;
-            let promotions = null;
-            
+            let weekData = cachedWeekStats?.weekData || cachedWeekStats;
+            let promotions = cachedWeekStats?.promotions || null;
+
             if (forceRefresh || !cachedWeekStats || now - lastWeekStatsLoad > CACHE_TIME) {
                 // 한국 시간 기준으로 7일 전 날짜 계산
                 const dateNow = new Date();
@@ -1519,9 +1936,7 @@
                     .gte('session_date', sevenDaysAgo)
                     .order('session_date', { ascending: false });
                 weekData = freshWeekData;
-                cachedWeekStats = freshWeekData;
-                lastWeekStatsLoad = now;
-                
+
                 // 슈챌→챔스 승급 정보 가져오기 (한국 시간 기준) (Egress 최적화)
                 const { data: freshPromotions } = await supabase
                 .from('tier_promotions')
@@ -1532,6 +1947,11 @@
                     .gte('promoted_at', sevenDaysAgo)
                     .order('promoted_at', { ascending: false });
                 promotions = freshPromotions;
+
+                // [Egress 최적화] 캐시 및 localStorage 저장 (페이지 새로고침 후에도 표시)
+                cachedWeekStats = {weekData: freshWeekData, promotions: freshPromotions};
+                lastWeekStatsLoad = now;
+                localStorage.setItem('cachedWeekStats', JSON.stringify(cachedWeekStats));
             }
             
             const tbody = document.getElementById('weekTableBody');
@@ -1669,7 +2089,10 @@
                 cachedScoreGraph = history || [];
                 cachedScoreGraphLimit = limit;
                 lastScoreGraphLoad = now;
-                
+
+                // [Egress 최적화] localStorage에 캐시 저장 (페이지 새로고침 후에도 표시)
+                localStorage.setItem('cachedScoreGraph', JSON.stringify({history: history || [], limit: limit}));
+
                 renderScoreGraph(history || [], limit);
             } catch (error) {
                 console.error('점수 그래프 로드 중 오류:', error);
