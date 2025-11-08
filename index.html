@@ -538,7 +538,28 @@
             
             <!-- 실시간 미니 정보 -->
             <div class="live-mini-window">
-                <h2>📡 실시간 정보</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h2 style="margin: 0;">📡 실시간 정보</h2>
+                    <div style="text-align: right;">
+                        <button id="manualRefreshBtn" onclick="manualRefresh()" style="
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            color: white;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-size: 13px;
+                            font-weight: bold;
+                            transition: all 0.3s ease;
+                            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(102, 126, 234, 0.3)';">
+                            🔄 새로고침
+                        </button>
+                        <div id="lastUpdatedTime" style="font-size: 11px; color: #8b949e; margin-top: 5px;">
+                            마지막 업데이트: 방금 전
+                        </div>
+                    </div>
+                </div>
                 <div class="mini-stats-grid">
                     <div class="mini-stat-box">
                         <div class="mini-stat-title">점수</div>
@@ -844,12 +865,20 @@
         let realtimeChannel = null;
         
         // Realtime 구독 시작 (실시간 업데이트, Egress 95% 절감)
+        // [Egress 최적화] Realtime 구독 비활성화 - 수동 새로고침으로 전환
+        // 이전: 자동 실시간 업데이트 (70 MB Realtime egress/day)
+        // 현재: 사용자가 새로고침 버튼 클릭 시에만 데이터 로드 (~0 MB Realtime egress)
         function startRealtimeSubscription() {
+            // Realtime 구독 비활성화됨 - 수동 새로고침 버튼 사용
+            console.log('ℹ️ Realtime 자동 구독 비활성화 (Egress 최적화: 수동 새로고침 방식)');
+            return;
+
+            /* [비활성화된 코드 - Egress 절감을 위해 주석 처리]
             // 기존 채널 제거
             if (realtimeChannel) {
                 supabase.removeChannel(realtimeChannel);
             }
-            
+
             // Realtime 채널 구독 (game_stats + daily_sessions)
             realtimeChannel = supabase
                 .channel(`user_stats_${currentUser}`)
@@ -884,8 +913,9 @@
                         setTimeout(() => startRealtimeSubscription(), 10000);
                     }
                 });
-            
+
             console.log('🔔 Realtime 구독 시작 (전체 통계 + 오늘의 통계 실시간 업데이트, Egress 95% 절감)');
+            */
         }
         
         // 실시간 업데이트 화면 반영 (전체 통계)
@@ -1188,21 +1218,27 @@
                 document.getElementById('announcementAdmin').style.display = 'block';  // 공지 작성 표시
             }
             
-            // 초기 로드 최소화: 오늘 탭만 로드하고 나머지는 탭 클릭 시 로드 (Lazy Loading)
-            // Realtime이 자동으로 업데이트하므로 초기 REST API 로드 불필요
+            // [Egress 최적화] 초기 데이터 로드 (1회만, 이후 수동 새로고침)
             loadAnnouncements();  // 공지사항 로드 (필수)
-            // loadMyStats() 제거: Realtime이 데이터를 자동으로 푸시하므로 초기 REST API 호출 불필요
-            
-            // Realtime 구독 시작 (실시간 업데이트로 자동 반영, Egress 최적화)
-            startRealtimeSubscription();
-            console.log('🔔 Realtime 활성화: 프로그램 변경사항이 0.1초만에 자동 반영됩니다!');
+            loadMyStats(true);     // 실시간 정보 초기 로드
+
+            // [Egress 최적화] Realtime 구독 비활성화, 타임스탬프 업데이트 시작
+            startRealtimeSubscription(); // 빈 함수 (비활성화됨)
+            startTimestampUpdates();     // 타임스탬프 업데이트 시작
+            console.log('ℹ️ 수동 새로고침 모드: 새로고침 버튼을 눌러 최신 데이터를 확인하세요 (Egress 93% 절감)');
         }
         
         function logout() {
             if (confirm('로그아웃 하시겠습니까?')) {
                 // Realtime 구독 중지
                 stopRealtimeSubscription();
-                
+
+                // [Egress 최적화] 타임스탬프 업데이트 중지
+                if (timestampUpdateInterval) {
+                    clearInterval(timestampUpdateInterval);
+                    timestampUpdateInterval = null;
+                }
+
                 // 모든 캐시 초기화 (Egress 최적화)
                 cachedStats = null;
                 cachedDailySession = null;
@@ -1276,14 +1312,85 @@
         let lastPromotionInfoLoad = 0;
         let lastUpdatesLoad = 0;
         let lastAdminPanelLoad = 0;
-        const CACHE_TIME = 900000; // 15분 캐시 (Egress 절감 최적화: 5분 → 15분)
-        const RANKING_CACHE_TIME = 300000; // 랭킹도 5분 캐시 (사용 안 함)
-        const SCORE_GRAPH_CACHE_TIME = 1200000; // 점수 그래프는 20분 캐시 (변경 빈도가 낮음, 10분 → 20분)
-        const PROMOTION_CACHE_TIME = 600000; // 승급 정보는 10분 캐시 (변경 빈도가 매우 낮음)
-        const UPDATES_CACHE_TIME = 300000; // 업데이트는 5분 캐시
-        const ADMIN_CACHE_TIME = 300000; // 관리자 패널은 5분 캐시
+        // [Egress 최적화] 캐시 시간 대폭 증가 - 수동 새로고침 방식으로 전환
+        // 자동 시간 기반 캐시 갱신 비활성화, 사용자가 새로고침 버튼 클릭 시에만 데이터 로드
+        const CACHE_TIME = 86400000; // 24시간 캐시 (실질적으로 비활성화, 수동 새로고침만 사용)
+        const RANKING_CACHE_TIME = 86400000; // 24시간 캐시 (사용 안 함)
+        const SCORE_GRAPH_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
+        const PROMOTION_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
+        const UPDATES_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
+        const ADMIN_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
         let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
-        
+
+        // [Egress 최적화] 수동 새로고침 추적 변수
+        let lastManualRefreshTime = Date.now(); // 마지막 수동 새로고침 시간
+        let timestampUpdateInterval = null; // 타임스탬프 업데이트 인터벌
+
+        // [Egress 최적화] 수동 새로고침 함수
+        async function manualRefresh() {
+            const btn = document.getElementById('manualRefreshBtn');
+
+            // 버튼 비활성화 및 로딩 상태 표시
+            btn.disabled = true;
+            btn.innerHTML = '⏳ 불러오는 중...';
+            btn.style.opacity = '0.6';
+            btn.style.cursor = 'not-allowed';
+
+            try {
+                // 강제 새로고침으로 데이터 로드
+                await loadMyStats(true);
+                await loadWeekStats(true);
+
+                // 마지막 새로고침 시간 업데이트
+                lastManualRefreshTime = Date.now();
+                updateTimestampDisplay();
+
+                console.log('✅ 수동 새로고침 완료 (Egress 최적화)');
+            } catch (error) {
+                console.error('❌ 새로고침 오류:', error);
+            } finally {
+                // 버튼 다시 활성화
+                btn.disabled = false;
+                btn.innerHTML = '🔄 새로고침';
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            }
+        }
+
+        // 타임스탬프 표시 업데이트
+        function updateTimestampDisplay() {
+            const elapsed = Math.floor((Date.now() - lastManualRefreshTime) / 60000); // 분 단위
+            let text;
+
+            if (elapsed === 0) {
+                text = '방금 전';
+            } else if (elapsed < 60) {
+                text = `${elapsed}분 전`;
+            } else {
+                const hours = Math.floor(elapsed / 60);
+                text = `${hours}시간 전`;
+            }
+
+            const timestampEl = document.getElementById('lastUpdatedTime');
+            if (timestampEl) {
+                timestampEl.textContent = `마지막 업데이트: ${text}`;
+            }
+        }
+
+        // 타임스탬프 업데이트 시작
+        function startTimestampUpdates() {
+            // 기존 인터벌 제거
+            if (timestampUpdateInterval) {
+                clearInterval(timestampUpdateInterval);
+            }
+
+            // 1분마다 타임스탬프 업데이트
+            timestampUpdateInterval = setInterval(updateTimestampDisplay, 60000);
+
+            // 즉시 한 번 업데이트
+            updateTimestampDisplay();
+        }
+
         // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
         async function loadMyStats(forceRefresh = false) {
             const now = Date.now();
