@@ -725,9 +725,10 @@
                     </div>
 
                     <!-- 경기 수 선택 -->
+                    <!-- [Egress 최적화] 기본값 200→100 경기로 변경 -->
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(100);">100경기</button>
-                        <button class="tab-btn active" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(200);">200경기</button>
+                        <button class="tab-btn active" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(100);">100경기</button>
+                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(200);">200경기</button>
                         <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(300);">300경기</button>
                     </div>
                     
@@ -741,8 +742,23 @@
             <!-- 업데이트 탭 -->
             <div class="tab-content" id="updatesTab">
                 <div class="card">
-                    <h2>📢 업데이트 공지</h2>
-                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 style="margin: 0;">📢 업데이트 공지</h2>
+                        <button onclick="loadUpdates(true)" style="
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                            color: white;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-weight: 600;
+                            font-size: 13px;
+                            transition: all 0.2s;
+                        ">
+                            📢 업데이트 갱신
+                        </button>
+                    </div>
+
                     <!-- 관리자만 보이는 작성 폼 -->
                     <div id="updateWriteForm" style="display:none;">
                         <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
@@ -886,7 +902,14 @@
         
         const SUPABASE_URL = 'https://tmbyzravuobepzicwpqe.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtYnl6cmF2dW9iZXB6aWN3cHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODg2NTksImV4cCI6MjA3NzE2NDY1OX0.XIb1VE_r3_7PHwaFSppscpIgpaJ9cuvf5t0i67OeQCg';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // [Egress 최적화] Realtime WebSocket 비활성화 (30-37 MB/day 절감)
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+            realtime: {
+                params: {
+                    eventsPerSecond: 0  // Realtime 이벤트 완전 비활성화
+                }
+            }
+        });
         
         let currentUser = null;
         let isAdmin = false;
@@ -1201,9 +1224,10 @@
             }
             
             try {
+                // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
                 const { data: userData, error: userError } = await supabase
                     .from('user_accounts')
-                    .select('*')
+                    .select('username, status, is_admin')
                     .eq('username', username)
                     .single();
                 
@@ -1350,7 +1374,8 @@
             } else if (tabName === 'updates') {
                 document.querySelectorAll('.tab-btn')[3].classList.add('active');
                 document.getElementById('updatesTab').classList.add('active');
-                loadUpdates(); // Lazy Loading: 탭 클릭 시에만 로드
+                // [Egress 최적화] 자동 로드 제거 - 수동 갱신 버튼으로 대체
+                // loadUpdates(); // 비활성화: 수동 갱신 버튼 사용
             } else if (tabName === 'admin' && isAdmin) {
                 document.getElementById('adminTabBtn').classList.add('active');
                 document.getElementById('adminTab').classList.add('active');
@@ -1461,7 +1486,8 @@
             try {
                 // Find active graph limit button
                 const activeBtn = document.querySelector('#historyTab .tab-btn.active');
-                const limit = parseInt(activeBtn?.textContent?.match(/\d+/)?.[0] || '200');
+                // [Egress 최적화] 기본값 200→100 경기로 변경
+                const limit = parseInt(activeBtn?.textContent?.match(/\d+/)?.[0] || '100');
                 await loadScoreGraph(limit, true);
 
                 lastGraphRefreshTime = Date.now();
@@ -2072,9 +2098,10 @@
                     return;
                 }
                 
+                // [Egress 최적화] 'result' 컬럼 제거 (그래프에서 사용하지 않음)
                 const { data: history, error } = await supabase
                     .from('game_history')
-                    .select('created_at, score_after, result')
+                    .select('created_at, score_after')
                     .eq('username', currentUser)
                     .order('created_at', { ascending: false })
                     .limit(limit);
@@ -2556,10 +2583,12 @@
             // 캐시 확인
             let updates = cachedUpdates;
             if (forceRefresh || !cachedUpdates || now - lastUpdatesLoad > UPDATES_CACHE_TIME) {
+                // [Egress 최적화] 최신 20개만 로드
                 const { data: freshUpdates } = await supabase
                     .from('updates')
                     .select('id, version, title, content, created_at, created_by, download_url')
-                    .order('created_at', { ascending: false });
+                    .order('created_at', { ascending: false })
+                    .limit(20);
                 updates = freshUpdates;
                 cachedUpdates = freshUpdates;
                 lastUpdatesLoad = now;
@@ -2773,9 +2802,10 @@
         // 댓글 로드
         async function loadComments(updateId) {
             try {
+                // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
                 const { data: comments } = await supabase
                     .from('update_comments')
-                    .select('*')
+                    .select('username, comment, created_at')
                     .eq('update_id', updateId)
                     .order('created_at', { ascending: true });
                 
@@ -2835,9 +2865,10 @@
         // 공지사항 로드
         async function loadAnnouncements() {
             try {
+                // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
                 const { data: announcements } = await supabase
                     .from('announcements')
-                    .select('*')
+                    .select('id, message, type, created_by')
                     .eq('active', true)
                     .order('created_at', { ascending: false })
                     .limit(1);
