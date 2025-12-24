@@ -458,17 +458,14 @@
 </head>
 <body>
     <div class="container">
-        <!-- 로그인/회원가입 화면 -->
         <div class="login-container" id="loginContainer">
             <h1>⚡ Function</h1>
             
-            <!-- 로그인/회원가입 전환 버튼 -->
             <div style="display: flex; gap: 10px; margin-bottom: 20px;">
                 <button id="showLoginBtn" onclick="showLoginForm()" style="flex: 1; background: #1f6feb;">로그인</button>
                 <button id="showSignupBtn" onclick="showSignupForm()" style="flex: 1; background: #30363d;">회원가입</button>
             </div>
             
-            <!-- 로그인 폼 -->
             <div id="loginForm">
                 <input type="text" id="loginUsername" placeholder="사용자명">
                 <input type="password" id="loginPassword" placeholder="비밀번호">
@@ -479,7 +476,6 @@
                 <button onclick="login()">로그인</button>
             </div>
             
-            <!-- 회원가입 폼 -->
             <div id="signupForm" style="display: none;">
                 <div style="color: #58a6ff; font-size: 13px; margin-bottom: 15px; padding: 10px; background: rgba(88, 166, 255, 0.1); border-radius: 6px; border: 1px solid #30363d;">
                     ⚽ <strong>아이디는 피파 닉네임으로 입력하세요</strong>
@@ -498,9 +494,7 @@
             <div id="loginMessage"></div>
         </div>
         
-        <!-- 메인 화면 -->
         <div class="main-view" id="mainView">
-            <!-- 헤더 -->
             <div class="header">
                 <h1>⚡ Function</h1>
                 <div class="header-right">
@@ -512,10 +506,8 @@
                 </div>
             </div>
             
-            <!-- 공지사항 배너 -->
             <div id="announcementBanner" style="display: none;"></div>
             
-            <!-- 관리자 공지 작성 (관리자만 보임) -->
             <div id="announcementAdmin" style="display: none;">
                 <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
                     <h3 style="color: #58a6ff; margin-bottom: 15px;">📢 공지사항 작성</h3>
@@ -536,7 +528,6 @@
                 </div>
             </div>
             
-            <!-- 실시간 미니 정보 -->
             <div class="live-mini-window">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h2 style="margin: 0;">📡 실시간 정보</h2>
@@ -592,7 +583,6 @@
                 </div>
             </div>
             
-            <!-- 탭 -->
             <div class="tabs">
                 <button class="tab-btn active" onclick="showTab('today')">오늘</button>
                 <button class="tab-btn" onclick="showTab('week')">7일</button>
@@ -601,9 +591,7 @@
                 <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="showTab('admin')">👑 회원관리</button>
             </div>
             
-            <!-- 오늘 탭 -->
             <div class="tab-content active" id="todayTab">
-                <!-- 일일 통계 -->
                 <div class="card">
                     <h2>📊 오늘의 통계</h2>
                     <div class="stats-grid">
@@ -642,7 +630,6 @@
                     </div>
                 </div>
                 
-                <!-- 슈챌→챔스 승급 정보 -->
                 <div class="card" id="promotionCard" style="display: none;">
                     <h2>🏆 슈챌 → 챔스 승급</h2>
                     <div style="text-align: center; padding: 20px;">
@@ -653,7 +640,6 @@
                 </div>
             </div>
             
-            <!-- 7일 탭 -->
             <div class="tab-content" id="weekTab">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -699,7 +685,6 @@
                 </div>
             </div>
             
-            <!-- 점수 그래프 탭 -->
             <div class="tab-content" id="historyTab">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -724,8 +709,6 @@
                         </div>
                     </div>
 
-                    <!-- 경기 수 선택 -->
-                    <!-- [Egress 최적화] 기본값 200→100 경기로 변경 -->
                     <div style="text-align: center; margin-bottom: 15px;">
                         <button class="tab-btn active" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(100);">100경기</button>
                         <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(200);">200경기</button>
@@ -739,7 +722,6 @@
             </div>
             
             
-            <!-- 업데이트 탭 -->
             <div class="tab-content" id="updatesTab">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -759,7 +741,6 @@
                         </button>
                     </div>
 
-                    <!-- 관리자만 보이는 작성 폼 -->
                     <div id="updateWriteForm" style="display:none;">
                         <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
                             <h3 style="color: #e0e0e0; margin-bottom: 15px; font-size: 16px;">✍️ 업데이트 작성/수정</h3>
@@ -784,12 +765,10 @@
                         </div>
                     </div>
                     
-                    <!-- 업데이트 목록 -->
                     <div id="updatesList"></div>
                 </div>
             </div>
             
-            <!-- 관리자 탭 -->
             <div class="tab-content" id="adminTab">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -902,8 +881,9 @@
         
         const SUPABASE_URL = 'https://tmbyzravuobepzicwpqe.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtYnl6cmF2dW9iZXB6aWN3cHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODg2NTksImV4cCI6MjA3NzE2NDY1OX0.XIb1VE_r3_7PHwaFSppscpIgpaJ9cuvf5t0i67OeQCg';
-        // [Egress 최적화] Realtime WebSocket 비활성화 (30-37 MB/day 절감)
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        
+        // [수정됨] 변수명 충돌 방지를 위해 supabase -> _supabase로 변경
+        const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
             realtime: {
                 params: {
                     eventsPerSecond: 0  // Realtime 이벤트 완전 비활성화
@@ -959,11 +939,11 @@
             /* [비활성화된 코드 - Egress 절감을 위해 주석 처리]
             // 기존 채널 제거
             if (realtimeChannel) {
-                supabase.removeChannel(realtimeChannel);
+                _supabase.removeChannel(realtimeChannel);
             }
 
             // Realtime 채널 구독 (game_stats + daily_sessions)
-            realtimeChannel = supabase
+            realtimeChannel = _supabase
                 .channel(`user_stats_${currentUser}`)
                 // 1. 전체 통계 (실시간 정보)
                 .on('postgres_changes', {
@@ -1101,7 +1081,7 @@
         // Realtime 구독 중지
         function stopRealtimeSubscription() {
             if (realtimeChannel) {
-                supabase.removeChannel(realtimeChannel);
+                _supabase.removeChannel(realtimeChannel);
                 realtimeChannel = null;
                 console.log('🔕 Realtime 구독 중지');
             }
@@ -1183,7 +1163,7 @@
             
             try {
                 // Supabase RPC를 통한 회원가입
-                const { data, error } = await supabase.rpc('signup_user', {
+                const { data, error } = await _supabase.rpc('signup_user', {
                     username_param: username,
                     pin_param: password
                 });
@@ -1225,7 +1205,7 @@
             
             try {
                 // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
-                const { data: userData, error: userError } = await supabase
+                const { data: userData, error: userError } = await _supabase
                     .from('user_accounts')
                     .select('username, status, is_admin')
                     .eq('username', username)
@@ -1243,7 +1223,7 @@
                     return;
                 }
                 
-                const { data: pinValid, error: pinError } = await supabase.rpc('verify_pin', {
+                const { data: pinValid, error: pinError } = await _supabase.rpc('verify_pin', {
                     username_param: username,
                     pin_param: password
                 });
@@ -1267,7 +1247,7 @@
                 }
                 
                 // 마지막 로그인 업데이트
-                await supabase.from('user_accounts').update({
+                await _supabase.from('user_accounts').update({
                     last_login: new Date().toISOString()
                 }).eq('username', username);
                 
@@ -1839,7 +1819,7 @@
             // 전체 통계 로드 (실시간 정보용) - 5분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
             let stats = cachedStats;
             if (forceRefresh || !cachedStats || now - lastStatsLoad > CACHE_TIME) {
-                const { data: freshStats, error: statsError } = await supabase
+                const { data: freshStats, error: statsError } = await _supabase
                     .from('game_stats')
                     .select('current_score, current_rank, current_tier, wins, draws, losses, fc_mined, matches, active_modes')
                     .eq('username', currentUser)
@@ -1903,7 +1883,7 @@
             const today = getTodayKST();
             let todaySession = cachedDailySession;
             if (forceRefresh || !cachedDailySession || now - lastDailySessionLoad > CACHE_TIME) {
-                const { data: freshSession, error: sessionError } = await supabase
+                const { data: freshSession, error: sessionError } = await _supabase
                     .from('daily_sessions')
                     .select('wins, losses, draws, matches, fc_mined, start_score, highest_score')
                     .eq('username', currentUser)
@@ -1955,7 +1935,7 @@
                 kstNow.setDate(kstNow.getDate() - 7);
                 const sevenDaysAgo = kstNow.toISOString().split('T')[0];
                 
-                const { data: freshWeekData } = await supabase
+                const { data: freshWeekData } = await _supabase
                     .from('daily_sessions')
                     .select('session_date, wins, losses, draws, fc_mined')
                     .eq('username', currentUser)
@@ -1964,7 +1944,7 @@
                 weekData = freshWeekData;
 
                 // 슈챌→챔스 승급 정보 가져오기 (한국 시간 기준) (Egress 최적화)
-                const { data: freshPromotions } = await supabase
+                const { data: freshPromotions } = await _supabase
                 .from('tier_promotions')
                     .select('promoted_at, matches_taken')
                     .eq('username', currentUser)
@@ -2046,7 +2026,7 @@
                 return;
             }
             
-            const { data: promotion, error: promotionError } = await supabase
+            const { data: promotion, error: promotionError } = await _supabase
                 .from('tier_promotions')
                 .select('promoted_at, matches_taken')
                 .eq('username', currentUser)
@@ -2099,7 +2079,7 @@
                 }
                 
                 // [Egress 최적화] 'result' 컬럼 제거 (그래프에서 사용하지 않음)
-                const { data: history, error } = await supabase
+                const { data: history, error } = await _supabase
                     .from('game_history')
                     .select('created_at, score_after')
                     .eq('username', currentUser)
@@ -2343,7 +2323,7 @@
                 console.log('[AdminPanel] 사용자 목록 로드 시작 (updated_at 제외)');
                 // 배열 형식으로 컬럼 지정 (브라우저 캐시 문제 방지)
                 const columns = ['username', 'status', 'created_at', 'last_login', 'is_admin'];
-                const { data: freshUsers, error } = await supabase.from('user_accounts')
+                const { data: freshUsers, error } = await _supabase.from('user_accounts')
                     .select(columns.join(','));
                 
                 if (error) {
@@ -2351,7 +2331,7 @@
                     console.error('[AdminPanel] 오류 상세:', JSON.stringify(error, null, 2));
                     // 에러 발생 시 전체 컬럼 선택으로 폴백 (에러 핸들링)
                     console.log('[AdminPanel] 폴백: 전체 컬럼 선택 시도');
-                    const { data: fallbackUsers, error: fallbackError } = await supabase.from('user_accounts')
+                    const { data: fallbackUsers, error: fallbackError } = await _supabase.from('user_accounts')
                         .select('*');
                     if (fallbackError) {
                         console.error('[AdminPanel] 폴백 로드도 실패:', fallbackError);
@@ -2473,7 +2453,7 @@
             if (!confirm(`'${username}' 승인?`)) return;
             
             try {
-                const { data, error } = await supabase.from('user_accounts').update({
+                const { data, error } = await _supabase.from('user_accounts').update({
                     status: 'approved',
                     approved_at: new Date().toISOString(),
                     approved_by: currentUser
@@ -2495,7 +2475,7 @@
             if (!confirm(`'${username}' 거부?`)) return;
             
             try {
-                const { error } = await supabase.from('user_accounts').update({ 
+                const { error } = await _supabase.from('user_accounts').update({ 
                     status: 'rejected' 
                 }).eq('username', username);
                 
@@ -2515,7 +2495,7 @@
             if (!confirm(`'${username}' 정지?`)) return;
             
             try {
-                const { error } = await supabase.from('user_accounts').update({ 
+                const { error } = await _supabase.from('user_accounts').update({ 
                     status: 'suspended' 
                 }).eq('username', username);
                 
@@ -2536,11 +2516,11 @@
             
             try {
                 // 통계 삭제
-                const { error: statsError } = await supabase.from('game_stats').delete().eq('username', username);
+                const { error: statsError } = await _supabase.from('game_stats').delete().eq('username', username);
                 if (statsError) throw statsError;
                 
                 // 계정 삭제
-                const { error: userError } = await supabase.from('user_accounts').delete().eq('username', username);
+                const { error: userError } = await _supabase.from('user_accounts').delete().eq('username', username);
                 if (userError) throw userError;
                 
                 alert('✅ 삭제 완료');
@@ -2557,7 +2537,7 @@
             if (!confirm(`'${username}' 복귀 (승인 상태로 변경)?`)) return;
             
             try {
-                const { error } = await supabase.from('user_accounts').update({
+                const { error } = await _supabase.from('user_accounts').update({
                     status: 'approved',
                     approved_at: new Date().toISOString(),
                     approved_by: currentUser
@@ -2584,7 +2564,7 @@
             let updates = cachedUpdates;
             if (forceRefresh || !cachedUpdates || now - lastUpdatesLoad > UPDATES_CACHE_TIME) {
                 // [Egress 최적화] 최신 20개만 로드
-                const { data: freshUpdates } = await supabase
+                const { data: freshUpdates } = await _supabase
                     .from('updates')
                     .select('id, version, title, content, created_at, created_by, download_url')
                     .order('created_at', { ascending: false })
@@ -2638,7 +2618,6 @@
                         </a>
                     ` : ''}
                     
-                    <!-- 댓글 섹션 (지연 로드: 클릭 시에만 로드) -->
                     <div style="border-top: 1px solid #30363d; padding-top: 15px; margin-top: 15px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                             <div style="color: #8b949e; font-size: 14px;">💬 댓글</div>
@@ -2702,7 +2681,7 @@
             try {
                 if (editingUpdateId) {
                     // 수정 모드
-                    const { error } = await supabase.from('updates')
+                    const { error } = await _supabase.from('updates')
                         .update({
                             version,
                             title,
@@ -2724,7 +2703,7 @@
                         download_url: downloadUrl || null
                     };
                     
-                    const { error } = await supabase.from('updates').insert(updateData);
+                    const { error } = await _supabase.from('updates').insert(updateData);
                     
                     if (error) throw error;
                     alert('✅ 업데이트 공지가 게시되었습니다!');
@@ -2784,7 +2763,7 @@
             if (!confirm('이 업데이트 공지를 삭제하시겠습니까?')) return;
             
             try {
-                const { error } = await supabase.from('updates').delete().eq('id', id);
+                const { error } = await _supabase.from('updates').delete().eq('id', id);
                 
                 if (error) throw error;
                 
@@ -2803,7 +2782,7 @@
         async function loadComments(updateId) {
             try {
                 // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
-                const { data: comments } = await supabase
+                const { data: comments } = await _supabase
                     .from('update_comments')
                     .select('username, comment, created_at')
                     .eq('update_id', updateId)
@@ -2842,7 +2821,7 @@
             }
             
             try {
-                const { error } = await supabase
+                const { error } = await _supabase
                     .from('update_comments')
                     .insert({
                         update_id: updateId,
@@ -2866,7 +2845,7 @@
         async function loadAnnouncements() {
             try {
                 // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
-                const { data: announcements } = await supabase
+                const { data: announcements } = await _supabase
                     .from('announcements')
                     .select('id, message, type, created_by')
                     .eq('active', true)
@@ -2931,13 +2910,13 @@
             
             try {
                 // 기존 공지 비활성화
-                await supabase
+                await _supabase
                     .from('announcements')
                     .update({ active: false })
                     .eq('active', true);
                 
                 // 새 공지 생성
-                const { error } = await supabase
+                const { error } = await _supabase
                     .from('announcements')
                     .insert({
                         message: message,
@@ -2969,7 +2948,7 @@
             if (!confirm('이 공지를 삭제하시겠습니까?')) return;
             
             try {
-                const { error } = await supabase
+                const { error } = await _supabase
                     .from('announcements')
                     .update({ active: false })
                     .eq('id', id);
@@ -2987,4 +2966,3 @@
     </script>
 </body>
 </html>
-
