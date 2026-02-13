@@ -674,11 +674,11 @@
                                     <th>패</th>
                                     <th>승률</th>
                                     <th>FC 채굴</th>
-                                    <th>슈챌→챔스</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody id="weekTableBody">
-                                <tr><td colspan="7" style="text-align:center;color:#8b949e;">로딩 중...</td></tr>
+                                <tr><td colspan="6" style="text-align:center;color:#8b949e;">로딩 중...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -875,7 +875,7 @@
     
     <script>
         // 버전 정보 (캐시 확인용)
-        const APP_VERSION = '2024-01-20-v2-fixed-406';
+        const APP_VERSION = '2024-02-13-v3-admin-role';
         console.log('🚀 Function 통계 시스템 로드됨 - 버전:', APP_VERSION);
         console.log('📅 빌드 시간:', new Date().toISOString());
         
@@ -893,6 +893,8 @@
         
         let currentUser = null;
         let isAdmin = false;
+        // [추가] 현재 사용자의 구체적인 등급 (super_admin, admin, user)
+        let currentRole = 'user';
         
         // 한국 시간(KST) 기준으로 오늘 날짜 반환 (YYYY-MM-DD)
         function getTodayKST() {
@@ -928,131 +930,10 @@
         let realtimeChannel = null;
         
         // Realtime 구독 시작 (실시간 업데이트, Egress 95% 절감)
-        // [Egress 최적화] Realtime 구독 비활성화 - 수동 새로고침으로 전환
-        // 이전: 자동 실시간 업데이트 (70 MB Realtime egress/day)
-        // 현재: 사용자가 새로고침 버튼 클릭 시에만 데이터 로드 (~0 MB Realtime egress)
         function startRealtimeSubscription() {
             // Realtime 구독 비활성화됨 - 수동 새로고침 버튼 사용
             console.log('ℹ️ Realtime 자동 구독 비활성화 (Egress 최적화: 수동 새로고침 방식)');
             return;
-
-            /* [비활성화된 코드 - Egress 절감을 위해 주석 처리]
-            // 기존 채널 제거
-            if (realtimeChannel) {
-                _supabase.removeChannel(realtimeChannel);
-            }
-
-            // Realtime 채널 구독 (game_stats + daily_sessions)
-            realtimeChannel = _supabase
-                .channel(`user_stats_${currentUser}`)
-                // 1. 전체 통계 (실시간 정보)
-                .on('postgres_changes', {
-                    event: 'UPDATE',
-                    schema: 'public',
-                    table: 'game_stats',
-                    filter: `username=eq.${currentUser}`
-                }, (payload) => {
-                    console.log('🔔 실시간 업데이트 (전체 통계):', payload.new);
-                    updateStatsDisplay(payload.new);
-                })
-                // 2. 오늘의 통계 (일일 세션)
-                .on('postgres_changes', {
-                    event: '*',  // INSERT, UPDATE 모두
-                    schema: 'public',
-                    table: 'daily_sessions',
-                    filter: `username=eq.${currentUser}`
-                }, (payload) => {
-                    console.log('🔔 실시간 업데이트 (오늘의 통계):', payload.new);
-                    updateDailySessionDisplay(payload.new);
-                })
-                .subscribe((status) => {
-                    if (status === 'SUBSCRIBED') {
-                        console.log('✅ Realtime 연결 성공! (전체 통계 + 오늘의 통계 실시간 업데이트)');
-                    } else if (status === 'CLOSED') {
-                        console.log('❌ Realtime 연결 끊김. 5초 후 재연결...');
-                        setTimeout(() => startRealtimeSubscription(), 5000);
-                    } else if (status === 'CHANNEL_ERROR') {
-                        console.log('⚠️ Realtime 연결 오류. 10초 후 재연결...');
-                        setTimeout(() => startRealtimeSubscription(), 10000);
-                    }
-                });
-
-            console.log('🔔 Realtime 구독 시작 (전체 통계 + 오늘의 통계 실시간 업데이트, Egress 95% 절감)');
-            */
-        }
-        
-        // 실시간 업데이트 화면 반영 (전체 통계)
-        function updateStatsDisplay(data) {
-            // 실시간 정보 업데이트
-            if (data.wins !== undefined) {
-                document.getElementById('sessionWins').textContent = data.wins + '승';
-            }
-            if (data.losses !== undefined) {
-                document.getElementById('sessionLosses').textContent = data.losses + '패';
-            }
-            if (data.draws !== undefined) {
-                document.getElementById('sessionDraws').textContent = data.draws + '무';
-            }
-            if (data.matches !== undefined) {
-                document.getElementById('sessionMatches').textContent = data.matches + '판';
-            }
-            if (data.fc_mined !== undefined) {
-                document.getElementById('sessionFC').textContent = data.fc_mined + ' FC';
-            }
-            if (data.current_score !== undefined) {
-                document.getElementById('currentScore').textContent = data.current_score;
-            }
-            if (data.current_rank !== undefined) {
-                document.getElementById('currentRank').textContent = data.current_rank + '위';
-            }
-            if (data.current_tier !== undefined) {
-                document.getElementById('currentTier').textContent = data.current_tier;
-            }
-            if (data.game_status !== undefined) {
-                document.getElementById('gameStatus').textContent = data.game_status;
-            }
-            
-            // 캐시 업데이트 (F5 새로고침 시 사용)
-            cachedStats = data;
-            lastStatsLoad = Date.now();
-            
-            console.log('✨ 전체 통계 업데이트 완료 (Realtime)');
-        }
-        
-        // 실시간 업데이트 화면 반영 (오늘의 통계)
-        function updateDailySessionDisplay(data) {
-            const today = getTodayKST();
-            
-            // 오늘 날짜 데이터만 업데이트
-            if (data.session_date === today) {
-                if (data.start_score !== undefined) {
-                    document.getElementById('todayStartScore').textContent = data.start_score;
-                }
-                if (data.highest_score !== undefined) {
-                    document.getElementById('todayHighestScore').textContent = data.highest_score;
-                }
-                if (data.wins !== undefined) {
-                    document.getElementById('todayWins').textContent = data.wins + '승';
-                }
-                if (data.losses !== undefined) {
-                    document.getElementById('todayLosses').textContent = data.losses + '패';
-                }
-                if (data.draws !== undefined) {
-                    document.getElementById('todayDraws').textContent = data.draws + '무';
-                }
-                if (data.matches !== undefined) {
-                    document.getElementById('todayMatches').textContent = data.matches + '판';
-                }
-                if (data.fc_mined !== undefined) {
-                    document.getElementById('todayFC').textContent = data.fc_mined + ' FC';
-                }
-                
-                // 캐시 업데이트
-                cachedDailySession = data;
-                lastDailySessionLoad = Date.now();
-                
-                console.log('✨ 오늘의 통계 업데이트 완료 (Realtime)');
-            }
         }
         
         // 수동 새로고침 (F5 누르면 강제로 Supabase에서 가져오기)
@@ -1204,10 +1085,10 @@
             }
             
             try {
-                // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
+                // [수정됨] 로그인 시 role 컬럼도 같이 가져와서 권한 구분
                 const { data: userData, error: userError } = await _supabase
                     .from('user_accounts')
-                    .select('username, status, is_admin')
+                    .select('username, status, role') 
                     .eq('username', username)
                     .single();
                 
@@ -1236,7 +1117,13 @@
                 
                 // 로그인 성공!
                 currentUser = userData.username;
-                isAdmin = userData.is_admin || false;
+                
+                // [수정됨] 권한 설정 로직
+                // DB의 role 값 ('super_admin', 'admin', 'user') 저장
+                currentRole = userData.role || 'user';
+                
+                // super_admin이거나 admin이면 관리자 기능 활성화
+                isAdmin = (currentRole === 'super_admin' || currentRole === 'admin');
                 
                 // 자동 로그인 저장
                 if (autoLogin) {
@@ -1275,8 +1162,19 @@
             
             document.getElementById('headerUsername').textContent = currentUser;
             
+            // 관리자 여부에 따라 UI 표시
             if (isAdmin) {
                 document.getElementById('adminBadge').style.display = 'inline';
+                
+                // 찐 관리자인지 일반 관리자인지 뱃지에 표시하면 더 좋음
+                if (currentRole === 'super_admin') {
+                   document.getElementById('adminBadge').textContent = '👑 SUPER ADMIN';
+                   document.getElementById('adminBadge').style.background = '#ffd700';
+                   document.getElementById('adminBadge').style.color = '#000';
+                } else {
+                   document.getElementById('adminBadge').textContent = '관리자';
+                }
+                
                 document.getElementById('adminTabBtn').style.display = 'block';
                 document.getElementById('updateWriteForm').style.display = 'block';
                 document.getElementById('announcementAdmin').style.display = 'block';  // 공지 작성 표시
@@ -1284,7 +1182,6 @@
             
             // [Egress 최적화] 초기 데이터 로드 제거 - 완전 수동 새로고침 모드
             loadAnnouncements();  // 공지사항만 로드 (필수)
-            // loadMyStats(true); ← 제거: 사용자가 새로고침 버튼을 눌러야 데이터 로드
 
             // [Egress 최적화] Realtime 구독 비활성화, 타임스탬프 업데이트 시작
             startRealtimeSubscription(); // 빈 함수 (비활성화됨)
@@ -1303,8 +1200,7 @@
                     timestampUpdateInterval = null;
                 }
                 lastManualRefreshTime = null;
-                // localStorage는 유지 (다음 로그인 시 복원됨)
-
+                
                 // 모든 캐시 초기화 (Egress 최적화)
                 cachedStats = null;
                 cachedDailySession = null;
@@ -1326,6 +1222,8 @@
                 clearAutoLogin();
                 currentUser = null;
                 isAdmin = false;
+                currentRole = 'user'; // role 초기화
+                
                 document.getElementById('loginContainer').style.display = 'block';
                 document.getElementById('mainView').classList.remove('active');
                 document.getElementById('loginUsername').value = '';
@@ -1338,29 +1236,21 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
-            // [Egress 최적화] 탭 전환 시 자동 로드 제거 - 사용자가 갱신 버튼 클릭해야만 데이터 로드
             if (tabName === 'today') {
                 document.querySelectorAll('.tab-btn')[0].classList.add('active');
                 document.getElementById('todayTab').classList.add('active');
-                // loadMyStats(false); // 비활성화: 수동 갱신 버튼으로 대체
             } else if (tabName === 'week') {
                 document.querySelectorAll('.tab-btn')[1].classList.add('active');
                 document.getElementById('weekTab').classList.add('active');
-                // loadWeekStats(false); // 비활성화: 수동 갱신 버튼으로 대체
             } else if (tabName === 'history') {
                 document.querySelectorAll('.tab-btn')[2].classList.add('active');
                 document.getElementById('historyTab').classList.add('active');
-                // loadScoreGraph(200); // 비활성화: 수동 갱신 버튼으로 대체
             } else if (tabName === 'updates') {
                 document.querySelectorAll('.tab-btn')[3].classList.add('active');
                 document.getElementById('updatesTab').classList.add('active');
-                // [Egress 최적화] 자동 로드 제거 - 수동 갱신 버튼으로 대체
-                // loadUpdates(); // 비활성화: 수동 갱신 버튼 사용
             } else if (tabName === 'admin' && isAdmin) {
                 document.getElementById('adminTabBtn').classList.add('active');
                 document.getElementById('adminTab').classList.add('active');
-                // [Egress 최적화] 자동 로드 제거 - 사용자가 "사용자 목록 갱신" 버튼 클릭해야 로드
-                // loadAdminPanel(); // 비활성화: 수동 갱신 버튼으로 대체
             }
         }
         
@@ -1380,22 +1270,21 @@
         let lastPromotionInfoLoad = 0;
         let lastUpdatesLoad = 0;
         let lastAdminPanelLoad = 0;
-        // [Egress 최적화] 캐시 시간 대폭 증가 - 수동 새로고침 방식으로 전환
-        // 자동 시간 기반 캐시 갱신 비활성화, 사용자가 새로고침 버튼 클릭 시에만 데이터 로드
-        const CACHE_TIME = 86400000; // 24시간 캐시 (실질적으로 비활성화, 수동 새로고침만 사용)
-        const RANKING_CACHE_TIME = 86400000; // 24시간 캐시 (사용 안 함)
-        const SCORE_GRAPH_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
-        const PROMOTION_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
-        const UPDATES_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
-        const ADMIN_CACHE_TIME = 86400000; // 24시간 캐시 (수동 새로고침만)
-        let isAutoRefreshStarted = false; // 자동 갱신 시작 여부
+        
+        const CACHE_TIME = 86400000; 
+        const RANKING_CACHE_TIME = 86400000; 
+        const SCORE_GRAPH_CACHE_TIME = 86400000; 
+        const PROMOTION_CACHE_TIME = 86400000; 
+        const UPDATES_CACHE_TIME = 86400000; 
+        const ADMIN_CACHE_TIME = 86400000; 
+        let isAutoRefreshStarted = false; 
 
         // [Egress 최적화] 수동 갱신 추적 변수 (섹션별 분리)
-        let lastManualRefreshTime = null; // 실시간 정보 마지막 갱신 시간
-        let lastWeekRefreshTime = null;   // 7일 통계 마지막 갱신 시간
-        let lastGraphRefreshTime = null;  // 그래프 마지막 갱신 시간
-        let lastAdminRefreshTime = null;  // 관리자 패널 마지막 갱신 시간
-        let timestampUpdateInterval = null; // 타임스탬프 업데이트 인터벌
+        let lastManualRefreshTime = null; 
+        let lastWeekRefreshTime = null;   
+        let lastGraphRefreshTime = null;  
+        let lastAdminRefreshTime = null;  
+        let timestampUpdateInterval = null; 
 
         // [Egress 최적화] 실시간 정보 갱신 (실시간 정보 + 오늘의 통계만)
         async function manualRefresh() {
@@ -2000,7 +1889,6 @@
                         <td style="color: #fca5a5; font-weight: 600;">${losses}</td>
                         <td style="color: #e0e0e0; font-weight: 600;">${winrate}%</td>
                         <td style="color: #fdba74; font-weight: 600;">${fc}</td>
-                        <td style="color: #c4b5fd; font-weight: 600;">${promotionText}</td>
                     </tr>
                 `;
             });
@@ -2312,38 +2200,25 @@
             }
         }
         
-        // 관리자 패널 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
+        // [수정됨] 관리자 패널 로드 (role 로직 적용 및 권한 구분)
         async function loadAdminPanel(forceRefresh = false) {
             const now = Date.now();
             
             // 캐시 확인
             let users = cachedAdminPanel;
             if (forceRefresh || !cachedAdminPanel || now - lastAdminPanelLoad > ADMIN_CACHE_TIME) {
-                // updated_at 제거된 쿼리 (400 에러 방지) - 배열 형식으로 명시적 지정
-                console.log('[AdminPanel] 사용자 목록 로드 시작 (updated_at 제외)');
-                // 배열 형식으로 컬럼 지정 (브라우저 캐시 문제 방지)
-                const columns = ['username', 'status', 'created_at', 'last_login', 'is_admin'];
+                console.log('[AdminPanel] 사용자 목록 로드 시작 (updated_at 제외, role 포함)');
+                // [수정] role 컬럼 추가
+                const columns = ['username', 'status', 'created_at', 'last_login', 'role'];
                 const { data: freshUsers, error } = await _supabase.from('user_accounts')
                     .select(columns.join(','));
                 
                 if (error) {
                     console.error('[AdminPanel] 쿼리 오류:', error);
-                    console.error('[AdminPanel] 오류 상세:', JSON.stringify(error, null, 2));
-                    // 에러 발생 시 전체 컬럼 선택으로 폴백 (에러 핸들링)
-                    console.log('[AdminPanel] 폴백: 전체 컬럼 선택 시도');
-                    const { data: fallbackUsers, error: fallbackError } = await _supabase.from('user_accounts')
-                        .select('*');
-                    if (fallbackError) {
-                        console.error('[AdminPanel] 폴백 로드도 실패:', fallbackError);
-                        alert('사용자 목록을 불러올 수 없습니다: ' + fallbackError.message);
-                        return;
-                    }
-                    users = fallbackUsers;
-                    console.log('[AdminPanel] 폴백 성공:', fallbackUsers?.length, '명');
-                } else {
-                    users = freshUsers;
-                    console.log('[AdminPanel] 로드 성공:', freshUsers?.length, '명');
+                    alert('사용자 목록을 불러올 수 없습니다: ' + error.message);
+                    return;
                 }
+                users = freshUsers;
                 cachedAdminPanel = users;
                 lastAdminPanelLoad = now;
             }
@@ -2380,22 +2255,56 @@
                     });
                 }
                 
-                // 승인된 회원
+                // [수정됨] 승인된 회원 목록 (권한별 버튼 차별화)
                 const approvedBody = document.getElementById('approvedUsersBody');
                 approvedBody.innerHTML = '';
                 const approved = users.filter(u => u.status === 'approved');
                 
                 approved.forEach(user => {
                     const lastLogin = formatDateKST(user.last_login);
+                    let buttonsHtml = '';
+                    
+                    // 1. 상대방이 슈퍼어드민(찐관리자)인 경우
+                    if (user.role === 'super_admin') {
+                         buttonsHtml = `<span style="color:#ffd700; font-weight:bold; font-size:12px;">👑 최고관리자</span>`;
+                    } 
+                    // 2. 상대방이 일반 관리자인 경우
+                    else if (user.role === 'admin') {
+                        // 내가 슈퍼어드민일 때만 '해임' 가능
+                        if (currentRole === 'super_admin') {
+                            buttonsHtml = `
+                                <button class="btn-suspend" style="background:#e67e22" onclick="changeUserRole('${user.username}', 'user')">⬇ 해임</button>
+                                <button class="btn-delete" onclick="deleteUser('${user.username}')">🗑</button>
+                            `;
+                        } else {
+                            // 일반 관리자끼리는 못 건드림
+                            buttonsHtml = `<span style="color:#8b949e; font-size:12px;">관리자</span>`;
+                        }
+                    } 
+                    // 3. 상대방이 일반 유저인 경우
+                    else {
+                        // 기본 정지/삭제 버튼
+                        let standardButtons = `
+                            <button class="btn-suspend" onclick="suspendUser('${user.username}')">⏸</button>
+                            <button class="btn-delete" onclick="deleteUser('${user.username}')">🗑</button>
+                        `;
+                        
+                        // 내가 슈퍼어드민이면 '관리자 승격' 버튼 추가
+                        if (currentRole === 'super_admin') {
+                             buttonsHtml = `
+                                <button class="btn-approve" style="background:#6f42c1" onclick="changeUserRole('${user.username}', 'admin')">⬆ 승격</button>
+                             ` + standardButtons;
+                        } else {
+                             buttonsHtml = standardButtons;
+                        }
+                    }
+                    
                     approvedBody.innerHTML += `
                         <tr>
-                            <td><strong>${user.username}</strong>${user.is_admin ? ' 👑' : ''}</td>
+                            <td><strong>${user.username}</strong></td>
                             <td>${lastLogin}</td>
                             <td class="action-buttons">
-                                ${!user.is_admin ? `
-                                    <button class="btn-suspend" onclick="suspendUser('${user.username}')">⏸</button>
-                                    <button class="btn-delete" onclick="deleteUser('${user.username}')">🗑</button>
-                                ` : '<span style="color:#8b949e;">관리자</span>'}
+                                ${buttonsHtml}
                             </td>
                         </tr>
                     `;
@@ -2552,6 +2461,34 @@
             } catch (error) {
                 console.error('복귀 오류:', error);
                 alert('❌ 복귀 실패: ' + error.message);
+            }
+        }
+
+        // [추가됨] 관리자 등급 변경 함수 (찐 관리자 전용)
+        async function changeUserRole(targetUsername, newRole) {
+            // 안전장치
+            if (currentRole !== 'super_admin') {
+                alert('이 기능은 최고 관리자(Super Admin)만 사용할 수 있습니다.');
+                return;
+            }
+
+            const actionName = newRole === 'admin' ? '관리자로 임명' : '일반 유저로 해임';
+            if (!confirm(`'${targetUsername}'님을 ${actionName} 하시겠습니까?`)) return;
+
+            try {
+                const { error } = await _supabase
+                    .from('user_accounts')
+                    .update({ role: newRole })
+                    .eq('username', targetUsername);
+
+                if (error) throw error;
+
+                alert(`✅ ${actionName} 완료!`);
+                cachedAdminPanel = null; // 캐시 무효화
+                loadAdminPanel(true); // 목록 새로고침
+            } catch (error) {
+                console.error('권한 변경 오류:', error);
+                alert('❌ 실패: ' + error.message);
             }
         }
         
