@@ -294,65 +294,21 @@
         }
         
         /* 색상 변형 */
-        .stat-box.green { 
-            background: #1a2e26;
-            border-color: #2d4a3e;
-        }
-        .stat-box.green:hover { 
-            background: #1e3a2e;
-            border-color: #3a5a4d;
-        }
-        .stat-box.green .stat-value { 
-            color: #86efac;
-        }
+        .stat-box.green { background: #1a2e26; border-color: #2d4a3e; }
+        .stat-box.green:hover { background: #1e3a2e; border-color: #3a5a4d; }
+        .stat-box.green .stat-value { color: #86efac; }
         
-        .stat-box.red { 
-            background: #2e1a1a;
-            border-color: #4a2d2d;
-        }
-        .stat-box.red:hover { 
-            background: #3a1e1e;
-            border-color: #5a3a3a;
-        }
-        .stat-box.red .stat-value { 
-            color: #fca5a5;
-        }
+        .stat-box.red { background: #2e1a1a; border-color: #4a2d2d; }
+        .stat-box.red:hover { background: #3a1e1e; border-color: #5a3a3a; }
+        .stat-box.red .stat-value { color: #fca5a5; }
         
-        .stat-box.yellow { 
-            background: #2e2a1a;
-            border-color: #4a422d;
-        }
-        .stat-box.yellow:hover { 
-            background: #3a341e;
-            border-color: #5a523a;
-        }
-        .stat-box.yellow .stat-value { 
-            color: #fcd34d;
-        }
+        .stat-box.yellow { background: #2e2a1a; border-color: #4a422d; }
+        .stat-box.yellow:hover { background: #3a341e; border-color: #5a523a; }
+        .stat-box.yellow .stat-value { color: #fcd34d; }
         
-        .stat-box.purple { 
-            background: #251a2e;
-            border-color: #3d2d4a;
-        }
-        .stat-box.purple:hover { 
-            background: #2e1e3a;
-            border-color: #4d3a5a;
-        }
-        .stat-box.purple .stat-value { 
-            color: #c4b5fd;
-        }
-        
-        .stat-box.orange { 
-            background: #2e221a;
-            border-color: #4a382d;
-        }
-        .stat-box.orange:hover { 
-            background: #3a2a1e;
-            border-color: #5a483a;
-        }
-        .stat-box.orange .stat-value { 
-            color: #fdba74;
-        }
+        .stat-box.orange { background: #2e221a; border-color: #4a382d; }
+        .stat-box.orange:hover { background: #3a2a1e; border-color: #5a483a; }
+        .stat-box.orange .stat-value { color: #fdba74; }
         
         /* 테이블 */
         .table-container {
@@ -361,57 +317,16 @@
             border-radius: 10px;
             background: #141414;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        th, td {
-            padding: 12px 10px;
-            text-align: center;
-            border-bottom: 1px solid #2a2a2a;
-        }
-        th {
-            background: #202020;
-            color: #b4b4b4;
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        tr:hover { 
-            background: #1a1a1a;
-            transition: all 0.2s ease;
-        }
-        
-        /* 랭킹 */
-        .rank-1 { background: #ffd700 !important; color: #000 !important; font-weight: bold; }
-        .rank-2 { background: #c0c0c0 !important; color: #000 !important; font-weight: bold; }
-        .rank-3 { background: #cd7f32 !important; color: #000 !important; font-weight: bold; }
-        .me-row { outline: 3px solid #1f6feb; }
-        
-        /* 상태 배지 */
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .status-pending { background: #d29922; color: #000; }
-        .status-approved { background: #238636; color: white; }
-        .status-rejected { background: #f85149; color: white; }
-        .status-suspended { background: #8b949e; color: white; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 12px 10px; text-align: center; border-bottom: 1px solid #2a2a2a; }
+        th { background: #202020; color: #b4b4b4; font-weight: 600; font-size: 13px; text-transform: uppercase; }
+        tr:hover { background: #1a1a1a; transition: all 0.2s ease; }
         
         /* 액션 버튼 */
-        .action-buttons { display: flex; gap: 5px; flex-wrap: wrap; }
+        .action-buttons { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
         .action-buttons button {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: bold;
-            transition: all 0.2s;
+            padding: 5px 10px; border: none; border-radius: 6px; cursor: pointer;
+            font-size: 11px; font-weight: bold; transition: all 0.2s;
         }
         .btn-approve { background: #238636; color: white; }
         .btn-approve:hover { background: #2ea043; }
@@ -422,19 +337,10 @@
         .btn-delete { background: #8b949e; color: white; }
         .btn-delete:hover { background: #6e7681; }
         
-        /* 차트 */
-        #chartContainer { height: 250px; margin: 15px 0; }
-        
         /* 메시지 */
-        .message {
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            font-size: 14px;
-        }
+        .message { padding: 12px; margin: 10px 0; border-radius: 8px; font-size: 14px; }
         .error { background: #ff4444; color: white; }
         .success { background: #00C851; color: white; }
-        .warning { background: #ffbb33; color: #000; }
         
         /* 탭 컨텐츠 */
         .tab-content { display: none; }
@@ -505,9 +411,27 @@
                     <button class="logout-btn" onclick="logout()">로그아웃</button>
                 </div>
             </div>
+
+            <div id="account-link-section" style="display: none; background: #1a1a1a; border: 1px solid #2a2a2a; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);">
+                <div id="register-sub-account" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <span style="color: #e0e0e0; font-weight: bold; font-size: 14px;">🔗 부캐 연결</span>
+                    <input type="text" id="subAccountInput" placeholder="부캐 피파 닉네임 입력" style="padding: 8px 12px; border-radius: 6px; border: 1px solid #30363d; background: #0f0f0f; color: #e0e0e0; flex: 1; min-width: 150px; font-size: 14px;">
+                    <button onclick="linkSubAccount()" style="padding: 8px 15px; background: #238636; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;">연결하기</button>
+                </div>
+                <div id="account-tabs" style="display: none; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <button onclick="switchAccountView('main')" id="tab-main-acc" style="padding: 8px 20px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;">
+                        본캐 (<span id="main-name-display"></span>)
+                    </button>
+                    <button onclick="switchAccountView('sub')" id="tab-sub-acc" style="padding: 8px 20px; background: #333; color: white; border: 1px solid #4a4a4a; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px;">
+                        부캐 (<span id="sub-name-display"></span>)
+                    </button>
+                    <button onclick="unlinkSubAccount()" style="padding: 6px 12px; background: transparent; color: #f85149; border: 1px solid #f85149; border-radius: 6px; cursor: pointer; font-size: 11px; margin-left: auto;">
+                        연결 해제
+                    </button>
+                </div>
+            </div>
             
             <div id="announcementBanner" style="display: none;"></div>
-            
             <div id="announcementAdmin" style="display: none;">
                 <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
                     <h3 style="color: #58a6ff; margin-bottom: 15px;">📢 공지사항 작성</h3>
@@ -534,16 +458,10 @@
                     <div style="text-align: right;">
                         <button id="manualRefreshBtn" onclick="manualRefresh()" style="
                             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                            color: white;
-                            border: none;
-                            padding: 8px 16px;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            font-size: 13px;
-                            font-weight: bold;
-                            transition: all 0.3s ease;
+                            color: white; border: none; padding: 8px 16px; border-radius: 8px;
+                            cursor: pointer; font-size: 13px; font-weight: bold; transition: all 0.3s ease;
                             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-                        " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(102, 126, 234, 0.3)';">
+                        ">
                             🔄 갱신
                         </button>
                         <div id="lastUpdatedTime" style="font-size: 11px; color: #8b949e; margin-top: 5px;">
@@ -647,14 +565,8 @@
                         <div style="text-align: right;">
                             <button id="refresh7DayBtn" onclick="refresh7DayStats()" style="
                                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                                color: white;
-                                border: none;
-                                padding: 6px 14px;
-                                border-radius: 6px;
-                                cursor: pointer;
-                                font-size: 12px;
-                                font-weight: bold;
-                                transition: all 0.3s ease;
+                                color: white; border: none; padding: 6px 14px; border-radius: 6px;
+                                cursor: pointer; font-size: 12px; font-weight: bold;
                             ">
                                 📊 7일 갱신
                             </button>
@@ -674,7 +586,6 @@
                                     <th>패</th>
                                     <th>승률</th>
                                     <th>FC 채굴</th>
-                                    
                                 </tr>
                             </thead>
                             <tbody id="weekTableBody">
@@ -692,14 +603,8 @@
                         <div style="text-align: right;">
                             <button id="refreshGraphBtn" onclick="refreshScoreGraph()" style="
                                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                                color: white;
-                                border: none;
-                                padding: 6px 14px;
-                                border-radius: 6px;
-                                cursor: pointer;
-                                font-size: 12px;
-                                font-weight: bold;
-                                transition: all 0.3s ease;
+                                color: white; border: none; padding: 6px 14px; border-radius: 6px;
+                                cursor: pointer; font-size: 12px; font-weight: bold;
                             ">
                                 📈 그래프 갱신
                             </button>
@@ -710,9 +615,9 @@
                     </div>
 
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <button class="tab-btn active" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(100);">100경기</button>
-                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(200);">200경기</button>
-                        <button class="tab-btn" style="margin: 5px;" onclick="this.classList.add('active'); document.querySelectorAll('#historyTab .tab-btn').forEach(b => { if (b !== this) b.classList.remove('active'); }); loadScoreGraph(300);">300경기</button>
+                        <button class="tab-btn active" style="margin: 5px;" onclick="document.querySelectorAll('#historyTab .tab-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); loadScoreGraph(100);">100경기</button>
+                        <button class="tab-btn" style="margin: 5px;" onclick="document.querySelectorAll('#historyTab .tab-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); loadScoreGraph(200);">200경기</button>
+                        <button class="tab-btn" style="margin: 5px;" onclick="document.querySelectorAll('#historyTab .tab-btn').forEach(b => b.classList.remove('active')); this.classList.add('active'); loadScoreGraph(300);">300경기</button>
                     </div>
                     
                     <div style="height: 350px;">
@@ -721,21 +626,14 @@
                 </div>
             </div>
             
-            
             <div class="tab-content" id="updatesTab">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h2 style="margin: 0;">📢 업데이트 공지</h2>
                         <button onclick="loadUpdates(true)" style="
                             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                            color: white;
-                            border: none;
-                            padding: 8px 16px;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            font-weight: 600;
-                            font-size: 13px;
-                            transition: all 0.2s;
+                            color: white; border: none; padding: 8px 16px; border-radius: 8px;
+                            cursor: pointer; font-weight: 600; font-size: 13px;
                         ">
                             📢 업데이트 갱신
                         </button>
@@ -744,23 +642,13 @@
                     <div id="updateWriteForm" style="display:none;">
                         <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
                             <h3 style="color: #e0e0e0; margin-bottom: 15px; font-size: 16px;">✍️ 업데이트 작성/수정</h3>
-                            <input type="text" id="updateVersion" placeholder="버전 (예: v1.0.0)" 
-                                style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
-                            <input type="text" id="updateTitle" placeholder="제목" 
-                                style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
-                            <textarea id="updateContent" placeholder="업데이트 내용 (줄바꿈은 Enter로)" rows="5"
-                                style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0; resize: vertical; line-height: 1.5;"></textarea>
-                            <input type="url" id="updateDownloadUrl" placeholder="다운로드 링크 (선택사항 - 구글 드라이브, GitHub 등)" 
-                                style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
+                            <input type="text" id="updateVersion" placeholder="버전 (예: v1.0.0)" style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
+                            <input type="text" id="updateTitle" placeholder="제목" style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
+                            <textarea id="updateContent" placeholder="업데이트 내용 (줄바꿈은 Enter로)" rows="5" style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0; resize: vertical; line-height: 1.5;"></textarea>
+                            <input type="url" id="updateDownloadUrl" placeholder="다운로드 링크 (선택사항 - 구글 드라이브, GitHub 등)" style="width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #2a2a2a; background: #0a0a0a; color: #e0e0e0;">
                             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                                <button onclick="postUpdate()" id="postUpdateBtn"
-                                    style="flex: 1; padding: 12px; background: #238636; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
-                                    📤 게시하기
-                                </button>
-                                <button onclick="cancelEdit()" 
-                                    style="padding: 12px 20px; background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; border-radius: 8px; cursor: pointer;">
-                                    취소
-                                </button>
+                                <button onclick="postUpdate()" id="postUpdateBtn" style="flex: 1; padding: 12px; background: #238636; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">📤 게시하기</button>
+                                <button onclick="cancelEdit()" style="padding: 12px 20px; background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; border-radius: 8px; cursor: pointer;">취소</button>
                             </div>
                         </div>
                     </div>
@@ -774,22 +662,8 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h2 style="margin: 0;">👑 회원 관리</h2>
                         <div style="text-align: right;">
-                            <button id="refreshAdminBtn" onclick="refreshAdminPanel()" style="
-                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                                color: white;
-                                border: none;
-                                padding: 6px 14px;
-                                border-radius: 6px;
-                                cursor: pointer;
-                                font-size: 12px;
-                                font-weight: bold;
-                                transition: all 0.3s ease;
-                            ">
-                                👥 사용자 목록 갱신
-                            </button>
-                            <div id="lastAdminUpdatedTime" style="font-size: 10px; color: #8b949e; margin-top: 3px;">
-                                마지막 갱신: 방금 전
-                            </div>
+                            <button id="refreshAdminBtn" onclick="refreshAdminPanel()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold;">👥 사용자 목록 갱신</button>
+                            <div id="lastAdminUpdatedTime" style="font-size: 10px; color: #8b949e; margin-top: 3px;">마지막 갱신: 방금 전</div>
                         </div>
                     </div>
 
@@ -815,13 +689,7 @@
                     <h3 style="margin: 20px 0 10px 0; color: #d29922; font-size: 16px;">⏳ 승인 대기</h3>
                     <div class="table-container">
                         <table>
-                            <thead>
-                                <tr>
-                                    <th>사용자명</th>
-                                    <th>가입일시</th>
-                                    <th>작업</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>사용자명</th><th>가입일시</th><th>작업</th></tr></thead>
                             <tbody id="pendingUsersBody"></tbody>
                         </table>
                     </div>
@@ -829,13 +697,7 @@
                     <h3 style="margin: 20px 0 10px 0; color: #238636; font-size: 16px;">✅ 승인된 회원</h3>
                     <div class="table-container">
                         <table>
-                            <thead>
-                                <tr>
-                                    <th>사용자명</th>
-                                    <th>마지막 접속</th>
-                                    <th>작업</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>사용자명</th><th>마지막 접속</th><th>작업</th></tr></thead>
                             <tbody id="approvedUsersBody"></tbody>
                         </table>
                     </div>
@@ -843,13 +705,7 @@
                     <h3 style="margin: 20px 0 10px 0; color: #f85149; font-size: 16px;">⏸ 정지된 회원</h3>
                     <div class="table-container">
                         <table>
-                            <thead>
-                                <tr>
-                                    <th>사용자명</th>
-                                    <th>정지일시</th>
-                                    <th>작업</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>사용자명</th><th>정지일시</th><th>작업</th></tr></thead>
                             <tbody id="suspendedUsersBody"></tbody>
                         </table>
                     </div>
@@ -857,131 +713,66 @@
                     <h3 style="margin: 20px 0 10px 0; color: #8b949e; font-size: 16px;">✗ 거부된 회원</h3>
                     <div class="table-container">
                         <table>
-                            <thead>
-                                <tr>
-                                    <th>사용자명</th>
-                                    <th>거부일시</th>
-                                    <th>작업</th>
-                                </tr>
-                            </thead>
+                            <thead><tr><th>사용자명</th><th>거부일시</th><th>작업</th></tr></thead>
                             <tbody id="rejectedUsersBody"></tbody>
                         </table>
                     </div>
-                    
                 </div>
             </div>
         </div>
     </div>
     
     <script>
-        // 버전 정보 (캐시 확인용)
-        const APP_VERSION = '2024-02-13-v3-admin-role';
+        // 버전 및 기본 설정
+        const APP_VERSION = '2024-02-13-v4-sub-account';
         console.log('🚀 Function 통계 시스템 로드됨 - 버전:', APP_VERSION);
-        console.log('📅 빌드 시간:', new Date().toISOString());
         
         const SUPABASE_URL = 'https://tmbyzravuobepzicwpqe.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtYnl6cmF2dW9iZXB6aWN3cHFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE1ODg2NTksImV4cCI6MjA3NzE2NDY1OX0.XIb1VE_r3_7PHwaFSppscpIgpaJ9cuvf5t0i67OeQCg';
         
-        // [수정됨] 변수명 충돌 방지를 위해 supabase -> _supabase로 변경
         const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-            realtime: {
-                params: {
-                    eventsPerSecond: 0  // Realtime 이벤트 완전 비활성화
-                }
-            }
+            realtime: { params: { eventsPerSecond: 0 } }
         });
         
-        let currentUser = null;
+        // ★ 본캐 부캐 상태 변수 ★
+        let loggedInUser = null;   // 실제 로그인한 본 계정 (글쓰기, 권한 검사 등에 사용)
+        let currentUser = null;    // 현재 화면에 띄우고 있는 계정 (본캐 or 부캐)
+        let subAccountUser = null; // 연결된 부캐 아이디
+        
         let isAdmin = false;
-        // [추가] 현재 사용자의 구체적인 등급 (super_admin, admin, user)
         let currentRole = 'user';
         
-        // 한국 시간(KST) 기준으로 오늘 날짜 반환 (YYYY-MM-DD)
         function getTodayKST() {
             const now = new Date();
-            // UTC 시간에 9시간(한국 시간대)을 더함
-            const kstOffset = 9 * 60; // 9시간을 분으로 변환
-            const kstTime = new Date(now.getTime() + (kstOffset * 60 * 1000));
-            
-            // ISO 문자열로 변환 후 날짜 부분만 추출
+            const kstTime = new Date(now.getTime() + (9 * 60 * 60 * 1000));
             return kstTime.toISOString().split('T')[0];
         }
         
-        // UTC 시간을 한국 시간(KST)으로 변환하여 포맷팅
         function formatDateKST(utcDateStr, format = 'date') {
             if (!utcDateStr) return '없음';
-            const utcDate = new Date(utcDateStr);
-            const kstDate = new Date(utcDate.getTime() + (9 * 60 * 60 * 1000));
-            
-            const year = kstDate.getUTCFullYear();
-            const month = kstDate.getUTCMonth() + 1;
-            const day = kstDate.getUTCDate();
-            
-            if (format === 'full') {
-                return `${year}.${month}.${day}`;
-            } else if (format === 'short') {
-                return `${month}/${day}`;
-            } else {
-                return `${year}. ${month}. ${day}.`;
-            }
+            const kstDate = new Date(new Date(utcDateStr).getTime() + (9 * 60 * 60 * 1000));
+            if (format === 'full') return `${kstDate.getUTCFullYear()}.${kstDate.getUTCMonth() + 1}.${kstDate.getUTCDate()}`;
+            if (format === 'short') return `${kstDate.getUTCMonth() + 1}/${kstDate.getUTCDate()}`;
+            return `${kstDate.getUTCFullYear()}. ${kstDate.getUTCMonth() + 1}. ${kstDate.getUTCDate()}.`;
         }
         
-        // Realtime 채널 변수
-        let realtimeChannel = null;
-        
-        // Realtime 구독 시작 (실시간 업데이트, Egress 95% 절감)
-        function startRealtimeSubscription() {
-            // Realtime 구독 비활성화됨 - 수동 새로고침 버튼 사용
-            console.log('ℹ️ Realtime 자동 구독 비활성화 (Egress 최적화: 수동 새로고침 방식)');
-            return;
-        }
-        
-        // 수동 새로고침 (F5 누르면 강제로 Supabase에서 가져오기)
         document.addEventListener('keydown', (e) => {
             if (e.key === 'F5' && currentUser) {
                 e.preventDefault();
-                loadMyStats(true); // forceRefresh = true
-                
-                // 현재 활성 탭도 강제 새로고침 (forceRefresh = true)
-                if (document.getElementById('weekTab').classList.contains('active')) {
-                    loadWeekStats(true);
-                } else if (document.getElementById('historyTab').classList.contains('active')) {
-                    // 히스토리 탭: 현재 limit 찾기
-                    const activeBtn = document.querySelector('#historyTab .tab-btn.active');
-                    const limit = activeBtn ? parseInt(activeBtn.textContent.replace('경기', '')) : 200;
-                    loadScoreGraph(limit, true);
-                } else if (document.getElementById('updatesTab').classList.contains('active')) {
-                    loadUpdates(true);
-                } else if (document.getElementById('adminTab').classList.contains('active')) {
-                    loadAdminPanel(true);
-                }
-                console.log('🔄 강제 새로고침 (F5) - 모든 캐시 무시');
+                manualRefresh();
             }
         });
         
-        // Realtime 구독 중지
-        function stopRealtimeSubscription() {
-            if (realtimeChannel) {
-                _supabase.removeChannel(realtimeChannel);
-                realtimeChannel = null;
-                console.log('🔕 Realtime 구독 중지');
-            }
-        }
-        
-        // 자동 로그인 체크
         window.onload = function() {
             const savedUsername = localStorage.getItem('function_username');
             const savedPassword = localStorage.getItem('function_password');
-            
             if (savedUsername && savedPassword) {
                 document.getElementById('loginUsername').value = savedUsername;
                 document.getElementById('loginPassword').value = savedPassword;
-                document.getElementById('autoLoginCheck').checked = true;
-                login(true); // 자동 로그인
+                login(true);
             }
         };
         
-        // 로그인/회원가입 폼 전환
         function showLoginForm() {
             document.getElementById('loginForm').style.display = 'block';
             document.getElementById('signupForm').style.display = 'none';
@@ -998,145 +789,58 @@
             document.getElementById('loginMessage').innerHTML = '';
         }
         
-        // 회원가입
         async function signup() {
             const username = document.getElementById('signupUsername').value.trim();
             const password = document.getElementById('signupPassword').value;
             const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
             
-            if (!username || !password || !passwordConfirm) {
-                showLoginMessage('모든 항목을 입력하세요.', 'error');
-                return;
-            }
-            
-            if (password !== passwordConfirm) {
-                showLoginMessage('비밀번호가 일치하지 않습니다.', 'error');
-                return;
-            }
-            
-            // 사용자명 검증 (2-20자, 한글/영어/숫자만)
-            if (username.length < 2 || username.length > 20) {
-                showLoginMessage('사용자명은 2~20자여야 합니다.', 'error');
-                return;
-            }
-            
-            const usernameRegex = /^[가-힣a-zA-Z0-9]+$/;
-            if (!usernameRegex.test(username)) {
-                showLoginMessage('사용자명은 한글, 영어, 숫자만 사용 가능합니다.', 'error');
-                return;
-            }
-            
-            // 비밀번호 검증 (6-12자, 영어/숫자/특수문자 중 2가지 이상)
-            if (password.length < 6 || password.length > 12) {
-                showLoginMessage('비밀번호는 6~12자여야 합니다.', 'error');
-                return;
-            }
-            
-            const hasLetter = /[a-zA-Z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-            const complexityCount = [hasLetter, hasNumber, hasSpecial].filter(Boolean).length;
-            
-            if (complexityCount < 2) {
-                showLoginMessage('비밀번호는 영어, 숫자, 특수문자 중 2가지 이상 포함해야 합니다.', 'error');
-                return;
-            }
+            if (!username || !password || !passwordConfirm) return showLoginMessage('모든 항목을 입력하세요.', 'error');
+            if (password !== passwordConfirm) return showLoginMessage('비밀번호 불일치', 'error');
             
             try {
-                // Supabase RPC를 통한 회원가입
-                const { data, error } = await _supabase.rpc('signup_user', {
-                    username_param: username,
-                    pin_param: password
-                });
-                
-                if (error) {
-                    if (error.message.includes('이미 존재')) {
-                        showLoginMessage('이미 존재하는 사용자명입니다.', 'error');
-                    } else {
-                        showLoginMessage('회원가입 실패: ' + error.message, 'error');
-                    }
-                    return;
-                }
-                
-                showLoginMessage('✅ 회원가입 성공! 관리자 승인 후 로그인할 수 있습니다.', 'success');
-                
-                // 3초 후 로그인 폼으로 전환
-                setTimeout(() => {
-                    showLoginForm();
-                    document.getElementById('signupUsername').value = '';
-                    document.getElementById('signupPassword').value = '';
-                    document.getElementById('signupPasswordConfirm').value = '';
-                }, 3000);
-                
+                const { error } = await _supabase.rpc('signup_user', { username_param: username, pin_param: password });
+                if (error) throw error;
+                showLoginMessage('✅ 회원가입 성공! 관리자 승인 후 로그인 가능합니다.', 'success');
+                setTimeout(showLoginForm, 3000);
             } catch (error) {
                 showLoginMessage('회원가입 오류: ' + error.message, 'error');
             }
         }
         
-        // 로그인
         async function login(auto = false) {
             const username = document.getElementById('loginUsername').value.trim();
             const password = document.getElementById('loginPassword').value;
-            const autoLogin = document.getElementById('autoLoginCheck').checked;
             
-            if (!username || !password) {
-                if (!auto) showLoginMessage('사용자명과 비밀번호를 입력하세요.', 'error');
-                return;
-            }
+            if (!username || !password) return auto ? null : showLoginMessage('정보를 입력하세요.', 'error');
             
             try {
-                // [수정됨] 로그인 시 role 컬럼도 같이 가져와서 권한 구분
+                // DB에서 linked_account 도 같이 가져옵니다
                 const { data: userData, error: userError } = await _supabase
                     .from('user_accounts')
-                    .select('username, status, role') 
+                    .select('username, status, role, linked_account') 
                     .eq('username', username)
                     .single();
                 
-                if (userError || !userData) {
-                    if (!auto) showLoginMessage('사용자를 찾을 수 없습니다.', 'error');
-                    if (auto) clearAutoLogin();
-                    return;
-                }
+                if (userError || !userData) return auto ? clearAutoLogin() : showLoginMessage('사용자 없음.', 'error');
+                if (userData.status !== 'approved') return auto ? clearAutoLogin() : showLoginMessage('승인 대기/정지 계정', 'error');
                 
-                if (userData.status !== 'approved') {
-                    if (!auto) showLoginMessage('계정이 승인되지 않았거나 정지되었습니다.', 'error');
-                    if (auto) clearAutoLogin();
-                    return;
-                }
+                const { data: pinValid, error: pinError } = await _supabase.rpc('verify_pin', { username_param: username, pin_param: password });
+                if (pinError || !pinValid) return auto ? clearAutoLogin() : showLoginMessage('비번 오류', 'error');
                 
-                const { data: pinValid, error: pinError } = await _supabase.rpc('verify_pin', {
-                    username_param: username,
-                    pin_param: password
-                });
-                
-                if (pinError || !pinValid) {
-                    if (!auto) showLoginMessage('비밀번호가 올바르지 않습니다.', 'error');
-                    if (auto) clearAutoLogin();
-                    return;
-                }
-                
-                // 로그인 성공!
+                // 로그인 성공 후 계정 정보 셋팅
+                loggedInUser = userData.username;
                 currentUser = userData.username;
+                subAccountUser = userData.linked_account || null;
                 
-                // [수정됨] 권한 설정 로직
-                // DB의 role 값 ('super_admin', 'admin', 'user') 저장
                 currentRole = userData.role || 'user';
-                
-                // super_admin이거나 admin이면 관리자 기능 활성화
                 isAdmin = (currentRole === 'super_admin' || currentRole === 'admin');
                 
-                // 자동 로그인 저장
-                if (autoLogin) {
+                if (document.getElementById('autoLoginCheck').checked) {
                     localStorage.setItem('function_username', username);
                     localStorage.setItem('function_password', password);
-                } else {
-                    clearAutoLogin();
-                }
+                } else clearAutoLogin();
                 
-                // 마지막 로그인 업데이트
-                await _supabase.from('user_accounts').update({
-                    last_login: new Date().toISOString()
-                }).eq('username', username);
+                await _supabase.from('user_accounts').update({ last_login: new Date().toISOString() }).eq('username', username);
                 
                 showMainView();
                 
@@ -1149,86 +853,149 @@
             localStorage.removeItem('function_username');
             localStorage.removeItem('function_password');
         }
-        
         function showLoginMessage(msg, type) {
-            const msgDiv = document.getElementById('loginMessage');
-            msgDiv.className = `message ${type}`;
-            msgDiv.textContent = msg;
+            const m = document.getElementById('loginMessage');
+            m.className = `message ${type}`; m.textContent = msg;
         }
         
         function showMainView() {
             document.getElementById('loginContainer').style.display = 'none';
             document.getElementById('mainView').classList.add('active');
             
+            // 헤더 유저 이름 및 부캐 UI 업데이트
             document.getElementById('headerUsername').textContent = currentUser;
+            updateAccountUI();
             
-            // 관리자 여부에 따라 UI 표시
             if (isAdmin) {
                 document.getElementById('adminBadge').style.display = 'inline';
-                
-                // 찐 관리자인지 일반 관리자인지 뱃지에 표시하면 더 좋음
                 if (currentRole === 'super_admin') {
                    document.getElementById('adminBadge').textContent = '👑 SUPER ADMIN';
                    document.getElementById('adminBadge').style.background = '#ffd700';
                    document.getElementById('adminBadge').style.color = '#000';
-                } else {
-                   document.getElementById('adminBadge').textContent = '관리자';
                 }
-                
                 document.getElementById('adminTabBtn').style.display = 'block';
                 document.getElementById('updateWriteForm').style.display = 'block';
-                document.getElementById('announcementAdmin').style.display = 'block';  // 공지 작성 표시
+                document.getElementById('announcementAdmin').style.display = 'block';
             }
             
-            // [Egress 최적화] 초기 데이터 로드 제거 - 완전 수동 새로고침 모드
-            loadAnnouncements();  // 공지사항만 로드 (필수)
+            loadAnnouncements();
+            startTimestampUpdates();
+        }
 
-            // [Egress 최적화] Realtime 구독 비활성화, 타임스탬프 업데이트 시작
-            startRealtimeSubscription(); // 빈 함수 (비활성화됨)
-            startTimestampUpdates();     // 타임스탬프 업데이트 시작 (페이지 접속 시간 기준)
-            console.log('ℹ️ 수동 새로고침 모드: 새로고침 버튼을 눌러 최신 데이터를 확인하세요 (Egress 97% 절감)');
+        // ★ 부캐 관련 UI 업데이트 함수 ★
+        function updateAccountUI() {
+            document.getElementById('account-link-section').style.display = 'block';
+            if (subAccountUser) {
+                document.getElementById('register-sub-account').style.display = 'none';
+                document.getElementById('account-tabs').style.display = 'flex';
+                document.getElementById('main-name-display').textContent = loggedInUser;
+                document.getElementById('sub-name-display').textContent = subAccountUser;
+            } else {
+                document.getElementById('register-sub-account').style.display = 'flex';
+                document.getElementById('account-tabs').style.display = 'none';
+            }
+        }
+
+        // ★ 부캐 연결 함수 ★
+        // ★ 부캐 연결 함수 (실존 유저 검증 로직 추가) ★
+async function linkSubAccount() {
+    const subId = document.getElementById('subAccountInput').value.trim();
+    
+    // 1. 빈칸 입력 방지
+    if (!subId) return alert('부캐 아이디를 입력해주세요.');
+    
+    // 2. 자기 자신(본캐)을 부캐로 등록하려는 바보(?) 행동 방지
+    if (subId === loggedInUser) return alert('본인 계정은 부캐로 등록할 수 없습니다!');
+
+    try {
+        // 3. 입력한 아이디가 Supabase(user_accounts)에 진짜 존재하는지 '조회'부터 하기
+        const { data: checkData, error: checkError } = await _supabase
+            .from('user_accounts')
+            .select('username')
+            .eq('username', subId)
+            .single(); // 딱 하나만 찾아오기
+            
+        // 찾았는데 에러가 나거나 데이터가 없다면? (없는 유저)
+        if (checkError || !checkData) {
+            return alert('❌ 존재하지 않는 사용자입니다! 부캐 계정이 먼저 Function에 회원가입 되어 있어야 합니다.');
+        }
+
+        // 4. 진짜 존재하는 유저임이 확인되었으니, 당당하게 연결 업데이트!
+        const { error } = await _supabase
+            .from('user_accounts')
+            .update({ linked_account: subId })
+            .eq('username', loggedInUser);
+            
+        if (error) throw error;
+        
+        alert('✅ 부캐가 성공적으로 연결되었습니다!');
+        subAccountUser = subId; // 현재 연결된 부캐 아이디 메모리 저장
+        updateAccountUI();      // 탭 화면으로 새로고침
+        
+    } catch (e) { 
+        alert('❌ 연결 실패: ' + e.message); 
+    }
+}
+
+        // ★ 부캐 연결 해제 함수 ★
+        async function unlinkSubAccount() {
+            if (!confirm('부캐 연결을 해제하시겠습니까?')) return;
+            try {
+                const { error } = await _supabase
+                    .from('user_accounts')
+                    .update({ linked_account: null })
+                    .eq('username', loggedInUser);
+                if (error) throw error;
+                alert('✅ 연결이 해제되었습니다.');
+                subAccountUser = null;
+                if (currentUser !== loggedInUser) switchAccountView('main');
+                else updateAccountUI();
+            } catch (e) { alert('❌ 해제 실패: ' + e.message); }
+        }
+
+        // ★ 본캐/부캐 화면 전환 함수 ★
+        async function switchAccountView(type) {
+            if (type === 'main') {
+                currentUser = loggedInUser;
+                document.getElementById('tab-main-acc').style.background = '#4CAF50';
+                document.getElementById('tab-main-acc').style.border = 'none';
+                document.getElementById('tab-sub-acc').style.background = '#333';
+                document.getElementById('tab-sub-acc').style.border = '1px solid #4a4a4a';
+                document.getElementById('headerUsername').textContent = currentUser;
+            } else {
+                currentUser = subAccountUser;
+                document.getElementById('tab-main-acc').style.background = '#333';
+                document.getElementById('tab-main-acc').style.border = '1px solid #4a4a4a';
+                document.getElementById('tab-sub-acc').style.background = '#4CAF50';
+                document.getElementById('tab-sub-acc').style.border = 'none';
+                document.getElementById('headerUsername').textContent = currentUser + ' (부캐)';
+            }
+            
+            // 캐시 메모리 초기화 후 로컬저장소/DB에서 다시 로드
+            clearRAMCaches();
+            loadUserTimestamps(); // 현재 유저의 갱신 시간 가져오기
+            restoreCachedData();
+            
+            await loadMyStats(false);
+            if (document.getElementById('weekTab').classList.contains('active')) await loadWeekStats(false);
+            if (document.getElementById('historyTab').classList.contains('active')) {
+                const activeBtn = document.querySelector('#historyTab .tab-btn.active');
+                await loadScoreGraph(activeBtn ? parseInt(activeBtn.textContent.match(/\d+/)[0]) : 100, false);
+            }
         }
         
         function logout() {
             if (confirm('로그아웃 하시겠습니까?')) {
-                // Realtime 구독 중지
-                stopRealtimeSubscription();
-
-                // [Egress 최적화] 타임스탬프 업데이트 중지 및 초기화
-                if (timestampUpdateInterval) {
-                    clearInterval(timestampUpdateInterval);
-                    timestampUpdateInterval = null;
-                }
-                lastManualRefreshTime = null;
-                
-                // 모든 캐시 초기화 (Egress 최적화)
-                cachedStats = null;
-                cachedDailySession = null;
-                cachedWeekStats = null;
-                cachedScoreGraph = null;
-                cachedScoreGraphLimit = null;
-                cachedPromotionInfo = null;
-                cachedUpdates = null;
-                cachedAdminPanel = null;
-                lastStatsLoad = 0;
-                lastDailySessionLoad = 0;
-                lastWeekStatsLoad = 0;
-                lastScoreGraphLoad = 0;
-                lastPromotionInfoLoad = 0;
-                lastUpdatesLoad = 0;
-                lastAdminPanelLoad = 0;
-                loadedComments.clear();
-                
+                if (timestampUpdateInterval) clearInterval(timestampUpdateInterval);
+                clearRAMCaches();
                 clearAutoLogin();
+                loggedInUser = null;
                 currentUser = null;
+                subAccountUser = null;
                 isAdmin = false;
-                currentRole = 'user'; // role 초기화
                 
                 document.getElementById('loginContainer').style.display = 'block';
                 document.getElementById('mainView').classList.remove('active');
-                document.getElementById('loginUsername').value = '';
-                document.getElementById('loginPassword').value = '';
-                document.getElementById('loginMessage').innerHTML = '';
             }
         }
         
@@ -1236,1668 +1003,461 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
-            if (tabName === 'today') {
-                document.querySelectorAll('.tab-btn')[0].classList.add('active');
-                document.getElementById('todayTab').classList.add('active');
-            } else if (tabName === 'week') {
-                document.querySelectorAll('.tab-btn')[1].classList.add('active');
-                document.getElementById('weekTab').classList.add('active');
-            } else if (tabName === 'history') {
-                document.querySelectorAll('.tab-btn')[2].classList.add('active');
-                document.getElementById('historyTab').classList.add('active');
-            } else if (tabName === 'updates') {
-                document.querySelectorAll('.tab-btn')[3].classList.add('active');
-                document.getElementById('updatesTab').classList.add('active');
-            } else if (tabName === 'admin' && isAdmin) {
-                document.getElementById('adminTabBtn').classList.add('active');
-                document.getElementById('adminTab').classList.add('active');
-            }
+            if (tabName === 'today') { document.querySelectorAll('.tab-btn')[0].classList.add('active'); document.getElementById('todayTab').classList.add('active'); }
+            else if (tabName === 'week') { document.querySelectorAll('.tab-btn')[1].classList.add('active'); document.getElementById('weekTab').classList.add('active'); }
+            else if (tabName === 'history') { document.querySelectorAll('.tab-btn')[2].classList.add('active'); document.getElementById('historyTab').classList.add('active'); }
+            else if (tabName === 'updates') { document.querySelectorAll('.tab-btn')[3].classList.add('active'); document.getElementById('updatesTab').classList.add('active'); }
+            else if (tabName === 'admin' && isAdmin) { document.getElementById('adminTabBtn').classList.add('active'); document.getElementById('adminTab').classList.add('active'); }
         }
         
-        // 캐싱 변수 (Egress 절감)
-        let cachedStats = null;
-        let cachedDailySession = null;
-        let cachedWeekStats = null;
-        let cachedScoreGraph = null;
-        let cachedScoreGraphLimit = null;
-        let cachedPromotionInfo = null;
-        let cachedUpdates = null;
-        let cachedAdminPanel = null;
-        let lastStatsLoad = 0;
-        let lastDailySessionLoad = 0;
-        let lastWeekStatsLoad = 0;
-        let lastScoreGraphLoad = 0;
-        let lastPromotionInfoLoad = 0;
-        let lastUpdatesLoad = 0;
-        let lastAdminPanelLoad = 0;
+        // 캐싱 변수 (RAM)
+        let cachedStats = null; let cachedDailySession = null; let cachedWeekStats = null;
+        let cachedScoreGraph = null; let cachedScoreGraphLimit = null; let cachedPromotionInfo = null;
+        let cachedUpdates = null; let cachedAdminPanel = null;
+        let lastStatsLoad = 0; let lastDailySessionLoad = 0; let lastWeekStatsLoad = 0;
+        let lastScoreGraphLoad = 0; let lastPromotionInfoLoad = 0; let lastUpdatesLoad = 0; let lastAdminPanelLoad = 0;
+        const CACHE_TIME = 86400000;
         
-        const CACHE_TIME = 86400000; 
-        const RANKING_CACHE_TIME = 86400000; 
-        const SCORE_GRAPH_CACHE_TIME = 86400000; 
-        const PROMOTION_CACHE_TIME = 86400000; 
-        const UPDATES_CACHE_TIME = 86400000; 
-        const ADMIN_CACHE_TIME = 86400000; 
-        let isAutoRefreshStarted = false; 
+        // 갱신 추적 변수
+        let lastManualRefreshTime = null; let lastWeekRefreshTime = null; let lastGraphRefreshTime = null; let lastAdminRefreshTime = null;
+        let timestampUpdateInterval = null;
 
-        // [Egress 최적화] 수동 갱신 추적 변수 (섹션별 분리)
-        let lastManualRefreshTime = null; 
-        let lastWeekRefreshTime = null;   
-        let lastGraphRefreshTime = null;  
-        let lastAdminRefreshTime = null;  
-        let timestampUpdateInterval = null; 
+        function clearRAMCaches() {
+            cachedStats = null; cachedDailySession = null; cachedWeekStats = null;
+            cachedScoreGraph = null; cachedPromotionInfo = null; cachedUpdates = null; cachedAdminPanel = null;
+            lastStatsLoad = 0; lastDailySessionLoad = 0; lastWeekStatsLoad = 0;
+            lastScoreGraphLoad = 0; lastPromotionInfoLoad = 0; lastUpdatesLoad = 0; lastAdminPanelLoad = 0;
+            updateTimestampDisplay(); updateWeekTimestamp(); updateGraphTimestamp();
+        }
 
-        // [Egress 최적화] 실시간 정보 갱신 (실시간 정보 + 오늘의 통계만)
+        // 현재 유저의 타임스탬프 복원
+        function loadUserTimestamps() {
+            const savedTime = localStorage.getItem('lastRefreshTime_' + currentUser);
+            lastManualRefreshTime = savedTime ? parseInt(savedTime) : null;
+            const savedWeekTime = localStorage.getItem('lastWeekRefreshTime_' + currentUser);
+            lastWeekRefreshTime = savedWeekTime ? parseInt(savedWeekTime) : null;
+            const savedGraphTime = localStorage.getItem('lastGraphRefreshTime_' + currentUser);
+            lastGraphRefreshTime = savedGraphTime ? parseInt(savedGraphTime) : null;
+        }
+        
         async function manualRefresh() {
             const btn = document.getElementById('manualRefreshBtn');
-
-            // 버튼 비활성화 및 로딩 상태 표시
-            btn.disabled = true;
-            btn.innerHTML = '⏳ 불러오는 중...';
-            btn.style.opacity = '0.6';
-            btn.style.cursor = 'not-allowed';
-
+            btn.disabled = true; btn.innerHTML = '⏳ 중...'; btn.style.opacity = '0.6';
             try {
-                // 실시간 정보 + 오늘의 통계만 로드 (7일/그래프는 별도 버튼)
                 await loadMyStats(true);
-
-                // 마지막 갱신 시간 업데이트 및 localStorage에 저장
                 lastManualRefreshTime = Date.now();
-                localStorage.setItem('lastRefreshTime', lastManualRefreshTime.toString());
+                localStorage.setItem('lastRefreshTime_' + currentUser, lastManualRefreshTime.toString());
                 updateTimestampDisplay();
-
-                console.log('✅ 실시간 정보 갱신 완료 (Egress 최적화)');
-            } catch (error) {
-                console.error('❌ 갱신 오류:', error);
-            } finally {
-                // 버튼 다시 활성화
-                btn.disabled = false;
-                btn.innerHTML = '🔄 갱신';
-                btn.style.opacity = '1';
-                btn.style.cursor = 'pointer';
-            }
+            } finally { btn.disabled = false; btn.innerHTML = '🔄 갱신'; btn.style.opacity = '1'; }
         }
 
-        // [Egress 최적화] 7일 통계 갱신
         async function refresh7DayStats() {
             const btn = document.getElementById('refresh7DayBtn');
-            if (!btn) return;
-
-            btn.disabled = true;
-            btn.innerHTML = '⏳ 불러오는 중...';
-            btn.style.opacity = '0.6';
-
+            btn.disabled = true; btn.innerHTML = '⏳ 중...'; btn.style.opacity = '0.6';
             try {
                 await loadWeekStats(true);
-
                 lastWeekRefreshTime = Date.now();
-                localStorage.setItem('lastWeekRefreshTime', lastWeekRefreshTime.toString());
+                localStorage.setItem('lastWeekRefreshTime_' + currentUser, lastWeekRefreshTime.toString());
                 updateWeekTimestamp();
-
-                console.log('✅ 7일 통계 갱신 완료');
-            } catch (error) {
-                console.error('❌ 7일 통계 갱신 오류:', error);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '📊 7일 갱신';
-                btn.style.opacity = '1';
-            }
+            } finally { btn.disabled = false; btn.innerHTML = '📊 7일 갱신'; btn.style.opacity = '1'; }
         }
 
-        // [Egress 최적화] 점수 그래프 갱신
         async function refreshScoreGraph() {
             const btn = document.getElementById('refreshGraphBtn');
-            if (!btn) return;
-
-            btn.disabled = true;
-            btn.innerHTML = '⏳ 불러오는 중...';
-            btn.style.opacity = '0.6';
-
+            btn.disabled = true; btn.innerHTML = '⏳ 중...'; btn.style.opacity = '0.6';
             try {
-                // Find active graph limit button
                 const activeBtn = document.querySelector('#historyTab .tab-btn.active');
-                // [Egress 최적화] 기본값 200→100 경기로 변경
-                const limit = parseInt(activeBtn?.textContent?.match(/\d+/)?.[0] || '100');
-                await loadScoreGraph(limit, true);
-
+                await loadScoreGraph(activeBtn ? parseInt(activeBtn.textContent.match(/\d+/)[0]) : 100, true);
                 lastGraphRefreshTime = Date.now();
-                localStorage.setItem('lastGraphRefreshTime', lastGraphRefreshTime.toString());
+                localStorage.setItem('lastGraphRefreshTime_' + currentUser, lastGraphRefreshTime.toString());
                 updateGraphTimestamp();
-
-                console.log('✅ 점수 그래프 갱신 완료');
-            } catch (error) {
-                console.error('❌ 그래프 갱신 오류:', error);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '📈 그래프 갱신';
-                btn.style.opacity = '1';
-            }
+            } finally { btn.disabled = false; btn.innerHTML = '📈 그래프 갱신'; btn.style.opacity = '1'; }
         }
 
-        // [Egress 최적화] 관리자 패널 갱신
         async function refreshAdminPanel() {
             const btn = document.getElementById('refreshAdminBtn');
-            if (!btn) return;
-
-            btn.disabled = true;
-            btn.innerHTML = '⏳ 불러오는 중...';
-            btn.style.opacity = '0.6';
-
+            btn.disabled = true; btn.innerHTML = '⏳ 중...'; btn.style.opacity = '0.6';
             try {
                 await loadAdminPanel(true);
-
                 lastAdminRefreshTime = Date.now();
-                localStorage.setItem('lastAdminRefreshTime', lastAdminRefreshTime.toString());
+                localStorage.setItem('lastAdminRefreshTime_' + loggedInUser, lastAdminRefreshTime.toString());
                 updateAdminTimestamp();
-
-                console.log('✅ 관리자 패널 갱신 완료');
-            } catch (error) {
-                console.error('❌ 관리자 패널 갱신 오류:', error);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '👥 사용자 목록 갱신';
-                btn.style.opacity = '1';
-            }
+            } finally { btn.disabled = false; btn.innerHTML = '👥 사용자 목록 갱신'; btn.style.opacity = '1'; }
         }
 
-        // 타임스탬프 표시 업데이트 (실시간 정보용)
         function updateTimestampDisplay() {
-            const timestampEl = document.getElementById('lastUpdatedTime');
-            if (!timestampEl) return;
-
-            // lastManualRefreshTime이 없으면 페이지 로드 시간 기준으로 표시
-            const referenceTime = lastManualRefreshTime || Date.now();
-
-            // 경과 시간 계산 (밀리초 → 분)
-            const elapsed = Math.floor((Date.now() - referenceTime) / 60000);
-
-            // 24시간(1440분) 이상 경과한 경우 → localStorage 정리하고 페이지 로드 시간으로 재설정
-            if (lastManualRefreshTime !== null && elapsed >= 1440) {
-                lastManualRefreshTime = null;
-                localStorage.removeItem('lastRefreshTime');
-                // 재귀 호출로 페이지 로드 시간 기준으로 다시 표시
-                updateTimestampDisplay();
-                return;
-            }
-
-            // 경과 시간 표시
-            let text;
-
-            if (elapsed === 0) {
-                text = '방금 전';
-            } else if (elapsed < 60) {
-                text = `${elapsed}분 전`;
-            } else {
-                const hours = Math.floor(elapsed / 60);
-                text = `${hours}시간 전`;
-            }
-
-            timestampEl.textContent = `마지막 갱신: ${text}`;
-            timestampEl.style.color = '#8b949e'; // 회색
+            const el = document.getElementById('lastUpdatedTime');
+            const ref = lastManualRefreshTime || Date.now();
+            const elap = Math.floor((Date.now() - ref) / 60000);
+            if (lastManualRefreshTime && elap >= 1440) { lastManualRefreshTime = null; localStorage.removeItem('lastRefreshTime_' + currentUser); return updateTimestampDisplay(); }
+            el.textContent = `마지막 갱신: ${elap === 0 ? '방금 전' : elap < 60 ? elap+'분 전' : Math.floor(elap/60)+'시간 전'}`;
         }
-
-        // 7일 통계 타임스탬프 업데이트
         function updateWeekTimestamp() {
-            const timestampEl = document.getElementById('lastWeekUpdatedTime');
-            if (!timestampEl) return;
-
-            const referenceTime = lastWeekRefreshTime || Date.now();
-            const elapsed = Math.floor((Date.now() - referenceTime) / 60000);
-
-            if (lastWeekRefreshTime !== null && elapsed >= 1440) {
-                lastWeekRefreshTime = null;
-                localStorage.removeItem('lastWeekRefreshTime');
-                updateWeekTimestamp();
-                return;
-            }
-
-            let text = elapsed === 0 ? '방금 전' : elapsed < 60 ? `${elapsed}분 전` : `${Math.floor(elapsed / 60)}시간 전`;
-            timestampEl.textContent = `마지막 갱신: ${text}`;
-            timestampEl.style.color = '#8b949e';
+            const el = document.getElementById('lastWeekUpdatedTime');
+            const ref = lastWeekRefreshTime || Date.now();
+            const elap = Math.floor((Date.now() - ref) / 60000);
+            el.textContent = `마지막 갱신: ${elap === 0 ? '방금 전' : elap < 60 ? elap+'분 전' : Math.floor(elap/60)+'시간 전'}`;
         }
-
-        // 그래프 타임스탬프 업데이트
         function updateGraphTimestamp() {
-            const timestampEl = document.getElementById('lastGraphUpdatedTime');
-            if (!timestampEl) return;
-
-            const referenceTime = lastGraphRefreshTime || Date.now();
-            const elapsed = Math.floor((Date.now() - referenceTime) / 60000);
-
-            if (lastGraphRefreshTime !== null && elapsed >= 1440) {
-                lastGraphRefreshTime = null;
-                localStorage.removeItem('lastGraphRefreshTime');
-                updateGraphTimestamp();
-                return;
-            }
-
-            let text = elapsed === 0 ? '방금 전' : elapsed < 60 ? `${elapsed}분 전` : `${Math.floor(elapsed / 60)}시간 전`;
-            timestampEl.textContent = `마지막 갱신: ${text}`;
-            timestampEl.style.color = '#8b949e';
+            const el = document.getElementById('lastGraphUpdatedTime');
+            const ref = lastGraphRefreshTime || Date.now();
+            const elap = Math.floor((Date.now() - ref) / 60000);
+            el.textContent = `마지막 갱신: ${elap === 0 ? '방금 전' : elap < 60 ? elap+'분 전' : Math.floor(elap/60)+'시간 전'}`;
         }
-
-        // 관리자 패널 타임스탬프 업데이트
         function updateAdminTimestamp() {
-            const timestampEl = document.getElementById('lastAdminUpdatedTime');
-            if (!timestampEl) return;
-
-            const referenceTime = lastAdminRefreshTime || Date.now();
-            const elapsed = Math.floor((Date.now() - referenceTime) / 60000);
-
-            if (lastAdminRefreshTime !== null && elapsed >= 1440) {
-                lastAdminRefreshTime = null;
-                localStorage.removeItem('lastAdminRefreshTime');
-                updateAdminTimestamp();
-                return;
-            }
-
-            let text = elapsed === 0 ? '방금 전' : elapsed < 60 ? `${elapsed}분 전` : `${Math.floor(elapsed / 60)}시간 전`;
-            timestampEl.textContent = `마지막 갱신: ${text}`;
-            timestampEl.style.color = '#8b949e';
+            const el = document.getElementById('lastAdminUpdatedTime');
+            const ref = lastAdminRefreshTime || Date.now();
+            const elap = Math.floor((Date.now() - ref) / 60000);
+            if(el) el.textContent = `마지막 갱신: ${elap === 0 ? '방금 전' : elap < 60 ? elap+'분 전' : Math.floor(elap/60)+'시간 전'}`;
         }
 
-        // [Egress 최적화] localStorage에서 캐시된 데이터 복원 및 표시 (zero egress)
+        // 유저별 LocalStorage 복원
         function restoreCachedData() {
             try {
-                // 실시간 정보 + 오늘의 통계 복원
-                const savedStats = localStorage.getItem('cachedStats');
+                const savedStats = localStorage.getItem('cachedStats_' + currentUser);
                 if (savedStats) {
                     const stats = JSON.parse(savedStats);
                     cachedStats = stats;
-
-                    // 실시간 정보 표시
-                    const score = Number(stats.current_score);
-                    const displayScore = (score && score > 0 && score < 10000) ? score : '--';
-                    document.getElementById('liveScore').textContent = displayScore;
-
-                    const rankElement = document.getElementById('liveRank');
-                    if (stats.current_rank && stats.current_rank < 99999) {
-                        rankElement.textContent = stats.current_rank;
-                        rankElement.style.fontSize = '20px';
-                    } else if (stats.current_rank >= 99999) {
-                        rankElement.textContent = '순위권이탈';
-                        rankElement.style.fontSize = '12px';
-                    } else {
-                        rankElement.textContent = '--';
-                        rankElement.style.fontSize = '20px';
-                    }
-
+                    document.getElementById('liveScore').textContent = (stats.current_score > 0 && stats.current_score < 10000) ? stats.current_score : '--';
+                    const rankEl = document.getElementById('liveRank');
+                    rankEl.textContent = stats.current_rank < 99999 ? stats.current_rank : (stats.current_rank >= 99999 ? '순위권이탈' : '--');
+                    rankEl.style.fontSize = stats.current_rank >= 99999 ? '12px' : '20px';
                     document.getElementById('liveTier').textContent = stats.current_tier || '--';
                     document.getElementById('liveWLD').textContent = `${stats.wins || 0}-${stats.draws || 0}-${stats.losses || 0}`;
                     document.getElementById('liveFC').textContent = stats.fc_mined || 0;
                     document.getElementById('liveMatches').textContent = stats.matches || 0;
-
-                    const tagsContainer = document.getElementById('liveTags');
-                    const activeModes = stats.active_modes ? stats.active_modes.split(',').filter(m => m.trim()) : [];
-                    if (activeModes.length > 0) {
-                        tagsContainer.innerHTML = activeModes.map(mode => `<span class="mini-tag">${mode}</span>`).join('');
-                    } else {
-                        tagsContainer.innerHTML = '';
-                    }
-
-                    console.log('✅ 실시간 정보 캐시 복원 완료 (zero egress)');
+                    document.getElementById('liveTags').innerHTML = stats.active_modes ? stats.active_modes.split(',').filter(m=>m.trim()).map(m=>`<span class="mini-tag">${m}</span>`).join('') : '';
                 }
 
-                // 오늘의 통계 복원
-                const savedDailySession = localStorage.getItem('cachedDailySession');
-                if (savedDailySession) {
-                    const todaySession = JSON.parse(savedDailySession);
-                    cachedDailySession = todaySession;
-
-                    if (todaySession) {
-                        document.getElementById('todayWins').textContent = todaySession.wins || 0;
-                        document.getElementById('todayLosses').textContent = todaySession.losses || 0;
-                        document.getElementById('todayDraws').textContent = todaySession.draws || 0;
-                        document.getElementById('todayMatches').textContent = todaySession.matches || 0;
-                        document.getElementById('todayFC').textContent = todaySession.fc_mined || 0;
-                        document.getElementById('todayStartScore').textContent = todaySession.start_score || '--';
-                        document.getElementById('todayHighScore').textContent = todaySession.highest_score || '--';
-                        console.log('✅ 오늘의 통계 캐시 복원 완료 (zero egress)');
-                    }
+                const savedDaily = localStorage.getItem('cachedDailySession_' + currentUser);
+                if (savedDaily) {
+                    const ts = JSON.parse(savedDaily);
+                    cachedDailySession = ts;
+                    document.getElementById('todayWins').textContent = ts.wins || 0;
+                    document.getElementById('todayLosses').textContent = ts.losses || 0;
+                    document.getElementById('todayDraws').textContent = ts.draws || 0;
+                    document.getElementById('todayMatches').textContent = ts.matches || 0;
+                    document.getElementById('todayFC').textContent = ts.fc_mined || 0;
+                    document.getElementById('todayStartScore').textContent = ts.start_score || '--';
+                    document.getElementById('todayHighScore').textContent = ts.highest_score || '--';
                 }
 
-                // 7일 통계 복원
-                const savedWeekStats = localStorage.getItem('cachedWeekStats');
-                if (savedWeekStats) {
-                    const weekCache = JSON.parse(savedWeekStats);
-                    cachedWeekStats = weekCache;
-
-                    const weekData = weekCache.weekData;
-                    const promotions = weekCache.promotions;
-
-                    if (weekData && weekData.length > 0) {
-                        const tbody = document.getElementById('weekTableBody');
-                        const promotionMap = {};
-                        if (promotions) {
-                            promotions.forEach(p => {
-                                const date = p.promoted_at.split('T')[0];
-                                promotionMap[date] = p.matches_taken;
-                            });
-                        }
-
-                        let html = '';
-                        weekData.forEach(day => {
-                            const dateStr = formatDateKST(day.session_date, 'short');
-                            const wins = day.wins || 0;
-                            const losses = day.losses || 0;
-                            const draws = day.draws || 0;
-                            const total = wins + losses + draws;
-                            const winrate = total > 0 ? ((wins / total) * 100).toFixed(1) : '0.0';
-                            const fc = day.fc_mined || 0;
-                            const promotion = promotionMap[day.session_date];
-                            const promotionText = promotion ? `${promotion}판` : '--';
-
-                            html += `
-                                <tr>
-                                    <td style="color: #b4b4b4;">${dateStr}</td>
-                                    <td style="color: #86efac; font-weight: 600;">${wins}</td>
-                                    <td style="color: #fcd34d; font-weight: 600;">${draws}</td>
-                                    <td style="color: #fca5a5; font-weight: 600;">${losses}</td>
-                                    <td style="color: #e0e0e0; font-weight: 600;">${winrate}%</td>
-                                    <td style="color: #fdba74; font-weight: 600;">${fc}</td>
-                                    <td style="color: #c4b5fd; font-weight: 600;">${promotionText}</td>
-                                </tr>
-                            `;
-                        });
-                        tbody.innerHTML = html;
-                        console.log('✅ 7일 통계 캐시 복원 완료 (zero egress)');
+                const savedWeek = localStorage.getItem('cachedWeekStats_' + currentUser);
+                if (savedWeek) {
+                    const cache = JSON.parse(savedWeek);
+                    cachedWeekStats = cache;
+                    const tbody = document.getElementById('weekTableBody');
+                    if (cache.weekData && cache.weekData.length > 0) {
+                        const pMap = {}; (cache.promotions||[]).forEach(p => pMap[p.promoted_at.split('T')[0]] = p.matches_taken);
+                        tbody.innerHTML = cache.weekData.map(d => {
+                            const tot = (d.wins||0)+(d.losses||0)+(d.draws||0);
+                            return `<tr><td style="color:#b4b4b4">${formatDateKST(d.session_date, 'short')}</td><td style="color:#86efac">${d.wins||0}</td><td style="color:#fcd34d">${d.draws||0}</td><td style="color:#fca5a5">${d.losses||0}</td><td style="color:#e0e0e0">${tot>0?((d.wins/tot)*100).toFixed(1):0}%</td><td style="color:#fdba74">${d.fc_mined||0}</td></tr>`;
+                        }).join('');
                     }
                 }
 
-                // 점수 그래프 복원
-                const savedScoreGraph = localStorage.getItem('cachedScoreGraph');
-                if (savedScoreGraph) {
-                    const graphCache = JSON.parse(savedScoreGraph);
-                    cachedScoreGraph = graphCache.history;
-                    cachedScoreGraphLimit = graphCache.limit;
-
-                    if (graphCache.history && graphCache.history.length > 0) {
-                        renderScoreGraph(graphCache.history, graphCache.limit);
-                        console.log('✅ 점수 그래프 캐시 복원 완료 (zero egress)');
-                    }
+                const savedGraph = localStorage.getItem('cachedScoreGraph_' + currentUser);
+                if (savedGraph) {
+                    const cache = JSON.parse(savedGraph);
+                    cachedScoreGraph = cache.history;
+                    cachedScoreGraphLimit = cache.limit;
+                    if(cache.history) renderScoreGraph(cache.history, cache.limit);
                 }
-
-            } catch (error) {
-                console.error('캐시 복원 오류:', error);
-            }
+            } catch (e) { console.error('캐시 복원 오류:', e); }
         }
 
-        // 타임스탬프 업데이트 시작
         function startTimestampUpdates() {
-            // 기존 인터벌 제거
-            if (timestampUpdateInterval) {
-                clearInterval(timestampUpdateInterval);
-            }
-
-            // [Egress 최적화] localStorage에서 각 섹션의 마지막 갱신 시간 복원
-            // 실시간 정보
-            const savedTime = localStorage.getItem('lastRefreshTime');
-            if (savedTime) {
-                const savedTimestamp = parseInt(savedTime);
-                const elapsed = Math.floor((Date.now() - savedTimestamp) / 60000);
-                if (elapsed < 1440) {
-                    lastManualRefreshTime = savedTimestamp;
-                    console.log(`ℹ️ 실시간 정보 갱신 시간 복원: ${elapsed}분 전`);
-                } else {
-                    localStorage.removeItem('lastRefreshTime');
-                }
-            }
-
-            // 7일 통계
-            const savedWeekTime = localStorage.getItem('lastWeekRefreshTime');
-            if (savedWeekTime) {
-                const savedTimestamp = parseInt(savedWeekTime);
-                const elapsed = Math.floor((Date.now() - savedTimestamp) / 60000);
-                if (elapsed < 1440) {
-                    lastWeekRefreshTime = savedTimestamp;
-                    console.log(`ℹ️ 7일 통계 갱신 시간 복원: ${elapsed}분 전`);
-                } else {
-                    localStorage.removeItem('lastWeekRefreshTime');
-                }
-            }
-
-            // 점수 그래프
-            const savedGraphTime = localStorage.getItem('lastGraphRefreshTime');
-            if (savedGraphTime) {
-                const savedTimestamp = parseInt(savedGraphTime);
-                const elapsed = Math.floor((Date.now() - savedTimestamp) / 60000);
-                if (elapsed < 1440) {
-                    lastGraphRefreshTime = savedTimestamp;
-                    console.log(`ℹ️ 그래프 갱신 시간 복원: ${elapsed}분 전`);
-                } else {
-                    localStorage.removeItem('lastGraphRefreshTime');
-                }
-            }
-
-            // 관리자 패널
-            const savedAdminTime = localStorage.getItem('lastAdminRefreshTime');
-            if (savedAdminTime) {
-                const savedTimestamp = parseInt(savedAdminTime);
-                const elapsed = Math.floor((Date.now() - savedTimestamp) / 60000);
-                if (elapsed < 1440) {
-                    lastAdminRefreshTime = savedTimestamp;
-                    console.log(`ℹ️ 관리자 패널 갱신 시간 복원: ${elapsed}분 전`);
-                } else {
-                    localStorage.removeItem('lastAdminRefreshTime');
-                }
-            }
-
-            // [Egress 최적화] localStorage에서 캐시된 데이터 복원 및 표시 (zero egress)
+            if (timestampUpdateInterval) clearInterval(timestampUpdateInterval);
+            loadUserTimestamps();
             restoreCachedData();
-
-            // 1분마다 모든 타임스탬프 업데이트
             timestampUpdateInterval = setInterval(() => {
-                updateTimestampDisplay();
-                updateWeekTimestamp();
-                updateGraphTimestamp();
-                updateAdminTimestamp();
+                updateTimestampDisplay(); updateWeekTimestamp(); updateGraphTimestamp(); updateAdminTimestamp();
             }, 60000);
-
-            // 즉시 한 번 업데이트
-            updateTimestampDisplay();
-            updateWeekTimestamp();
-            updateGraphTimestamp();
-            updateAdminTimestamp();
+            updateTimestampDisplay(); updateWeekTimestamp(); updateGraphTimestamp(); updateAdminTimestamp();
         }
-
-        // 내 통계 로드 (실시간 정보 포함) - 캐싱 적용
+        
         async function loadMyStats(forceRefresh = false) {
             const now = Date.now();
-            
-            // Realtime은 로그인 시 자동 시작되므로 여기서는 불필요
-            
-            // 전체 통계 로드 (실시간 정보용) - 5분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
             let stats = cachedStats;
             if (forceRefresh || !cachedStats || now - lastStatsLoad > CACHE_TIME) {
-                const { data: freshStats, error: statsError } = await _supabase
-                    .from('game_stats')
+                const { data, error } = await _supabase.from('game_stats')
                     .select('current_score, current_rank, current_tier, wins, draws, losses, fc_mined, matches, active_modes')
-                    .eq('username', currentUser)
-                    .maybeSingle(); // single() 대신 maybeSingle() 사용 (데이터 없을 때 null 반환, 406 에러 방지)
-                
-                if (statsError) {
-                    console.error('[loadMyStats] game_stats 쿼리 오류:', statsError);
-                    // 에러가 있어도 계속 진행 (Realtime이 있으므로)
-                    stats = null;
-                } else {
-                    stats = freshStats;
-                    cachedStats = freshStats;
-                    lastStatsLoad = now;
-                    // [Egress 최적화] localStorage에 캐시 저장 (페이지 새로고침 후에도 표시)
-                    localStorage.setItem('cachedStats', JSON.stringify(freshStats));
+                    .eq('username', currentUser).maybeSingle(); // 쿼리를 currentUser로 분리
+                if (!error) {
+                    stats = data; cachedStats = data; lastStatsLoad = now;
+                    localStorage.setItem('cachedStats_' + currentUser, JSON.stringify(data));
                 }
             }
 
             if (stats) {
-                // 실시간 미니창 정보 (현재 값 표시) - 5자리 이상 필터링
-                const score = Number(stats.current_score);
-                const displayScore = (score && score > 0 && score < 10000) ? score : '--';
-                document.getElementById('liveScore').textContent = displayScore;
-                
-                // 등수 표시 (순위권이탈 포함)
-                const rankElement = document.getElementById('liveRank');
-                if (stats.current_rank && stats.current_rank < 99999) {
-                    rankElement.textContent = stats.current_rank;
-                    rankElement.style.fontSize = '20px';
-                } else if (stats.current_rank >= 99999) {
-                    rankElement.textContent = '순위권이탈';
-                    rankElement.style.fontSize = '12px';
-                } else {
-                    rankElement.textContent = '--';
-                    rankElement.style.fontSize = '20px';
-                }
-                
+                document.getElementById('liveScore').textContent = (stats.current_score > 0 && stats.current_score < 10000) ? stats.current_score : '--';
+                const rankEl = document.getElementById('liveRank');
+                rankEl.textContent = stats.current_rank < 99999 ? stats.current_rank : (stats.current_rank >= 99999 ? '순위권이탈' : '--');
+                rankEl.style.fontSize = stats.current_rank >= 99999 ? '12px' : '20px';
                 document.getElementById('liveTier').textContent = stats.current_tier || '--';
                 document.getElementById('liveWLD').textContent = `${stats.wins || 0}-${stats.draws || 0}-${stats.losses || 0}`;
                 document.getElementById('liveFC').textContent = stats.fc_mined || 0;
                 document.getElementById('liveMatches').textContent = stats.matches || 0;
-                
-                // 게임 상태 표시 제거 (활성 모드만 표시)
-                // const status = stats.game_status || '대기 중';
-                // document.getElementById('liveStatus').textContent = status;
-                
-                // 활성 모드 태그 표시
-                const tagsContainer = document.getElementById('liveTags');
-                const activeModes = stats.active_modes ? stats.active_modes.split(',').filter(m => m.trim()) : [];
-                
-                if (activeModes.length > 0) {
-                    tagsContainer.innerHTML = activeModes.map(mode => 
-                        `<span class="mini-tag">${mode}</span>`
-                    ).join('');
-                } else {
-                    tagsContainer.innerHTML = '';
-                }
+                document.getElementById('liveTags').innerHTML = stats.active_modes ? stats.active_modes.split(',').filter(m=>m.trim()).map(m=>`<span class="mini-tag">${m}</span>`).join('') : '';
             }
             
-            // 오늘의 통계 로드 (한국 시간 기준) - 5분 캐싱 (Egress 최적화: 필요한 컬럼만 선택)
             const today = getTodayKST();
-            let todaySession = cachedDailySession;
+            let ts = cachedDailySession;
             if (forceRefresh || !cachedDailySession || now - lastDailySessionLoad > CACHE_TIME) {
-                const { data: freshSession, error: sessionError } = await _supabase
-                    .from('daily_sessions')
+                const { data, error } = await _supabase.from('daily_sessions')
                     .select('wins, losses, draws, matches, fc_mined, start_score, highest_score')
-                    .eq('username', currentUser)
-                    .eq('session_date', today)
-                    .maybeSingle(); // single() 대신 maybeSingle() 사용 (데이터 없을 때 null 반환, 406 에러 방지)
-                
-                if (sessionError) {
-                    console.error('[loadMyStats] daily_sessions 쿼리 오류:', sessionError);
-                    // 에러가 있어도 계속 진행 (오늘 첫 게임이면 데이터가 없을 수 있음)
-                    todaySession = null;
-                } else {
-                    todaySession = freshSession;
-                    cachedDailySession = freshSession;
-                    lastDailySessionLoad = now;
-                    // [Egress 최적화] localStorage에 캐시 저장 (페이지 새로고침 후에도 표시)
-                    localStorage.setItem('cachedDailySession', JSON.stringify(freshSession));
+                    .eq('username', currentUser).eq('session_date', today).maybeSingle();
+                if (!error) {
+                    ts = data; cachedDailySession = data; lastDailySessionLoad = now;
+                    localStorage.setItem('cachedDailySession_' + currentUser, JSON.stringify(data));
                 }
             }
 
-            if (todaySession) {
-                document.getElementById('todayWins').textContent = todaySession.wins || 0;
-                document.getElementById('todayLosses').textContent = todaySession.losses || 0;
-                document.getElementById('todayDraws').textContent = todaySession.draws || 0;
-                document.getElementById('todayMatches').textContent = todaySession.matches || 0;
-                document.getElementById('todayFC').textContent = todaySession.fc_mined || 0;
-                document.getElementById('todayStartScore').textContent = todaySession.start_score || '--';
-                document.getElementById('todayHighScore').textContent = todaySession.highest_score || '--';
-                
-                const total = (todaySession.wins || 0) + (todaySession.losses || 0) + (todaySession.draws || 0);
-                const winrate = total > 0 ? ((todaySession.wins || 0) / total * 100).toFixed(1) : 0;
-                document.getElementById('todayWinrate').textContent = winrate + '%';
+            if (ts) {
+                document.getElementById('todayWins').textContent = ts.wins || 0;
+                document.getElementById('todayLosses').textContent = ts.losses || 0;
+                document.getElementById('todayDraws').textContent = ts.draws || 0;
+                document.getElementById('todayMatches').textContent = ts.matches || 0;
+                document.getElementById('todayFC').textContent = ts.fc_mined || 0;
+                document.getElementById('todayStartScore').textContent = ts.start_score || '--';
+                document.getElementById('todayHighScore').textContent = ts.highest_score || '--';
+                const tot = (ts.wins||0)+(ts.losses||0)+(ts.draws||0);
+                document.getElementById('todayWinrate').textContent = (tot>0?((ts.wins/tot)*100).toFixed(1):0) + '%';
             }
-            
-            // 승급 정보 로드 (캐싱 적용)
             await loadPromotionInfo(false);
         }
         
-        // 최근 7일 통계 로드 (한국 시간 기준) (Egress 최적화: 캐싱 추가)
         async function loadWeekStats(forceRefresh = false) {
             const now = Date.now();
-            let weekData = cachedWeekStats?.weekData || cachedWeekStats;
-            let promotions = cachedWeekStats?.promotions || null;
-
+            let cache = cachedWeekStats;
             if (forceRefresh || !cachedWeekStats || now - lastWeekStatsLoad > CACHE_TIME) {
-                // 한국 시간 기준으로 7일 전 날짜 계산
-                const dateNow = new Date();
-                const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로
-                const kstNow = new Date(dateNow.getTime() + kstOffset);
-                kstNow.setDate(kstNow.getDate() - 7);
-                const sevenDaysAgo = kstNow.toISOString().split('T')[0];
-                
-                const { data: freshWeekData } = await _supabase
-                    .from('daily_sessions')
-                    .select('session_date, wins, losses, draws, fc_mined')
-                    .eq('username', currentUser)
-                    .gte('session_date', sevenDaysAgo)
-                    .order('session_date', { ascending: false });
-                weekData = freshWeekData;
-
-                // 슈챌→챔스 승급 정보 가져오기 (한국 시간 기준) (Egress 최적화)
-                const { data: freshPromotions } = await _supabase
-                .from('tier_promotions')
-                    .select('promoted_at, matches_taken')
-                    .eq('username', currentUser)
-                    .eq('from_tier', '슈챌')
-                    .eq('to_tier', '챔스')
-                    .gte('promoted_at', sevenDaysAgo)
-                    .order('promoted_at', { ascending: false });
-                promotions = freshPromotions;
-
-                // [Egress 최적화] 캐시 및 localStorage 저장 (페이지 새로고침 후에도 표시)
-                cachedWeekStats = {weekData: freshWeekData, promotions: freshPromotions};
-                lastWeekStatsLoad = now;
-                localStorage.setItem('cachedWeekStats', JSON.stringify(cachedWeekStats));
+                const dateNow = new Date(new Date().getTime() + 9*60*60*1000); dateNow.setDate(dateNow.getDate() - 7);
+                const sevenAgo = dateNow.toISOString().split('T')[0];
+                const { data: wData } = await _supabase.from('daily_sessions').select('session_date, wins, losses, draws, fc_mined').eq('username', currentUser).gte('session_date', sevenAgo).order('session_date', {ascending: false});
+                const { data: pData } = await _supabase.from('tier_promotions').select('promoted_at, matches_taken').eq('username', currentUser).eq('from_tier', '슈챌').eq('to_tier', '챔스').gte('promoted_at', sevenAgo).order('promoted_at', {ascending: false});
+                cache = { weekData: wData, promotions: pData };
+                cachedWeekStats = cache; lastWeekStatsLoad = now;
+                localStorage.setItem('cachedWeekStats_' + currentUser, JSON.stringify(cache));
             }
             
             const tbody = document.getElementById('weekTableBody');
+            if (!cache || !cache.weekData || cache.weekData.length === 0) return tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#8b949e;">데이터가 없습니다</td></tr>';
             
-            if (!weekData || weekData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#8b949e;">데이터가 없습니다</td></tr>';
-                return;
-            }
-            
-            // 날짜별 승급 정보 매핑
-            const promotionMap = {};
-            if (promotions) {
-                promotions.forEach(p => {
-                    const date = p.promoted_at.split('T')[0];
-                    promotionMap[date] = p.matches_taken;
-                });
-            }
-            
-            // 표 채우기
-            let html = '';
-            weekData.forEach(day => {
-                // 한국 시간으로 날짜 표시
-                const dateStr = formatDateKST(day.session_date, 'short');
-                
-                const wins = day.wins || 0;
-                const losses = day.losses || 0;
-                const draws = day.draws || 0;
-                const total = wins + losses + draws;
-                const winrate = total > 0 ? ((wins / total) * 100).toFixed(1) : '0.0';
-                const fc = day.fc_mined || 0;
-                
-                const promotion = promotionMap[day.session_date];
-                const promotionText = promotion ? `${promotion}판` : '--';
-                
-                html += `
-                    <tr>
-                        <td style="color: #b4b4b4;">${dateStr}</td>
-                        <td style="color: #86efac; font-weight: 600;">${wins}</td>
-                        <td style="color: #fcd34d; font-weight: 600;">${draws}</td>
-                        <td style="color: #fca5a5; font-weight: 600;">${losses}</td>
-                        <td style="color: #e0e0e0; font-weight: 600;">${winrate}%</td>
-                        <td style="color: #fdba74; font-weight: 600;">${fc}</td>
-                    </tr>
-                `;
-            });
-            
-            tbody.innerHTML = html;
+            const pMap = {}; (cache.promotions||[]).forEach(p => pMap[p.promoted_at.split('T')[0]] = p.matches_taken);
+            tbody.innerHTML = cache.weekData.map(d => {
+                const tot = (d.wins||0)+(d.losses||0)+(d.draws||0);
+                return `<tr><td style="color:#b4b4b4">${formatDateKST(d.session_date, 'short')}</td><td style="color:#86efac">${d.wins||0}</td><td style="color:#fcd34d">${d.draws||0}</td><td style="color:#fca5a5">${d.losses||0}</td><td style="color:#e0e0e0">${tot>0?((d.wins/tot)*100).toFixed(1):0}%</td><td style="color:#fdba74">${d.fc_mined||0}</td></tr>`;
+            }).join('');
         }
         
-        // 슈챌→챔스 승급 정보 로드 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
         async function loadPromotionInfo(forceRefresh = false) {
             const now = Date.now();
-            
-            // 캐시 확인
-            if (!forceRefresh && cachedPromotionInfo && now - lastPromotionInfoLoad < PROMOTION_CACHE_TIME) {
-                const promotion = cachedPromotionInfo;
-                if (promotion) {
+            if (!forceRefresh && cachedPromotionInfo && now - lastPromotionInfoLoad < CACHE_TIME) {
+                if(cachedPromotionInfo) {
                     document.getElementById('promotionCard').style.display = 'block';
-                    document.getElementById('promotionMatches').textContent = `${promotion.matches_taken || '--'}판`;
-                    const dateStr = formatDateKST(promotion.promoted_at, 'full');
-                    document.getElementById('promotionDate').textContent = `${dateStr} 승급`;
-                } else {
-                    document.getElementById('promotionCard').style.display = 'none';
-                }
+                    document.getElementById('promotionMatches').textContent = `${cachedPromotionInfo.matches_taken||'--'}판`;
+                    document.getElementById('promotionDate').textContent = `${formatDateKST(cachedPromotionInfo.promoted_at, 'full')} 승급`;
+                } else document.getElementById('promotionCard').style.display = 'none';
                 return;
             }
-            
-            const { data: promotion, error: promotionError } = await _supabase
-                .from('tier_promotions')
-                .select('promoted_at, matches_taken')
-                .eq('username', currentUser)
-                .eq('from_tier', '슈챌')
-                .eq('to_tier', '챔스')
-                .order('promoted_at', { ascending: false })
-                .limit(1)
-                .maybeSingle(); // single() 대신 maybeSingle() 사용 (데이터 없을 때 null 반환, 406 에러 방지)
-            
-            if (promotionError) {
-                console.error('[loadPromotionInfo] 승급 정보 쿼리 오류:', promotionError);
-                cachedPromotionInfo = null;
-            } else {
-                // 캐시 저장
-                cachedPromotionInfo = promotion;
-            }
-            lastPromotionInfoLoad = now;
-            
-            if (promotion) {
+            const { data } = await _supabase.from('tier_promotions').select('promoted_at, matches_taken').eq('username', currentUser).eq('from_tier', '슈챌').eq('to_tier', '챔스').order('promoted_at', {ascending: false}).limit(1).maybeSingle();
+            cachedPromotionInfo = data; lastPromotionInfoLoad = now;
+            if(data) {
                 document.getElementById('promotionCard').style.display = 'block';
-                document.getElementById('promotionMatches').textContent = `${promotion.matches_taken || '--'}판`;
-                
-                // 한국 시간으로 날짜 표시
-                const dateStr = formatDateKST(promotion.promoted_at, 'full');
-                document.getElementById('promotionDate').textContent = `${dateStr} 승급`;
-            } else {
-                document.getElementById('promotionCard').style.display = 'none';
-            }
+                document.getElementById('promotionMatches').textContent = `${data.matches_taken||'--'}판`;
+                document.getElementById('promotionDate').textContent = `${formatDateKST(data.promoted_at, 'full')} 승급`;
+            } else document.getElementById('promotionCard').style.display = 'none';
         }
         
-        // 최근 N경기 점수 그래프 (Egress 최적화: 필요한 컬럼만 선택 + 캐싱)
         async function loadScoreGraph(limit, forceRefresh = false) {
-            try {
-                const now = Date.now();
-                
-                // 캐시가 있고 같은 limit이고 유효하면 캐시 사용
-                if (!forceRefresh && cachedScoreGraph && cachedScoreGraphLimit === limit && 
-                    now - lastScoreGraphLoad < SCORE_GRAPH_CACHE_TIME) {
-                    // 캐시된 데이터로 그래프 렌더링
-                    const history = cachedScoreGraph;
-                    renderScoreGraph(history, limit);
-                    return;
-                }
-                
-                // currentUser가 없으면 에러
-                if (!currentUser) {
-                    console.error('⚠️ 로그인이 필요합니다.');
-                    renderScoreGraph(null, limit);
-                    return;
-                }
-                
-                // [Egress 최적화] 'result' 컬럼 제거 (그래프에서 사용하지 않음)
-                const { data: history, error } = await _supabase
-                    .from('game_history')
-                    .select('created_at, score_after')
-                    .eq('username', currentUser)
-                    .order('created_at', { ascending: false })
-                    .limit(limit);
-                
-                if (error) {
-                    console.error('점수 그래프 로드 오류:', error);
-                    renderScoreGraph(null, limit);
-                    return;
-                }
-                
-                // 캐시 저장
-                cachedScoreGraph = history || [];
-                cachedScoreGraphLimit = limit;
-                lastScoreGraphLoad = now;
-
-                // [Egress 최적화] localStorage에 캐시 저장 (페이지 새로고침 후에도 표시)
-                localStorage.setItem('cachedScoreGraph', JSON.stringify({history: history || [], limit: limit}));
-
-                renderScoreGraph(history || [], limit);
-            } catch (error) {
-                console.error('점수 그래프 로드 중 오류:', error);
-                renderScoreGraph(null, limit);
-            }
+            const now = Date.now();
+            if (!forceRefresh && cachedScoreGraph && cachedScoreGraphLimit === limit && now - lastScoreGraphLoad < CACHE_TIME) return renderScoreGraph(cachedScoreGraph, limit);
+            if (!currentUser) return renderScoreGraph(null, limit);
+            
+            const { data } = await _supabase.from('game_history').select('created_at, score_after').eq('username', currentUser).order('created_at', {ascending: false}).limit(limit);
+            cachedScoreGraph = data || []; cachedScoreGraphLimit = limit; lastScoreGraphLoad = now;
+            localStorage.setItem('cachedScoreGraph_' + currentUser, JSON.stringify({history: data || [], limit: limit}));
+            renderScoreGraph(data || [], limit);
         }
         
-        // 점수 그래프 렌더링 함수 (재사용)
         function renderScoreGraph(history, limit) {
-            try {
-                // 기존 차트 안전하게 제거
-                if (window.scoreChart && typeof window.scoreChart.destroy === 'function') {
-                    try {
-                        window.scoreChart.destroy();
-                    } catch (e) {
-                        console.warn('기존 차트 제거 중 오류:', e);
-                    }
-                }
-                window.scoreChart = null;
-                
-                // canvas 요소 확인
-                const canvasElement = document.getElementById('scoreChart');
-                if (!canvasElement) {
-                    console.error('⚠️ scoreChart canvas 요소를 찾을 수 없습니다.');
-                    return;
-                }
-                
-                const scoreCtx = canvasElement.getContext('2d');
-                if (!scoreCtx) {
-                    console.error('⚠️ canvas context를 가져올 수 없습니다.');
-                    return;
-                }
-            
-                if (!history || history.length === 0) {
-                    // 데이터가 없을 때 빈 그래프 표시
-                    window.scoreChart = new Chart(scoreCtx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: '점수',
-                            data: [],
-                            borderColor: '#94a3b8',
-                            backgroundColor: 'rgba(148, 163, 184, 0.1)',
-                            tension: 0.1,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: '아직 경기 데이터가 없습니다',
-                                color: '#8b949e'
-                            }
-                        }
-                    }
-                });
-                return;
+            if (window.scoreChart) window.scoreChart.destroy();
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+            if (!history || history.length === 0) {
+                window.scoreChart = new Chart(ctx, { type: 'line', data: { labels:[], datasets:[{label:'점수', data:[]}] }, options: { plugins: { title: {display: true, text: '데이터 없음', color: '#8b949e'} } }}); return;
             }
-            
-            // 최신 경기가 오른쪽에 오도록 역순 정렬
-            history.reverse();
-            
-            // 실제 점수 추출
-            const scores = [];
-            const labels = [];
-            let gameNumber = 1;
-            
-            history.forEach((game) => {
-                // score_after가 있으면 실제 점수, 없으면 스킵
-                if (game.score_after) {
-                    scores.push(game.score_after);
-                    labels.push(gameNumber.toString());
-                    gameNumber++;
-                }
+            const histRev = [...history].reverse();
+            const scores = [], labels = []; let gn = 1;
+            histRev.forEach(g => { if(g.score_after) { scores.push(g.score_after); labels.push(gn.toString()); gn++; } });
+            window.scoreChart = new Chart(ctx, {
+                type: 'line', data: { labels, datasets: [{ label: '점수', data: scores, borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', fill: true, tension: 0.3 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false} }, scales: { x:{grid:{color:'#30363d'}, ticks:{color:'#8b949e'}}, y:{grid:{color:'#30363d'}, ticks:{color:'#8b949e'}} } }
             });
-            
-            if (scores.length === 0) {
-                // score 데이터가 없을 때
-                window.scoreChart = new Chart(scoreCtx, {
-                    type: 'line',
-                    data: {
-                        labels: [],
-                        datasets: [{
-                            label: '점수',
-                            data: [],
-                            borderColor: '#94a3b8',
-                            backgroundColor: 'rgba(148, 163, 184, 0.1)',
-                            tension: 0.1,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            title: {
-                                display: true,
-                                text: '점수 데이터가 없습니다 (프로그램을 최신 버전으로 업데이트하세요)',
-                                color: '#f85149'
-                            }
-                        }
-                    }
-                });
-                return;
-            }
-            
-            // 점수 그래프 렌더링
-            window.scoreChart = new Chart(scoreCtx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '점수',
-                        data: scores,
-                        borderColor: '#58a6ff',
-                        backgroundColor: 'rgba(88, 166, 255, 0.1)',
-                        tension: 0.3,
-                        fill: true,
-                        pointRadius: 2,
-                        pointHoverRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return '점수: ' + context.parsed.y.toLocaleString();
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: '경기',
-                                color: '#8b949e',
-                                font: { size: 12 }
-                            },
-                            ticks: { 
-                                color: '#8b949e', 
-                                maxTicksLimit: 20
-                            },
-                            grid: { color: '#30363d' }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: '점수',
-                                color: '#8b949e',
-                                font: { size: 12 }
-                            },
-                            ticks: { 
-                                color: '#8b949e',
-                                callback: function(value) {
-                                    return value.toLocaleString();
-                                }
-                            },
-                            grid: { color: '#30363d' }
-                        }
-                    }
-                }
-            });
-            
-            // 버튼 활성화 상태 변경
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                if (btn.textContent.includes(limit + '경기')) {
-                    btn.classList.add('active');
-                } else if (btn.textContent.includes('경기')) {
-                    btn.classList.remove('active');
-                }
-            });
-            } catch (error) {
-                console.error('점수 그래프 렌더링 중 오류:', error);
-                // 오류 발생 시 빈 그래프 표시
-                const canvasElement = document.getElementById('scoreChart');
-                if (canvasElement) {
-                    const scoreCtx = canvasElement.getContext('2d');
-                    if (scoreCtx && window.scoreChart && typeof window.scoreChart.destroy === 'function') {
-                        try {
-                            window.scoreChart.destroy();
-                        } catch (e) {}
-                    }
-                    window.scoreChart = new Chart(scoreCtx, {
-                        type: 'line',
-                        data: { labels: [], datasets: [] },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                title: {
-                                    display: true,
-                                    text: '그래프 로드 중 오류가 발생했습니다',
-                                    color: '#f85149'
-                                }
-                            }
-                        }
-                    });
-                }
-            }
         }
         
-        // [수정됨] 관리자 패널 로드 (role 로직 적용 및 권한 구분)
         async function loadAdminPanel(forceRefresh = false) {
             const now = Date.now();
-            
-            // 캐시 확인
             let users = cachedAdminPanel;
-            if (forceRefresh || !cachedAdminPanel || now - lastAdminPanelLoad > ADMIN_CACHE_TIME) {
-                console.log('[AdminPanel] 사용자 목록 로드 시작 (updated_at 제외, role 포함)');
-                // [수정] role 컬럼 추가
-                const columns = ['username', 'status', 'created_at', 'last_login', 'role'];
-                const { data: freshUsers, error } = await _supabase.from('user_accounts')
-                    .select(columns.join(','));
-                
-                if (error) {
-                    console.error('[AdminPanel] 쿼리 오류:', error);
-                    alert('사용자 목록을 불러올 수 없습니다: ' + error.message);
-                    return;
-                }
-                users = freshUsers;
-                cachedAdminPanel = users;
-                lastAdminPanelLoad = now;
+            if (forceRefresh || !cachedAdminPanel || now - lastAdminPanelLoad > CACHE_TIME) {
+                const { data } = await _supabase.from('user_accounts').select('username, status, created_at, last_login, role');
+                users = data; cachedAdminPanel = data; lastAdminPanelLoad = now;
             }
-            
             if (users) {
                 document.getElementById('totalUsers').textContent = users.length;
                 document.getElementById('pendingUsers').textContent = users.filter(u => u.status === 'pending').length;
                 document.getElementById('approvedUsers').textContent = users.filter(u => u.status === 'approved').length;
+                document.getElementById('activeToday').textContent = users.filter(u => u.last_login && u.last_login.startsWith(getTodayKST())).length;
                 
-                const today = getTodayKST();
-                const activeToday = users.filter(u => u.last_login && u.last_login.startsWith(today)).length;
-                document.getElementById('activeToday').textContent = activeToday;
-                
-                // 승인 대기
-                const pendingBody = document.getElementById('pendingUsersBody');
-                pendingBody.innerHTML = '';
-                const pending = users.filter(u => u.status === 'pending');
-                
-                if (pending.length === 0) {
-                    pendingBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#8b949e;">없음</td></tr>';
-                } else {
-                    pending.forEach(user => {
-                        const createdDate = formatDateKST(user.created_at);
-                        pendingBody.innerHTML += `
-                            <tr>
-                                <td><strong>${user.username}</strong></td>
-                                <td>${createdDate}</td>
-                                <td class="action-buttons">
-                                    <button class="btn-approve" onclick="approveUser('${user.username}')">✓</button>
-                                    <button class="btn-reject" onclick="rejectUser('${user.username}')">✗</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-                
-                // [수정됨] 승인된 회원 목록 (권한별 버튼 차별화)
-                const approvedBody = document.getElementById('approvedUsersBody');
-                approvedBody.innerHTML = '';
-                const approved = users.filter(u => u.status === 'approved');
-                
-                approved.forEach(user => {
-                    const lastLogin = formatDateKST(user.last_login);
-                    let buttonsHtml = '';
-                    
-                    // 1. 상대방이 슈퍼어드민(찐관리자)인 경우
-                    if (user.role === 'super_admin') {
-                         buttonsHtml = `<span style="color:#ffd700; font-weight:bold; font-size:12px;">👑 최고관리자</span>`;
-                    } 
-                    // 2. 상대방이 일반 관리자인 경우
-                    else if (user.role === 'admin') {
-                        // 내가 슈퍼어드민일 때만 '해임' 가능
-                        if (currentRole === 'super_admin') {
-                            buttonsHtml = `
-                                <button class="btn-suspend" style="background:#e67e22" onclick="changeUserRole('${user.username}', 'user')">⬇ 해임</button>
-                                <button class="btn-delete" onclick="deleteUser('${user.username}')">🗑</button>
-                            `;
-                        } else {
-                            // 일반 관리자끼리는 못 건드림
-                            buttonsHtml = `<span style="color:#8b949e; font-size:12px;">관리자</span>`;
-                        }
-                    } 
-                    // 3. 상대방이 일반 유저인 경우
-                    else {
-                        // 기본 정지/삭제 버튼
-                        let standardButtons = `
-                            <button class="btn-suspend" onclick="suspendUser('${user.username}')">⏸</button>
-                            <button class="btn-delete" onclick="deleteUser('${user.username}')">🗑</button>
-                        `;
-                        
-                        // 내가 슈퍼어드민이면 '관리자 승격' 버튼 추가
-                        if (currentRole === 'super_admin') {
-                             buttonsHtml = `
-                                <button class="btn-approve" style="background:#6f42c1" onclick="changeUserRole('${user.username}', 'admin')">⬆ 승격</button>
-                             ` + standardButtons;
-                        } else {
-                             buttonsHtml = standardButtons;
-                        }
-                    }
-                    
-                    approvedBody.innerHTML += `
-                        <tr>
-                            <td><strong>${user.username}</strong></td>
-                            <td>${lastLogin}</td>
-                            <td class="action-buttons">
-                                ${buttonsHtml}
-                            </td>
-                        </tr>
-                    `;
-                });
-                
-                // 정지된 회원
-                const suspendedBody = document.getElementById('suspendedUsersBody');
-                suspendedBody.innerHTML = '';
-                const suspended = users.filter(u => u.status === 'suspended');
-                
-                if (suspended.length === 0) {
-                    suspendedBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#8b949e;">없음</td></tr>';
-                } else {
-                    suspended.forEach(user => {
-                        const suspendedDate = formatDateKST(user.updated_at || user.created_at);
-                        suspendedBody.innerHTML += `
-                            <tr>
-                                <td><strong>${user.username}</strong></td>
-                                <td>${suspendedDate}</td>
-                                <td class="action-buttons">
-                                    <button class="btn-approve" onclick="restoreUser('${user.username}')">✓ 복귀</button>
-                                    <button class="btn-delete" onclick="deleteUser('${user.username}')">🗑</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-                
-                // 거부된 회원
-                const rejectedBody = document.getElementById('rejectedUsersBody');
-                rejectedBody.innerHTML = '';
-                const rejected = users.filter(u => u.status === 'rejected');
-                
-                if (rejected.length === 0) {
-                    rejectedBody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#8b949e;">없음</td></tr>';
-                } else {
-                    rejected.forEach(user => {
-                        const rejectedDate = formatDateKST(user.updated_at || user.created_at);
-                        rejectedBody.innerHTML += `
-                            <tr>
-                                <td><strong>${user.username}</strong></td>
-                                <td>${rejectedDate}</td>
-                                <td class="action-buttons">
-                                    <button class="btn-approve" onclick="restoreUser('${user.username}')">✓ 복귀</button>
-                                    <button class="btn-delete" onclick="deleteUser('${user.username}')">🗑</button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
+                document.getElementById('pendingUsersBody').innerHTML = users.filter(u => u.status === 'pending').map(u => `<tr><td><strong>${u.username}</strong></td><td>${formatDateKST(u.created_at)}</td><td class="action-buttons"><button class="btn-approve" onclick="approveUser('${u.username}')">✓</button><button class="btn-reject" onclick="rejectUser('${u.username}')">✗</button></td></tr>`).join('') || '<tr><td colspan="3">없음</td></tr>';
+                document.getElementById('approvedUsersBody').innerHTML = users.filter(u => u.status === 'approved').map(u => {
+                    let bHtml = '';
+                    if(u.role === 'super_admin') bHtml = '<span style="color:#ffd700">👑 최고관리자</span>';
+                    else if(u.role === 'admin') bHtml = currentRole === 'super_admin' ? `<button class="btn-suspend" onclick="changeUserRole('${u.username}','user')">⬇ 해임</button><button class="btn-delete" onclick="deleteUser('${u.username}')">🗑</button>` : '<span>관리자</span>';
+                    else bHtml = (currentRole === 'super_admin' ? `<button class="btn-approve" style="background:#6f42c1" onclick="changeUserRole('${u.username}','admin')">⬆ 승격</button>` : '') + `<button class="btn-suspend" onclick="suspendUser('${u.username}')">⏸</button><button class="btn-delete" onclick="deleteUser('${u.username}')">🗑</button>`;
+                    return `<tr><td><strong>${u.username}</strong></td><td>${formatDateKST(u.last_login)}</td><td class="action-buttons">${bHtml}</td></tr>`;
+                }).join('');
+                document.getElementById('suspendedUsersBody').innerHTML = users.filter(u => u.status === 'suspended').map(u => `<tr><td><strong>${u.username}</strong></td><td>${formatDateKST(u.updated_at||u.created_at)}</td><td class="action-buttons"><button class="btn-approve" onclick="restoreUser('${u.username}')">✓ 복귀</button></td></tr>`).join('') || '<tr><td colspan="3">없음</td></tr>';
+                document.getElementById('rejectedUsersBody').innerHTML = users.filter(u => u.status === 'rejected').map(u => `<tr><td><strong>${u.username}</strong></td><td>${formatDateKST(u.updated_at||u.created_at)}</td><td class="action-buttons"><button class="btn-approve" onclick="restoreUser('${u.username}')">✓ 복귀</button><button class="btn-delete" onclick="deleteUser('${u.username}')">🗑</button></td></tr>`).join('') || '<tr><td colspan="3">없음</td></tr>';
             }
         }
         
-        async function approveUser(username) {
-            if (!confirm(`'${username}' 승인?`)) return;
+        async function approveUser(u) { 
+    if(!confirm('승인하시겠습니까?')) return; // 취소 누르면 종료
+    
+    try {
+        const { error } = await _supabase.from('user_accounts')
+            .update({ status: 'approved', approved_by: loggedInUser })
+            .eq('username', u);
             
-            try {
-                const { data, error } = await _supabase.from('user_accounts').update({
-                    status: 'approved',
-                    approved_at: new Date().toISOString(),
-                    approved_by: currentUser
-                }).eq('username', username);
-                
-                if (error) throw error;
-                
-                alert('✅ 승인 완료!');
-                cachedAdminPanel = null; // 캐시 무효화
-                await loadAdminPanel(true);
-                
-            } catch (error) {
-                console.error('승인 오류:', error);
-                alert('❌ 승인 실패: ' + error.message);
-            }
-        }
+        if (error) throw error; // 에러가 있으면 catch 블록으로 던짐
         
-        async function rejectUser(username) {
-            if (!confirm(`'${username}' 거부?`)) return;
-            
-            try {
-                const { error } = await _supabase.from('user_accounts').update({ 
-                    status: 'rejected' 
-                }).eq('username', username);
-                
-                if (error) throw error;
-                
-                alert('✅ 거부 완료');
-                cachedAdminPanel = null; // 캐시 무효화
-                await loadAdminPanel(true);
-                
-            } catch (error) {
-                console.error('거부 오류:', error);
-                alert('❌ 거부 실패: ' + error.message);
-            }
-        }
+        alert('✅ 승인 완료!');
+        await loadAdminPanel(true); // 화면 새로고침
         
-        async function suspendUser(username) {
-            if (!confirm(`'${username}' 정지?`)) return;
-            
-            try {
-                const { error } = await _supabase.from('user_accounts').update({ 
-                    status: 'suspended' 
-                }).eq('username', username);
-                
-                if (error) throw error;
-                
-                alert('✅ 정지 완료');
-                cachedAdminPanel = null; // 캐시 무효화
-                await loadAdminPanel(true);
-                
-            } catch (error) {
-                console.error('정지 오류:', error);
-                alert('❌ 정지 실패: ' + error.message);
-            }
-        }
+    } catch (error) {
+        alert('❌ 승인 실패: ' + error.message);
+    } 
+}
+        async function rejectUser(u) { if(confirm('거부?')){ await _supabase.from('user_accounts').update({status:'rejected'}).eq('username',u); await loadAdminPanel(true); } }
+        async function suspendUser(u) { if(confirm('정지?')){ await _supabase.from('user_accounts').update({status:'suspended'}).eq('username',u); await loadAdminPanel(true); } }
+        async function deleteUser(u) { if(confirm('삭제?')){ await _supabase.from('game_stats').delete().eq('username',u); await _supabase.from('user_accounts').delete().eq('username',u); await loadAdminPanel(true); } }
+        async function restoreUser(u) { if(confirm('복귀?')){ await _supabase.from('user_accounts').update({status:'approved', approved_by:loggedInUser}).eq('username',u); await loadAdminPanel(true); } }
+        async function changeUserRole(u, r) { if(confirm('권한 변경?')){ await _supabase.from('user_accounts').update({role:r}).eq('username',u); await loadAdminPanel(true); } }
         
-        async function deleteUser(username) {
-            if (!confirm(`'${username}' 삭제?\n통계도 삭제됩니다!`)) return;
-            
-            try {
-                // 통계 삭제
-                const { error: statsError } = await _supabase.from('game_stats').delete().eq('username', username);
-                if (statsError) throw statsError;
-                
-                // 계정 삭제
-                const { error: userError } = await _supabase.from('user_accounts').delete().eq('username', username);
-                if (userError) throw userError;
-                
-                alert('✅ 삭제 완료');
-                cachedAdminPanel = null; // 캐시 무효화
-                await loadAdminPanel(true);
-                
-            } catch (error) {
-                console.error('삭제 오류:', error);
-                alert('❌ 삭제 실패: ' + error.message);
-            }
-        }
-        
-        async function restoreUser(username) {
-            if (!confirm(`'${username}' 복귀 (승인 상태로 변경)?`)) return;
-            
-            try {
-                const { error } = await _supabase.from('user_accounts').update({
-                    status: 'approved',
-                    approved_at: new Date().toISOString(),
-                    approved_by: currentUser
-                }).eq('username', username);
-                
-                if (error) throw error;
-                
-                alert('✅ 복귀 완료! 해당 사용자는 다시 로그인할 수 있습니다.');
-                cachedAdminPanel = null; // 캐시 무효화
-                await loadAdminPanel(true);
-                
-            } catch (error) {
-                console.error('복귀 오류:', error);
-                alert('❌ 복귀 실패: ' + error.message);
-            }
-        }
-
-        // [추가됨] 관리자 등급 변경 함수 (찐 관리자 전용)
-        async function changeUserRole(targetUsername, newRole) {
-            // 안전장치
-            if (currentRole !== 'super_admin') {
-                alert('이 기능은 최고 관리자(Super Admin)만 사용할 수 있습니다.');
-                return;
-            }
-
-            const actionName = newRole === 'admin' ? '관리자로 임명' : '일반 유저로 해임';
-            if (!confirm(`'${targetUsername}'님을 ${actionName} 하시겠습니까?`)) return;
-
-            try {
-                const { error } = await _supabase
-                    .from('user_accounts')
-                    .update({ role: newRole })
-                    .eq('username', targetUsername);
-
-                if (error) throw error;
-
-                alert(`✅ ${actionName} 완료!`);
-                cachedAdminPanel = null; // 캐시 무효화
-                loadAdminPanel(true); // 목록 새로고침
-            } catch (error) {
-                console.error('권한 변경 오류:', error);
-                alert('❌ 실패: ' + error.message);
-            }
-        }
-        
-        // 업데이트 목록 로드 (Egress 최적화: 캐싱 + 필요한 컬럼만 선택 + 댓글 지연 로드)
+        // 작성/수정 작업은 화면에 표시된 currentUser가 아니라 'loggedInUser(진짜 본인 계정)'로 처리합니다!
         async function loadUpdates(forceRefresh = false) {
-            const now = Date.now();
             const list = document.getElementById('updatesList');
-            
-            // 캐시 확인
-            let updates = cachedUpdates;
-            if (forceRefresh || !cachedUpdates || now - lastUpdatesLoad > UPDATES_CACHE_TIME) {
-                // [Egress 최적화] 최신 20개만 로드
-                const { data: freshUpdates } = await _supabase
-                    .from('updates')
-                    .select('id, version, title, content, created_at, created_by, download_url')
-                    .order('created_at', { ascending: false })
-                    .limit(20);
-                updates = freshUpdates;
-                cachedUpdates = freshUpdates;
-                lastUpdatesLoad = now;
-            }
-            
-            if (!updates || updates.length === 0) {
-                list.innerHTML = '<div style="text-align:center;color:#8b949e;padding:40px;">아직 업데이트 공지가 없습니다.</div>';
-                return;
-            }
-            
-            list.innerHTML = updates.map(update => `
-                <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
-                        <div>
-                            <span style="background: #3a3a3a; color: #e0e0e0; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-right: 10px; border: 1px solid #4a4a4a;">
-                                ${update.version || 'v1.0.0'}
-                            </span>
-                            <span style="color: #e0e0e0; font-size: 18px; font-weight: bold;">
-                                ${update.title}
-                            </span>
-                        </div>
-                        ${isAdmin ? `
-                            <div style="display: flex; gap: 8px;">
-                                <button onclick="editUpdate(${update.id}, '${update.version?.replace(/'/g, "\\'")}', '${update.title.replace(/'/g, "\\'")}', \`${update.content.replace(/`/g, '\\`')}\`, '${update.download_url || ''}')" 
-                                    style="background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
-                                    ✏️ 수정
-                                </button>
-                                <button onclick="deleteUpdate(${update.id})" 
-                                    style="background: #f85149; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;">
-                                    🗑️ 삭제
-                                </button>
-                            </div>
-                        ` : ''}
+            if (forceRefresh || !cachedUpdates) { const {data} = await _supabase.from('updates').select('id, version, title, content, created_at, created_by, download_url').order('created_at', {ascending: false}).limit(20); cachedUpdates = data; }
+            if (!cachedUpdates || !cachedUpdates.length) return list.innerHTML = '<div style="text-align:center;padding:40px;">없음</div>';
+            list.innerHTML = cachedUpdates.map(u => `
+                <div style="background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 15px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <div><span style="background:#3a3a3a; padding:4px 10px; border-radius:8px;">${u.version||''}</span> <span style="font-weight:bold">${u.title}</span></div>
+                        ${isAdmin ? `<div style="display:flex; gap:8px;"><button onclick="editUpdate(${u.id}, '${u.version}', '${u.title}', \`${u.content}\`, '${u.download_url||''}')" style="background:#3a3a3a; border-radius:6px; color:#fff;">✏️</button><button onclick="deleteUpdate(${u.id})" style="background:#f85149; border-radius:6px; color:#fff; border:none;">🗑️</button></div>` : ''}
                     </div>
-                    <div style="color: #808080; font-size: 12px; margin-bottom: 15px;">
-                        ${new Date(update.created_at).toLocaleString('ko-KR')} · ${update.created_by}
-                    </div>
-                    <div style="color: #b4b4b4; line-height: 1.6; white-space: pre-wrap; margin-bottom: 15px;">
-                        ${update.content}
-                    </div>
-                    ${update.download_url ? `
-                        <a href="${update.download_url}" target="_blank" 
-                            style="display: inline-block; background: linear-gradient(135deg, #238636 0%, #2ea043 100%); color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 14px; transition: transform 0.2s; margin-bottom: 15px;"
-                            onmouseover="this.style.transform='translateY(-2px)'" 
-                            onmouseout="this.style.transform='translateY(0)'">
-                            📥 다운로드
-                        </a>
-                    ` : ''}
-                    
-                    <div style="border-top: 1px solid #30363d; padding-top: 15px; margin-top: 15px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <div style="color: #8b949e; font-size: 14px;">💬 댓글</div>
-                            <button onclick="toggleComments(${update.id})" id="toggleBtn-${update.id}"
-                                style="background: #3a3a3a; color: #e0e0e0; border: 1px solid #4a4a4a; padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 11px;">
-                                보기
-                            </button>
-                        </div>
-                        <div id="commentsContainer-${update.id}" style="display: none;">
-                            <div id="comments-${update.id}" style="margin-bottom: 10px;"></div>
-                            <div style="display: flex; gap: 10px;">
-                                <input type="text" id="commentInput-${update.id}" placeholder="댓글을 입력하세요..." 
-                                    style="flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; font-size: 13px;">
-                                <button onclick="postComment(${update.id})" 
-                                    style="background: #238636; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; white-space: nowrap;">
-                                    댓글 작성
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            // 댓글은 지연 로드 (초기 로드 안 함)
+                    <div style="color:#808080; font-size:12px; margin-bottom:15px;">${new Date(u.created_at).toLocaleString('ko')} · ${u.created_by}</div>
+                    <div style="white-space:pre-wrap; margin-bottom:15px;">${u.content}</div>
+                    ${u.download_url ? `<a href="${u.download_url}" target="_blank" style="background:#238636; color:white; padding:8px 16px; border-radius:8px; text-decoration:none;">📥 다운로드</a>` : ''}
+                    <div style="border-top: 1px solid #30363d; margin-top:15px; padding-top:10px;"><button onclick="toggleComments(${u.id})" id="toggleBtn-${u.id}" style="background:#3a3a3a; color:white; border-radius:6px; border:none; padding:4px 10px;">댓글 보기</button><div id="commentsContainer-${u.id}" style="display:none; margin-top:10px;"><div id="comments-${u.id}"></div><div style="display:flex; gap:10px; margin-top:10px;"><input type="text" id="commentInput-${u.id}" style="flex:1; padding:8px; border-radius:6px; background:#161b22; color:#fff;"><button onclick="postComment(${u.id})" style="background:#238636; color:white; border:none; border-radius:6px; padding:8px;">작성</button></div></div></div>
+                </div>`).join('');
         }
-        
-        // 댓글 토글 함수 (지연 로드)
+
         let loadedComments = new Set();
-        async function toggleComments(updateId) {
-            const container = document.getElementById(`commentsContainer-${updateId}`);
-            const toggleBtn = document.getElementById(`toggleBtn-${updateId}`);
-            
-            if (container.style.display === 'none') {
-                container.style.display = 'block';
-                toggleBtn.textContent = '숨기기';
-                
-                // 댓글을 아직 로드하지 않았으면 로드
-                if (!loadedComments.has(updateId)) {
-                    await loadComments(updateId);
-                    loadedComments.add(updateId);
-                }
-            } else {
-                container.style.display = 'none';
-                toggleBtn.textContent = '보기';
-            }
+        async function toggleComments(id) {
+            const con = document.getElementById(`commentsContainer-${id}`), btn = document.getElementById(`toggleBtn-${id}`);
+            if(con.style.display === 'none') { con.style.display='block'; btn.textContent='숨기기'; if(!loadedComments.has(id)){ await loadComments(id); loadedComments.add(id); } }
+            else { con.style.display='none'; btn.textContent='댓글 보기'; }
         }
         
-        // 업데이트 게시
-        // 업데이트 게시/수정 함수
-        async function postUpdate() {
-            const version = document.getElementById('updateVersion').value.trim();
-            const title = document.getElementById('updateTitle').value.trim();
-            const content = document.getElementById('updateContent').value.trim();
-            const downloadUrl = document.getElementById('updateDownloadUrl').value.trim();
-            
-            if (!version || !title || !content) {
-                alert('⚠️ 버전, 제목, 내용은 필수 항목입니다!');
-                return;
-            }
-            
-            try {
-                if (editingUpdateId) {
-                    // 수정 모드
-                    const { error } = await _supabase.from('updates')
-                        .update({
-                            version,
-                            title,
-                            content,
-                            download_url: downloadUrl || null
-                        })
-                        .eq('id', editingUpdateId);
-                    
-                    if (error) throw error;
-                    alert('✅ 업데이트 공지가 수정되었습니다!');
-                    editingUpdateId = null;
-                } else {
-                    // 등록 모드
-                    const updateData = {
-                        version,
-                        title,
-                        content,
-                        created_by: currentUser,
-                        download_url: downloadUrl || null
-                    };
-                    
-                    const { error } = await _supabase.from('updates').insert(updateData);
-                    
-                    if (error) throw error;
-                    alert('✅ 업데이트 공지가 게시되었습니다!');
-                }
-                
-                // 입력 필드 초기화
-                cancelEdit();
-                cachedUpdates = null; // 캐시 무효화
-                await loadUpdates(true);
-                
-            } catch (error) {
-                alert('❌ 실패: ' + error.message);
-            }
+        async function loadComments(id) {
+            const {data} = await _supabase.from('update_comments').select('username, comment, created_at').eq('update_id', id).order('created_at', {ascending:true});
+            document.getElementById(`comments-${id}`).innerHTML = data?.length ? data.map(c => `<div style="background:#161b22; padding:8px; margin-bottom:5px; border-radius:6px;"><div style="color:#58a6ff; font-size:12px; font-weight:bold;">${c.username}</div><div style="font-size:13px;">${c.comment}</div></div>`).join('') : '<div style="font-size:12px; color:#8b949e">첫 댓글을 작성해보세요!</div>';
         }
         
-        // 수정 취소 및 폼 초기화
-        function cancelEdit() {
-            editingUpdateId = null;
-            document.getElementById('updateVersion').value = '';
-            document.getElementById('updateTitle').value = '';
-            document.getElementById('updateContent').value = '';
-            document.getElementById('updateDownloadUrl').value = '';
-            
-            // 버튼 텍스트 원래대로
-            const btn = document.getElementById('postUpdateBtn');
-            if (btn) {
-                btn.textContent = '📤 게시하기';
-                btn.style.background = '#238636';
-            }
+        // 댓글, 공지, 업데이트 작성은 'loggedInUser(본캐)' 명의로 기록
+        async function postComment(id) {
+            const v = document.getElementById(`commentInput-${id}`).value; if(!v) return;
+            await _supabase.from('update_comments').insert({update_id:id, username:loggedInUser, comment:v});
+            document.getElementById(`commentInput-${id}`).value=''; await loadComments(id);
         }
         
-        // 업데이트 수정 (폼에 데이터 넣기)
         let editingUpdateId = null;
-        
-        function editUpdate(id, version, title, content, downloadUrl) {
-            editingUpdateId = id;
+        async function postUpdate() {
+            const v = document.getElementById('updateVersion').value;
+            const t = document.getElementById('updateTitle').value;
+            const c = document.getElementById('updateContent').value;
+            const d = document.getElementById('updateDownloadUrl').value;
             
-            // 폼에 기존 데이터 넣기
-            document.getElementById('updateVersion').value = version || '';
-            document.getElementById('updateTitle').value = title || '';
-            document.getElementById('updateContent').value = content || '';
-            document.getElementById('updateDownloadUrl').value = downloadUrl || '';
-            
-            // 버튼 텍스트 변경
-            const btn = document.getElementById('postUpdateBtn');
-            if (btn) {
-                btn.textContent = '✏️ 수정 완료';
-                btn.style.background = '#3a3a3a';
-            }
-            
-            // 스크롤 이동 (작성 폼으로)
-            document.getElementById('updateWriteForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        
-        // 업데이트 삭제
-        async function deleteUpdate(id) {
-            if (!confirm('이 업데이트 공지를 삭제하시겠습니까?')) return;
+            if(!v || !t || !c) return alert('⚠️ 버전, 제목, 내용은 필수 입력 항목입니다.');
             
             try {
-                const { error } = await _supabase.from('updates').delete().eq('id', id);
-                
-                if (error) throw error;
-                
-                alert('✅ 삭제 완료');
-                cachedUpdates = null; // 캐시 무효화
+                if(editingUpdateId) {
+                    const { error } = await _supabase.from('updates').update({version:v, title:t, content:c, download_url:d||null}).eq('id', editingUpdateId);
+                    if (error) throw error;
+                    alert('✅ 업데이트가 성공적으로 수정되었습니다.');
+                } else {
+                    const { error } = await _supabase.from('updates').insert({version:v, title:t, content:c, created_by:loggedInUser, download_url:d||null});
+                    if (error) throw error;
+                    alert('✅ 새 업데이트가 게시되었습니다.');
+                }
+                cancelEdit(); 
+                cachedUpdates=null; 
                 await loadUpdates(true);
-                
+            } catch (error) {
+                alert('❌ 오류 발생: ' + error.message);
+            }
+        }
+        function cancelEdit() { editingUpdateId=null; document.getElementById('updateVersion').value=''; document.getElementById('updateTitle').value=''; document.getElementById('updateContent').value=''; document.getElementById('updateDownloadUrl').value=''; document.getElementById('postUpdateBtn').textContent='📤 게시하기'; }
+        function editUpdate(id,v,t,c,d) { editingUpdateId=id; document.getElementById('updateVersion').value=v; document.getElementById('updateTitle').value=t; document.getElementById('updateContent').value=c; document.getElementById('updateDownloadUrl').value=d; document.getElementById('postUpdateBtn').textContent='✏️ 수정 완료'; document.getElementById('updateWriteForm').scrollIntoView(); }
+        async function deleteUpdate(id) { 
+            if(!confirm('이 업데이트 공지를 삭제하시겠습니까?')) return;
+            try {
+                const { error } = await _supabase.from('updates').delete().eq('id',id); 
+                if (error) throw error;
+                alert('✅ 삭제가 완료되었습니다.');
+                cachedUpdates=null; 
+                await loadUpdates(true); 
             } catch (error) {
                 alert('❌ 삭제 실패: ' + error.message);
             }
         }
         
-        // 랭킹 로드 (오늘의 승수 순위)
-        // 랭킹 타입 전환
-        // 댓글 로드
-        async function loadComments(updateId) {
-            try {
-                // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
-                const { data: comments } = await _supabase
-                    .from('update_comments')
-                    .select('username, comment, created_at')
-                    .eq('update_id', updateId)
-                    .order('created_at', { ascending: true });
-                
-                const container = document.getElementById(`comments-${updateId}`);
-                
-                if (!comments || comments.length === 0) {
-                    container.innerHTML = '<div style="color: #8b949e; font-size: 12px; padding: 10px 0;">첫 댓글을 작성해보세요!</div>';
-                    return;
-                }
-                
-                container.innerHTML = comments.map(comment => `
-                    <div style="background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 10px; margin-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                            <span style="color: #58a6ff; font-weight: bold; font-size: 13px;">${comment.username}</span>
-                            <span style="color: #8b949e; font-size: 11px;">${new Date(comment.created_at).toLocaleString('ko-KR')}</span>
-                        </div>
-                        <div style="color: #c9d1d9; font-size: 13px; line-height: 1.4;">${comment.comment}</div>
-                    </div>
-                `).join('');
-                
-            } catch (error) {
-                console.error('댓글 로드 오류:', error);
-            }
-        }
-        
-        // 댓글 작성
-        async function postComment(updateId) {
-            const input = document.getElementById(`commentInput-${updateId}`);
-            const comment = input.value.trim();
-            
-            if (!comment) {
-                alert('댓글 내용을 입력하세요!');
-                return;
-            }
-            
-            try {
-                const { error } = await _supabase
-                    .from('update_comments')
-                    .insert({
-                        update_id: updateId,
-                        username: currentUser,
-                        comment: comment
-                    });
-                
-                if (error) throw error;
-                
-                input.value = '';
-                // 댓글만 새로고침 (업데이트 목록은 그대로)
-                await loadComments(updateId);
-                
-            } catch (error) {
-                console.error('댓글 작성 오류:', error);
-                alert('댓글 작성 실패: ' + error.message);
-            }
-        }
-        
-        // 공지사항 로드
         async function loadAnnouncements() {
-            try {
-                // [Egress 최적화] 필요한 컬럼만 선택 (select '*' 대신)
-                const { data: announcements } = await _supabase
-                    .from('announcements')
-                    .select('id, message, type, created_by')
-                    .eq('active', true)
-                    .order('created_at', { ascending: false })
-                    .limit(1);
-                
-                const banner = document.getElementById('announcementBanner');
-                
-                if (!announcements || announcements.length === 0) {
-                    banner.style.display = 'none';
-                    return;
-                }
-                
-                const announcement = announcements[0];
-                const colors = {
-                    info: { bg: '#1a2e3a', border: '#2a5a7a', text: '#58a6ff' },
-                    success: { bg: '#1a2e26', border: '#2d4a3e', text: '#86efac' },
-                    warning: { bg: '#2e2a1a', border: '#4a422d', text: '#fcd34d' },
-                    error: { bg: '#2e1a1a', border: '#4a2d2d', text: '#fca5a5' }
-                };
-                
-                const color = colors[announcement.type] || colors.info;
-                
-                banner.innerHTML = `
-                    <div style="background: ${color.bg}; border: 1px solid ${color.border}; 
-                                border-radius: 12px; padding: 15px 20px; margin-bottom: 20px; 
-                                display: flex; align-items: center; justify-content: space-between;">
-                        <div style="color: ${color.text}; font-weight: 600; flex: 1;">
-                            ${announcement.message}
-                        </div>
-                        ${isAdmin ? `
-                            <button onclick="deleteAnnouncement(${announcement.id})" 
-                                    style="background: transparent; border: 1px solid ${color.border}; 
-                                           color: ${color.text}; padding: 6px 12px; border-radius: 6px; 
-                                           cursor: pointer; margin-left: 15px; font-size: 12px;">
-                                삭제
-                            </button>
-                        ` : ''}
-                    </div>
-                `;
-                banner.style.display = 'block';
-                
-            } catch (error) {
-                console.error('공지사항 로드 오류:', error);
-            }
+            const {data} = await _supabase.from('announcements').select('id, message, type').eq('active', true).order('created_at', {ascending:false}).limit(1);
+            const banner = document.getElementById('announcementBanner');
+            if(!data || !data.length) return banner.style.display='none';
+            const colors = {info:{bg:'#1a2e3a',t:'#58a6ff'}, success:{bg:'#1a2e26',t:'#86efac'}, warning:{bg:'#2e2a1a',t:'#fcd34d'}, error:{bg:'#2e1a1a',t:'#fca5a5'}};
+            const c = colors[data[0].type] || colors.info;
+            banner.innerHTML = `<div style="background:${c.bg}; color:${c.t}; padding:15px; border-radius:12px; margin-bottom:20px; display:flex; justify-content:space-between;"><b>${data[0].message}</b> ${isAdmin?`<button onclick="deleteAnnouncement(${data[0].id})" style="background:none; border:none; color:${c.t}; cursor:pointer;">삭제</button>`:''}</div>`; banner.style.display='block';
         }
-        
-        // 공지사항 작성 (관리자만)
         async function createAnnouncement() {
-            if (!isAdmin) {
-                alert('권한이 없습니다.');
-                return;
-            }
-            
-            const message = document.getElementById('announcementInput').value.trim();
-            const type = document.getElementById('announcementType').value;
-            
-            if (!message) {
-                alert('공지 내용을 입력하세요!');
-                return;
-            }
+            const m = document.getElementById('announcementInput').value;
+            const t = document.getElementById('announcementType').value; 
+            if(!m) return alert('⚠️ 공지 내용을 입력하세요!');
             
             try {
-                // 기존 공지 비활성화
-                await _supabase
-                    .from('announcements')
-                    .update({ active: false })
-                    .eq('active', true);
+                const { error: err1 } = await _supabase.from('announcements').update({active:false}).eq('active',true);
+                if (err1) throw err1;
                 
-                // 새 공지 생성
-                const { error } = await _supabase
-                    .from('announcements')
-                    .insert({
-                        message: message,
-                        type: type,
-                        created_by: currentUser,
-                        active: true
-                    });
+                const { error: err2 } = await _supabase.from('announcements').insert({message:m, type:t, created_by:loggedInUser, active:true});
+                if (err2) throw err2;
                 
-                if (error) throw error;
-                
-                alert('✅ 공지가 게시되었습니다!');
-                document.getElementById('announcementInput').value = '';
-                document.getElementById('announcementType').value = 'info';
+                alert('✅ 배너 공지가 등록되었습니다.');
+                document.getElementById('announcementInput').value=''; 
                 loadAnnouncements();
-                
             } catch (error) {
-                console.error('공지 작성 오류:', error);
-                alert('❌ 공지 작성 실패: ' + error.message);
+                alert('❌ 등록 실패: ' + error.message);
             }
         }
-        
-        // 공지사항 삭제 (관리자만)
-        async function deleteAnnouncement(id) {
-            if (!isAdmin) {
-                alert('권한이 없습니다.');
-                return;
-            }
-            
-            if (!confirm('이 공지를 삭제하시겠습니까?')) return;
-            
+        async function deleteAnnouncement(id) { 
+            if(!confirm('이 배너 공지를 내리시겠습니까?')) return;
             try {
-                const { error } = await _supabase
-                    .from('announcements')
-                    .update({ active: false })
-                    .eq('id', id);
-                
+                const { error } = await _supabase.from('announcements').update({active:false}).eq('id',id); 
                 if (error) throw error;
-                
-                alert('삭제 완료');
-                loadAnnouncements();
-                
+                alert('✅ 공지가 삭제되었습니다.');
+                loadAnnouncements(); 
             } catch (error) {
-                console.error('공지 삭제 오류:', error);
-                alert('삭제 실패: ' + error.message);
+                alert('❌ 삭제 실패: ' + error.message);
             }
         }
     </script>
