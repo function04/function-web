@@ -1005,7 +1005,21 @@ async function linkSubAccount() {
             
             if (tabName === 'today') { document.querySelectorAll('.tab-btn')[0].classList.add('active'); document.getElementById('todayTab').classList.add('active'); }
             else if (tabName === 'week') { document.querySelectorAll('.tab-btn')[1].classList.add('active'); document.getElementById('weekTab').classList.add('active'); }
-            else if (tabName === 'history') { document.querySelectorAll('.tab-btn')[2].classList.add('active'); document.getElementById('historyTab').classList.add('active'); }
+            else if (tabName === 'history') { 
+                document.querySelectorAll('.tab-btn')[2].classList.add('active'); 
+                document.getElementById('historyTab').classList.add('active'); 
+                
+                // ★ [여기가 핵심!] 숨겨진 상태에서 0x0 크기로 깨진 차트 사이즈를 정상으로 강제 복구
+                if (window.scoreChart) {
+                    window.scoreChart.resize();
+                }
+                
+                // ★ [여기가 핵심!] 부캐 캐시가 없어서 안 뜰 때, 탭을 누르면 자동으로 데이터 로드
+                if (!cachedScoreGraph || cachedScoreGraph.length === 0) {
+                    const activeBtn = document.querySelector('#historyTab .tab-btn.active');
+                    loadScoreGraph(activeBtn ? parseInt(activeBtn.textContent.match(/\d+/)[0]) : 100, false);
+                }
+            }
             else if (tabName === 'updates') { document.querySelectorAll('.tab-btn')[3].classList.add('active'); document.getElementById('updatesTab').classList.add('active'); }
             else if (tabName === 'admin' && isAdmin) { document.getElementById('adminTabBtn').classList.add('active'); document.getElementById('adminTab').classList.add('active'); }
         }
@@ -1045,6 +1059,13 @@ async function linkSubAccount() {
             btn.disabled = true; btn.innerHTML = '⏳ 중...'; btn.style.opacity = '0.6';
             try {
                 await loadMyStats(true);
+                
+                // ★ [추가] 전체 갱신 버튼을 누를 때, 현재 그래프 탭이 열려 있다면 그래프도 함께 최신화
+                if (document.getElementById('historyTab').classList.contains('active')) {
+                    const activeBtn = document.querySelector('#historyTab .tab-btn.active');
+                    await loadScoreGraph(activeBtn ? parseInt(activeBtn.textContent.match(/\d+/)[0]) : 100, true);
+                }
+                
                 lastManualRefreshTime = Date.now();
                 localStorage.setItem('lastRefreshTime_' + currentUser, lastManualRefreshTime.toString());
                 updateTimestampDisplay();
