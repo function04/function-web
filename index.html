@@ -741,6 +741,7 @@
         
         let isAdmin = false;
         let currentRole = 'user';
+        let scoreChartInstance = null; // 차트 객체를 담을 전용 변수 추가
         
         function getTodayKST() {
             const now = new Date();
@@ -1010,8 +1011,8 @@ async function linkSubAccount() {
                 document.getElementById('historyTab').classList.add('active'); 
                 
                 // ★ [여기가 핵심!] 숨겨진 상태에서 0x0 크기로 깨진 차트 사이즈를 정상으로 강제 복구
-                if (window.scoreChart) {
-                    window.scoreChart.resize();
+                if (scoreChartInstance) {
+                    scoreChartInstance.resize();
                 }
                 
                 // ★ [여기가 핵심!] 부캐 캐시가 없어서 안 뜰 때, 탭을 누르면 자동으로 데이터 로드
@@ -1136,53 +1137,61 @@ async function linkSubAccount() {
         function restoreCachedData() {
             try {
                 const savedStats = localStorage.getItem('cachedStats_' + currentUser);
-                if (savedStats) {
+                if (savedStats && savedStats !== 'null') {
                     const stats = JSON.parse(savedStats);
-                    cachedStats = stats;
-                    document.getElementById('liveScore').textContent = (stats.current_score > 0 && stats.current_score < 10000) ? stats.current_score : '--';
-                    const rankEl = document.getElementById('liveRank');
-                    rankEl.textContent = stats.current_rank < 99999 ? stats.current_rank : (stats.current_rank >= 99999 ? '순위권이탈' : '--');
-                    rankEl.style.fontSize = stats.current_rank >= 99999 ? '12px' : '20px';
-                    document.getElementById('liveTier').textContent = stats.current_tier || '--';
-                    document.getElementById('liveWLD').textContent = `${stats.wins || 0}-${stats.draws || 0}-${stats.losses || 0}`;
-                    document.getElementById('liveFC').textContent = stats.fc_mined || 0;
-                    document.getElementById('liveMatches').textContent = stats.matches || 0;
-                    document.getElementById('liveTags').innerHTML = stats.active_modes ? stats.active_modes.split(',').filter(m=>m.trim()).map(m=>`<span class="mini-tag">${m}</span>`).join('') : '';
+                    if (stats) { // 데이터가 있을 때만 적용되도록 방어막 추가
+                        cachedStats = stats;
+                        document.getElementById('liveScore').textContent = (stats.current_score > 0 && stats.current_score < 10000) ? stats.current_score : '--';
+                        const rankEl = document.getElementById('liveRank');
+                        rankEl.textContent = stats.current_rank < 99999 ? stats.current_rank : (stats.current_rank >= 99999 ? '순위권이탈' : '--');
+                        rankEl.style.fontSize = stats.current_rank >= 99999 ? '12px' : '20px';
+                        document.getElementById('liveTier').textContent = stats.current_tier || '--';
+                        document.getElementById('liveWLD').textContent = `${stats.wins || 0}-${stats.draws || 0}-${stats.losses || 0}`;
+                        document.getElementById('liveFC').textContent = stats.fc_mined || 0;
+                        document.getElementById('liveMatches').textContent = stats.matches || 0;
+                        document.getElementById('liveTags').innerHTML = stats.active_modes ? stats.active_modes.split(',').filter(m=>m.trim()).map(m=>`<span class="mini-tag">${m}</span>`).join('') : '';
+                    }
                 }
 
                 const savedDaily = localStorage.getItem('cachedDailySession_' + currentUser);
-                if (savedDaily) {
+                if (savedDaily && savedDaily !== 'null') {
                     const ts = JSON.parse(savedDaily);
-                    cachedDailySession = ts;
-                    document.getElementById('todayWins').textContent = ts.wins || 0;
-                    document.getElementById('todayLosses').textContent = ts.losses || 0;
-                    document.getElementById('todayDraws').textContent = ts.draws || 0;
-                    document.getElementById('todayMatches').textContent = ts.matches || 0;
-                    document.getElementById('todayFC').textContent = ts.fc_mined || 0;
-                    document.getElementById('todayStartScore').textContent = ts.start_score || '--';
-                    document.getElementById('todayHighScore').textContent = ts.highest_score || '--';
+                    if (ts) { // 데이터가 있을 때만 적용되도록 방어막 추가
+                        cachedDailySession = ts;
+                        document.getElementById('todayWins').textContent = ts.wins || 0;
+                        document.getElementById('todayLosses').textContent = ts.losses || 0;
+                        document.getElementById('todayDraws').textContent = ts.draws || 0;
+                        document.getElementById('todayMatches').textContent = ts.matches || 0;
+                        document.getElementById('todayFC').textContent = ts.fc_mined || 0;
+                        document.getElementById('todayStartScore').textContent = ts.start_score || '--';
+                        document.getElementById('todayHighScore').textContent = ts.highest_score || '--';
+                    }
                 }
 
                 const savedWeek = localStorage.getItem('cachedWeekStats_' + currentUser);
-                if (savedWeek) {
+                if (savedWeek && savedWeek !== 'null') {
                     const cache = JSON.parse(savedWeek);
-                    cachedWeekStats = cache;
-                    const tbody = document.getElementById('weekTableBody');
-                    if (cache.weekData && cache.weekData.length > 0) {
-                        const pMap = {}; (cache.promotions||[]).forEach(p => pMap[p.promoted_at.split('T')[0]] = p.matches_taken);
-                        tbody.innerHTML = cache.weekData.map(d => {
-                            const tot = (d.wins||0)+(d.losses||0)+(d.draws||0);
-                            return `<tr><td style="color:#b4b4b4">${formatDateKST(d.session_date, 'short')}</td><td style="color:#86efac">${d.wins||0}</td><td style="color:#fcd34d">${d.draws||0}</td><td style="color:#fca5a5">${d.losses||0}</td><td style="color:#e0e0e0">${tot>0?((d.wins/tot)*100).toFixed(1):0}%</td><td style="color:#fdba74">${d.fc_mined||0}</td></tr>`;
-                        }).join('');
+                    if (cache) {
+                        cachedWeekStats = cache;
+                        const tbody = document.getElementById('weekTableBody');
+                        if (cache.weekData && cache.weekData.length > 0) {
+                            const pMap = {}; (cache.promotions||[]).forEach(p => pMap[p.promoted_at.split('T')[0]] = p.matches_taken);
+                            tbody.innerHTML = cache.weekData.map(d => {
+                                const tot = (d.wins||0)+(d.losses||0)+(d.draws||0);
+                                return `<tr><td style="color:#b4b4b4">${formatDateKST(d.session_date, 'short')}</td><td style="color:#86efac">${d.wins||0}</td><td style="color:#fcd34d">${d.draws||0}</td><td style="color:#fca5a5">${d.losses||0}</td><td style="color:#e0e0e0">${tot>0?((d.wins/tot)*100).toFixed(1):0}%</td><td style="color:#fdba74">${d.fc_mined||0}</td></tr>`;
+                            }).join('');
+                        }
                     }
                 }
 
                 const savedGraph = localStorage.getItem('cachedScoreGraph_' + currentUser);
-                if (savedGraph) {
+                if (savedGraph && savedGraph !== 'null') {
                     const cache = JSON.parse(savedGraph);
-                    cachedScoreGraph = cache.history;
-                    cachedScoreGraphLimit = cache.limit;
-                    if(cache.history) renderScoreGraph(cache.history, cache.limit);
+                    if (cache) {
+                        cachedScoreGraph = cache.history;
+                        cachedScoreGraphLimit = cache.limit;
+                        if(cache.history) renderScoreGraph(cache.history, cache.limit);
+                    }
                 }
             } catch (e) { console.error('캐시 복원 오류:', e); }
         }
@@ -1302,15 +1311,15 @@ async function linkSubAccount() {
         }
         
         function renderScoreGraph(history, limit) {
-            if (window.scoreChart) window.scoreChart.destroy();
+            if (scoreChartInstance) scoreChartInstance.destroy();
             const ctx = document.getElementById('scoreChart').getContext('2d');
             if (!history || history.length === 0) {
-                window.scoreChart = new Chart(ctx, { type: 'line', data: { labels:[], datasets:[{label:'점수', data:[]}] }, options: { plugins: { title: {display: true, text: '데이터 없음', color: '#8b949e'} } }}); return;
+                scoreChartInstance = new Chart(ctx, { type: 'line', data: { labels:[], datasets:[{label:'점수', data:[]}] }, options: { plugins: { title: {display: true, text: '데이터 없음', color: '#8b949e'} } }}); return;
             }
             const histRev = [...history].reverse();
             const scores = [], labels = []; let gn = 1;
             histRev.forEach(g => { if(g.score_after) { scores.push(g.score_after); labels.push(gn.toString()); gn++; } });
-            window.scoreChart = new Chart(ctx, {
+            scoreChartInstance = new Chart(ctx, {
                 type: 'line', data: { labels, datasets: [{ label: '점수', data: scores, borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', fill: true, tension: 0.3 }] },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: {display: false} }, scales: { x:{grid:{color:'#30363d'}, ticks:{color:'#8b949e'}}, y:{grid:{color:'#30363d'}, ticks:{color:'#8b949e'}} } }
             });
