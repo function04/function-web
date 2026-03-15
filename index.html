@@ -504,7 +504,7 @@
             <div class="tabs">
                 <button class="tab-btn active" onclick="showTab('today')">오늘</button>
                 <button class="tab-btn" onclick="showTab('week')">7일</button>
-                <button class="tab-btn" onclick="showTab('history')">점수 그래프</button>
+                <button class="tab-btn" onclick="showTab('ranking')">🏆 랭킹</button> <button class="tab-btn" onclick="showTab('history')">점수 그래프</button>
                 <button class="tab-btn" onclick="showTab('updates')">📢 업데이트</button>
                 <button class="tab-btn" id="adminTabBtn" style="display:none;" onclick="showTab('admin')">👑 회원관리</button>
             </div>
@@ -719,10 +719,37 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <script>
+
+            <div class="tab-content" id="rankingTab">
+                <div class="card" style="padding: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h2 style="margin: 0; font-size: 18px;">🏆 명예의 전당</h2>
+                        <div style="text-align: right;">
+                            <button id="btnRefreshRanking" onclick="forceUpdateRankings()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold;">🔄 랭킹 갱신</button>
+                            <div style="font-size: 10px; color: #8b949e; margin-top: 3px;">(갱신: <span id="lastRefreshTime">-</span>)</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 5px; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px;">
+                        <button class="tab-btn active" id="subTabScore" style="flex: 1; padding: 8px 5px; font-size: 13px;" onclick="switchRankTab('score')">👑 점수</button>
+                        <button class="tab-btn" id="subTabWins" style="flex: 1; padding: 8px 5px; font-size: 13px;" onclick="switchRankTab('wins')">⚔️ 다승</button>
+                        <button class="tab-btn" id="subTabWinRate" style="flex: 1; padding: 8px 5px; font-size: 13px;" onclick="switchRankTab('winrate')">📈 승률</button>
+                    </div>
+
+                    <div id="rankView_score" style="display: block;">
+                        <ul id="rankScoreList" style="list-style: none; padding: 0; margin: 0;"></ul>
+                    </div>
+                    <div id="rankView_wins" style="display: none;">
+                        <ul id="rankWinsList" style="list-style: none; padding: 0; margin: 0;"></ul>
+                    </div>
+                    <div id="rankView_winrate" style="display: none;">
+                        <div style="text-align: right; font-size: 11px; color: #888; margin-bottom: 5px;">* 최소 20전 이상 기준</div>
+                        <ul id="rankWinRateList" style="list-style: none; padding: 0; margin: 0;"></ul>
+                    </div>
+                </div>
+            </div>
+            
+            </div> </div>  <script>
         // 버전 및 기본 설정
         const APP_VERSION = '2024-02-13-v4-sub-account';
         console.log('🚀 Function 통계 시스템 로드됨 - 버전:', APP_VERSION);
@@ -881,6 +908,8 @@
             
             loadAnnouncements();
             startTimestampUpdates();
+        
+            loadRankings();
         }
 
         // ★ 부캐 관련 UI 업데이트 함수 ★
@@ -1001,28 +1030,53 @@ async function linkSubAccount() {
         }
         
         function showTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                // 모바일 서브 탭(subTabScore 등)은 건드리지 않도록 예외 처리
+                if(!btn.id.startsWith('subTab')) btn.classList.remove('active');
+            });
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
             
             if (tabName === 'today') { document.querySelectorAll('.tab-btn')[0].classList.add('active'); document.getElementById('todayTab').classList.add('active'); }
             else if (tabName === 'week') { document.querySelectorAll('.tab-btn')[1].classList.add('active'); document.getElementById('weekTab').classList.add('active'); }
-            else if (tabName === 'history') { 
+            else if (tabName === 'ranking') { 
                 document.querySelectorAll('.tab-btn')[2].classList.add('active'); 
+                document.getElementById('rankingTab').classList.add('active'); 
+                loadRankings(); // 💡 랭킹 탭을 눌렀을 때만 DB를 찔러 데이터를 가져옵니다!
+            }
+            else if (tabName === 'history') { 
+                document.querySelectorAll('.tab-btn')[3].classList.add('active'); 
                 document.getElementById('historyTab').classList.add('active'); 
                 
-                // ★ [여기가 핵심!] 숨겨진 상태에서 0x0 크기로 깨진 차트 사이즈를 정상으로 강제 복구
                 if (scoreChartInstance) {
                     scoreChartInstance.resize();
                 }
                 
-                // ★ [여기가 핵심!] 부캐 캐시가 없어서 안 뜰 때, 탭을 누르면 자동으로 데이터 로드
                 if (!cachedScoreGraph || cachedScoreGraph.length === 0) {
                     const activeBtn = document.querySelector('#historyTab .tab-btn.active');
                     loadScoreGraph(activeBtn ? parseInt(activeBtn.textContent.match(/\d+/)[0]) : 100, false);
                 }
             }
-            else if (tabName === 'updates') { document.querySelectorAll('.tab-btn')[3].classList.add('active'); document.getElementById('updatesTab').classList.add('active'); }
+            else if (tabName === 'updates') { document.querySelectorAll('.tab-btn')[4].classList.add('active'); document.getElementById('updatesTab').classList.add('active'); }
             else if (tabName === 'admin' && isAdmin) { document.getElementById('adminTabBtn').classList.add('active'); document.getElementById('adminTab').classList.add('active'); }
+        }
+
+        // 👇 서브 탭(점수/다승/승률) 화면 전환 함수 추가
+        function switchRankTab(type) {
+            // 버튼 색상 변경
+            document.getElementById('subTabScore').classList.remove('active');
+            document.getElementById('subTabWins').classList.remove('active');
+            document.getElementById('subTabWinRate').classList.remove('active');
+            
+            if(type === 'score') document.getElementById('subTabScore').classList.add('active');
+            if(type === 'wins') document.getElementById('subTabWins').classList.add('active');
+            if(type === 'winrate') document.getElementById('subTabWinRate').classList.add('active');
+
+            // 내용 화면 끄고 켜기
+            document.getElementById('rankView_score').style.display = 'none';
+            document.getElementById('rankView_wins').style.display = 'none';
+            document.getElementById('rankView_winrate').style.display = 'none';
+            
+            document.getElementById('rankView_' + type).style.display = 'block';
         }
         
         // 캐싱 변수 (RAM)
@@ -1490,6 +1544,97 @@ async function linkSubAccount() {
                 alert('❌ 삭제 실패: ' + error.message);
             }
         }
+        // --- 🏆 랭킹 시스템 (Egress 방어 로직 포함) ---
+const RANKING_CACHE_KEY = 'fc_ranking_data';
+const RANKING_TIME_KEY = 'fc_ranking_time';
+const COOLDOWN_MINUTES = 10; // 💡 10분 쿨타임 설정
+
+// 🚨 주의: 아래 'game_stats' 부분을 질문자님이 실제로 사용하는 유저 통계 테이블 이름으로 꼭 바꿔주세요!
+const STATS_TABLE_NAME = 'game_stats'; 
+
+async function loadRankings() {
+    const now = new Date().getTime();
+    const lastTime = localStorage.getItem(RANKING_TIME_KEY);
+
+    // 1. 캐시 확인: 10분이 지나지 않았다면 브라우저 저장소 데이터(무료) 사용
+    if (lastTime && (now - lastTime) < COOLDOWN_MINUTES * 60 * 1000) {
+        const cachedData = JSON.parse(localStorage.getItem(RANKING_CACHE_KEY));
+        if (cachedData) {
+            renderRankings(cachedData);
+            document.getElementById('lastRefreshTime').innerText = new Date(parseInt(lastTime)).toLocaleTimeString();
+            return;
+        }
+    }
+    // 2. 캐시가 없거나 10분이 지났다면 DB 통신
+    await fetchRankingsFromDB();
+}
+
+async function forceUpdateRankings() {
+    const now = new Date().getTime();
+    const lastTime = localStorage.getItem(RANKING_TIME_KEY);
+
+    // 갱신 버튼 연타 방지 (Egress 방어)
+    if (lastTime && (now - lastTime) < COOLDOWN_MINUTES * 60 * 1000) {
+        const remain = Math.ceil((COOLDOWN_MINUTES * 60 * 1000 - (now - lastTime)) / 1000 / 60);
+        alert(`🚨 트래픽 과부하 방지 시스템 작동 중\\n랭킹은 10분마다 갱신할 수 있습니다.\\n약 ${remain}분 후에 다시 시도해주세요.`);
+        return;
+    }
+    await fetchRankingsFromDB();
+}
+
+async function fetchRankingsFromDB() {
+    const btn = document.getElementById('btnRefreshRanking');
+    btn.innerText = "⏳ 중...";
+    btn.disabled = true;
+
+    try {
+        // 💡 3번의 요청과 50명의 데이터를 불러오던 것을, 단 1번의 RPC 호출로 압축!
+        const { data: finalData, error } = await _supabase.rpc('get_fc_rankings');
+        
+        if (error) throw error;
+
+        const now = new Date().getTime();
+
+        // 브라우저 10분 캐싱용 로컬스토리지 저장 (기존 로직 유지)
+        localStorage.setItem(RANKING_CACHE_KEY, JSON.stringify(finalData));
+        localStorage.setItem(RANKING_TIME_KEY, now.toString());
+
+        // 렌더링 함수로 전달
+        renderRankings(finalData);
+        
+        document.getElementById('lastRefreshTime').innerText = new Date(now).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+
+    } catch (error) {
+        console.error("랭킹 갱신 오류:", error);
+        alert("랭킹 갱신 중 오류가 발생했습니다.");
+    } finally {
+        btn.innerText = "🔄 랭킹 갱신";
+        btn.disabled = false;
+    }
+}
+function renderRankings(data) {
+    const makeRow = (user, index, value, unitHTML, color) => `
+        <li style="padding: 12px 10px; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; background: ${index % 2 === 0 ? '#1a1a1a' : '#1e1e1e'}; border-radius: 6px; margin-bottom: 4px;">
+            <span>
+                <b style="display: inline-block; width: 24px; text-align: center; background: ${index < 3 ? color : '#333'}; color: ${index < 3 ? '#000' : '#888'}; border-radius: 4px; font-size: 11px; padding: 3px 0; margin-right: 10px;">${index + 1}</b>
+                <span style="color: #e0e0e0; font-size: 14px; font-weight: 500;">${user.username}</span>
+            </span>
+            <span style="color: ${color}; font-weight: bold; font-size: 16px;">${value}${unitHTML}</span>
+        </li>`;
+
+    const noDataRow = `<li style="text-align: center; color: #666; padding: 30px 0; font-size: 13px;">데이터가 부족합니다.</li>`;
+
+    document.getElementById('rankScoreList').innerHTML = data.scoreData && data.scoreData.length > 0 
+        ? data.scoreData.map((d, i) => makeRow(d, i, d.highest_score || 0, '<span style="font-size: 12px; color: #888; margin-left: 2px;">점</span>', '#FFD700')).join('') : noDataRow;
+        
+    document.getElementById('rankWinsList').innerHTML = data.winsData && data.winsData.length > 0 
+        ? data.winsData.map((d, i) => makeRow(d, i, d.wins || 0, '<span style="font-size: 12px; color: #888; margin-left: 2px;">승</span>', '#4CAF50')).join('') : noDataRow;
+        
+    // 💡 승률 탭에만 '(몇전)' 이라는 HTML 태그를 추가해서 넘겨줍니다!
+    document.getElementById('rankWinRateList').innerHTML = data.winRateData && data.winRateData.length > 0 
+        ? data.winRateData.map((d, i) => makeRow(d, i, d.winRate || 0, `<span style="font-size: 11px; color: #8b949e; margin-left: 4px; font-weight: normal;">% (${d.matches}전)</span>`, '#E91E63')).join('') : noDataRow;
+}
+// --- 🏆 랭킹 시스템 끝 ---
     </script>
 </body>
 </html>
