@@ -1,0 +1,20 @@
+{
+  "name": "Function Dashboard",
+  "short_name": "Function",
+  "description": "FC Online 자동화 대시보드",
+  "start_url": "/function-web/",
+  "scope": "/function-web/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "categories": ["productivity", "sports"],
+  "icons": [
+    {
+      "src": "/function-web/apple-icon",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
