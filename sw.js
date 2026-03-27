@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.0.0";
+const CACHE_VERSION = "v1.0.2";
 const CACHE_NAME = `function-${CACHE_VERSION}`;
 
 // Install: cache app shell
