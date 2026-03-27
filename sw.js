@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.0.3";
+const CACHE_VERSION = "v1.0.4";
 const CACHE_NAME = `function-${CACHE_VERSION}`;
 
 // Install: cache app shell
@@ -35,6 +35,8 @@ self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   if (url.pathname.startsWith("/api/")) return;
   if (url.hostname !== self.location.hostname) return;
+  // Never cache HTML — always fetch fresh so JS chunk list stays current
+  if (url.pathname.endsWith(".html") || url.pathname === "/" || !url.pathname.includes(".")) return;
 
   event.respondWith(
     fetch(event.request)
