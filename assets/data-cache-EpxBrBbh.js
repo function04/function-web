@@ -1,0 +1,1 @@
+const a=new Map;function n(t){const s=a.get(t);if(s)return s.data;try{const e=sessionStorage.getItem(`fc_cache_${t}`);if(e){const c=JSON.parse(e);return a.set(t,c),c.data}}catch{}return null}function r(t,s){const e={data:s,ts:Date.now()};a.set(t,e);try{sessionStorage.setItem(`fc_cache_${t}`,JSON.stringify(e))}catch{}}export{n as g,r as s};

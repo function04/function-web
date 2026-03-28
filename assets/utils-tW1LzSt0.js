@@ -1,0 +1,1 @@
+function r(e){const o=new Date,n=new Date(e),t=Math.floor((o.getTime()-n.getTime())/1e3);return t<60?"방금 전":t<3600?`${Math.floor(t/60)}분 전`:t<86400?`${Math.floor(t/3600)}시간 전`:`${Math.floor(t/86400)}일 전`}export{r as t};
