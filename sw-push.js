@@ -45,7 +45,7 @@ self.addEventListener("notificationclick", (event) => {
     url = "/function-web/updates";
   } else if (data.type === "super_champ") {
     url = "/function-web/leaderboard";
-  } else if (data.type === "target_score" || data.type === "target_rank") {
+  } else if (data.type === "target_score" || data.type === "target_rank" || data.type === "daily_summary") {
     url = "/function-web/history";
   } else if (data.url) {
     url = data.url;
